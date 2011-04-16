@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FilePicker">
+        <attr name="workingDir" format="string"/>
+        <attr name="showHidden" format="boolean"/>
+        <attr name="showFiles" format="boolean"/>
+        <attr name="showOthers" format="boolean"/>
+        <attr name="showUnreadable" format="boolean"/>
+        <attr name="mask" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="FilePickerPreference">
+        <attr name="workingDir"/>
+        <attr name="showHidden"/>
+        <attr name="showFiles"/>
+        <attr name="showOthers"/>
+        <attr name="showUnreadable"/>
+        <attr name="mask"/>
+    </declare-styleable>
+</resources>
+

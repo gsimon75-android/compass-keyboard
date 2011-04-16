@@ -1,0 +1,116 @@
+The format of a layout XML file can be illustrated by the excerpt based on the default latin layout below:
+
+<?xml version="1.0" encoding="utf-8"?>
+<CompassKeyboard name="sample_based_on_default_latin">
+
+    <Layout name="vertical" key_mm="12">
+        <!-- global swipes -->
+        <Action mod="grave"/>   <Action mod="caret"/>   <Action mod="acute"/>
+        <Action mod="diae"/>    <Action/>               <Action mod="misc"/>
+        <Action mod="tilde"/>   <Action mod="hacek"/>   <Action mod="spec"/>
+
+        <Row name="top">
+
+            <Key name="math ops" has_left="0">
+                <State>
+                    <Action code="("/>                      <Action code=")"/>                      <Action code="%2b"/> <!-- + -->
+                    <Action code="-"/>                      <Action code="*"/>                      <Action code="/"/>
+                </State>
+                <State name="shift">
+                    <Action code="&lt;"/>                   <Action code="&gt;"/>                   <Action code="{"/>
+                    <Action code="}"/>                      <Action code="["/>                      <Action code="]"/>
+                </State>
+            </Key>
+
+            <Key name="a-o">
+                <State>
+                    <Action code="a"/>                      <Action code="b"/>                      <Action code="c"/>
+                    <Action code="g"/>                      <Action code="h"/>                      <Action code="i"/>
+                    <Action code="m"/>                      <Action code="n"/>                      <Action code="o"/>
+                </State>
+                <State name="shift">
+                    <Action code="A"/>                      <Action code="B"/>                      <Action code="C"/>
+                    <Action code="G"/>                      <Action code="H"/>                      <Action code="I"/>
+                    <Action code="M"/>                      <Action code="N"/>                      <Action code="O"/>
+                </State>
+                <State name="ctrl">
+                    <Action text="a" code="%01"/>           <Action text="b" code="%02"/>           <Action text="c" code="%03"/>
+                    <Action text="g" code="%07"/>           <Action text="h" code="%08"/>           <Action text="i" code="%09"/>
+                    <Action text="m" code="%0d"/>           <Action text="n" code="%0e"/>           <Action text="o" code="%0f"/>
+                </State>
+                <State name="grave">
+                    <Action code="à"/>                      <Action/>                               <Action/>
+                    <Action/>                               <Action/>                               <Action code="ì"/>
+                    <Action/>                               <Action/>                               <Action code="ò"/>
+                </State>
+                <State name="shift,grave">
+                    <Action code="À"/>                      <Action/>                               <Action/>
+                    <Action/>                               <Action/>                               <Action code="Ì"/>
+                    <Action/>                               <Action/>                               <Action code="Ò"/>
+                </State>
+		<!-- other State tags -->
+            </Key>
+
+	    <!-- other Key tags -->
+        </Row>
+
+        <Row name="bottom" has_bottom="0">
+	    <!-- other Key tags -->
+        </Row>
+
+	<!-- other Row tags -->
+    </Layout>
+
+    <Layout name="horizontal" key_mm="12">
+        <!-- global swipes -->
+        <Action mod="grave"/>   <Action mod="caret"/>   <Action mod="acute"/>
+        <Action mod="diae"/>    <Action/>               <Action mod="misc"/>
+        <Action mod="tilde"/>   <Action mod="hacek"/>   <Action mod="spec"/>
+
+	<!-- other Row tags -->
+    </Layout>
+</CompassKeyboard>
+
+As you see, the XML file contains one <CompassKeyboard> tag that may have a name="..." attribute, although this latter serves only debug purposes.
+Within the <CompassKeyboard> there must be exactly two <Layout> tags defined, one with name="horizontal" and one with name="vertical". The key_mm="12" attributes specify that the keys may be at most 12 mm large, even if the screen would permit larger. (Certainly, if the screen is smaller, the keys will be shrinked to fit anyway.)
+
+Each <Layout> starts with the definition of its eight global swipes in the form of <Action mod="..."/> tags. Even though currently there is no 'tap' global swipe implemented yet, for further compatibility it must be present and is currently ignored.  The name of the accent modifier may be any arbitrary string as long as it is unique.
+
+The content of the <Layout> continues with any number of <Row> tags, whose name="..." attribute is again only for debug purposes. The <Row> tags may have two further optional attributes: has_top="0" and has_bottom="0", which control whether the keys in the row have their upper and lower directional actions. A non-zero value means that these actions are present, and this is the default behaviour if the has_xxx="" attribute is not present at all.
+
+
+Within each <Row> you may specify the <Key> tags, with the name="..." attribute being relevant only for debugging, again. The <Key> tags may have two optional attributes as well: has_left="0" and has_right="0", marking that the left- and right-side actions are missing for that key. Similar to has_top and has_bottom, a non-zero value means that the actions are present, and this is the default behaviour of these attributes.
+
+The actual arrangement of the layout is defined in the content of the <Key>-s, where you may specify the behaviour of that key in the various modifier states, one by one. You can do this by defining <State> tags whose name="..." attribute must either not be present at all (for referring to the default mode) or match some of the modifiers that you defined at the global swipes or the ones that you define later as modifier keys (like Shift). If you would like to specify the behaviour for a combination of modifiers (like acute + shift), you may do so by separating those modifier names with a comma, the order of the names is irrelevant.
+
+There is a special modifier name 'hide', choosing this the user may request hiding the virtual keyboard.
+
+Within each <State> you can specify what should happen if the user performs a directional swipe on the key, by specifying exactly one <Action/> tag for each direction that is relevant for that key, in the order NW, N, NE, W, TAP, E, SW, S, SE. By default this means nine such <Action/> tags, but if the key is located in a row that has has_top="0" or has_bottom="0", then that eliminates the need for the NW, N, NE or the SW, S, SE directions, thus reducing the number of <Action/> tags to 6 (or to 3, if both has_top and has_bottom is zero).
+
+This number can be reduced furthermore if the key has attributes has_left="0" or has_right="0", as these eliminate the need for the NW, W, SW or the NE, E, SE directions from the remaining set. So, the number of the required <Action> tags may be 1x1=1, 1x2=2x1=2, 1x3=3x1=3, 2x2=4, 2x3=3x2=6 or 3x3=9, depending on the has_xxx tags of the <Row> and the <Key>. Such partial keys (some has_xxx="0" attribute is present) are useful mostly at keys on the the left, right and bottom edge, as it is kind of hard to 'leave' these keys towards the edge, 
+
+As the order of the required <Action/> tags codifies the direction for which they are relevant, they must be present even if the key has no action defined for that direction, in this case the <Action/> tag must be left empty.
+If there is something to do if the key is swiped to the given direction, it can be specified by the attributes of the <Action/> tag:
+ - code="a"
+   A text that must be generated to the applications exactly in this literal form. As not all characters are permitted in XML, the usual URL-encoding (%nn, where 'nn' is a 2-digit hex number) can be used.
+
+ - mod="shift"
+   A modifier (like Shift, in this example) is to be toggled.
+
+ - keycode="19"
+   A key event must be generated to the applications. The list of the event codes can be found at http://developer.android.com/reference/android/view/KeyEvent.html
+
+For textual actions, the caption that is displayed for this direction defaults to the 'code' attribute, but it can be overridden by a text="..." attribute, if needed. For the other two types of actions, this 'text' attribute is mandatory.
+
+Some general guidelines for designing layouts:
+ - Try to test both the horizontal and vertical layouts on as many screen sizes as possible.
+ - The supported characters may vary from one (real) device to another, so try to test the symbols on various devices.
+ - Try to arrange the symbols in a systematical way, users will look for similar symbols in similar places or using the same modifier.
+ - Involve some friends in the testing, as they may have different ideas of a layout being 'intuitive'.
+ - Try to use as little part of the screen as possible, this is one of the primary goals of CompassKeyboard.
+ - Don't use too complicated modifier combinations, at least not for the frequently used keys, users will consider more than two movements tiresome.
+ - If you design more layouts, the more similar you arrange them, the easier your users can switch between them.
+
+
+
+

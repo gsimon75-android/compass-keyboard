@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<CompassKeyboard name="default_latin">
+
+    <Layout name="vertical" key_mm="12">
+        <!-- global swipes -->
+        <Action mod="grave"/>   <Action mod="caret"/>   <Action mod="acute"/>
+        <Action mod="diae"/>    <Action/>               <Action mod="misc"/>
+        <Action mod="tilde"/>   <Action mod="hacek"/>   <Action mod="spec"/>
+
+        <Row name="top">
+
+            <Key name="math ops" has_left="0">
+                <State>
+                    <Action code="("/>                      <Action code=")"/>                      <Action code="%2b"/> <!-- + -->
+                    <Action code="-"/>                      <Action code="*"/>                      <Action code="/"/>
+                </State>
+                <State name="shift">
+                    <Action code="&lt;"/>                   <Action code="&gt;"/>                   <Action code="{"/>
+                    <Action code="}"/>                      <Action code="["/>                      <Action code="]"/>
+                </State>
+            </Key>
+
+            <Key name="a-o">
+                <State>
+                    <Action code="a"/>                      <Action code="b"/>                      <Action code="c"/>
+                    <Action code="g"/>                      <Action code="h"/>                      <Action code="i"/>
+                    <Action code="m"/>                      <Action code="n"/>                      <Action code="o"/>
+                </State>
+                <State name="shift">
+                    <Action code="A"/>                      <Action code="B"/>                      <Action code="C"/>
+                    <Action code="G"/>                      <Action code="H"/>                      <Action code="I"/>
+                    <Action code="M"/>                      <Action code="N"/>                      <Action code="O"/>
+                </State>
+            </Key>
+
+            <Key name="d-r">
+                <State>
+                    <Action code="d"/>                      <Action code="e"/>                      <Action code="f"/>
+                    <Action code="j"/>                      <Action code="k"/>                      <Action code="l"/>
+                    <Action code="p"/>                      <Action code="q"/>                      <Action code="r"/>
+                </State>
+                <State name="shift">
+                    <Action code="D"/>                      <Action code="E"/>                      <Action code="F"/>
+                    <Action code="J"/>                      <Action code="K"/>                      <Action code="L"/>
+                    <Action code="P"/>                      <Action code="Q"/>                      <Action code="R"/>
+                </State>
+            </Key>
+
+            <Key name="nav">
+                <State>
+                    <Action code=";"/>                      <Action text="↑" key="19"/>             <Action code=":"/>
+                    <Action text="←" key="21"/>             <Action text="↲" key="66"/>             <Action text="→" key="22"/>
+                    <Action code=","/>                      <Action text="↓" key="20"/>             <Action code="."/>
+                </State>
+                <State name="shift">
+                    <Action/>                               <Action text="↑" code="%1b[1;2A"/>      <Action/>
+                    <Action text="←" code="%1b[1;2D"/>      <Action/>                               <Action text="→" code="%1b[1;2C"/>
+                    <Action/>                               <Action text="↓" code="%1b[1;2B"/>      <Action/>
+                </State>
+                <State name="ctrl">
+                    <Action/>                               <Action text="↑" code="%1b[1;5A"/>      <Action/>
+                    <Action text="←" code="%1b[1;5D"/>      <Action/>                               <Action text="→" code="%1b[1;5C"/>
+                    <Action/>                               <Action text="↓" code="%1b[1;5B"/>      <Action/>
+                </State>
+                <State name="ctrl,shift">
+                    <Action/>                               <Action text="↑" code="%1b[1;6A"/>      <Action/>
+                    <Action text="←" code="%1b[1;6D"/>      <Action/>                               <Action text="→" code="%1b[1;6C"/>
+                    <Action/>                               <Action text="↓" code="%1b[1;6B"/>      <Action/>
+                </State>
+                <State name="spec">
+                    <Action/>                               <Action text="↟" key="92"/>             <Action/>
+                    <Action text="↞" code="%1b[H"/>         <Action text="╳" key="23"/>             <Action text="↠" code="%1b[F"/>
+                    <Action/>                               <Action text="↡" key="93"/>             <Action/>
+                </State>
+                <State name="shift,spec">
+                    <Action/>                               <Action text="↟" code="%1b[5;2~"/>      <Action/>
+                    <Action text="↞" code="%1b[1;2H"/>      <Action/>                               <Action text="↠" code="%1b[1;2F"/>
+                    <Action/>                               <Action text="↡" code="%1b[6;2~"/>      <Action/>
+                </State>
+                <State name="ctrl,spec">
+                    <Action/>                               <Action text="↟" code="%1b[5;5~"/>      <Action/>
+                    <Action text="↞" code="%1b[1;5H"/>      <Action/>                               <Action text="↠" code="%1b[1;5F"/>
+                    <Action/>                               <Action text="↡" code="%1b[6;5~"/>      <Action/>
+                </State>
+                <State name="ctrl,shift,spec">
+                    <Action/>                               <Action text="↟" code="%1b[5;6~"/>      <Action/>
+                    <Action text="↞" code="%1b[1;6H"/>      <Action/>                               <Action text="↠" code="%1b[1;6F"/>
+                    <Action/>                               <Action text="↡" code="%1b[6;6~"/>      <Action/>
+                </State>
+            </Key>
+
+            <Key name="marks" has_right="0">
+                <State>
+                    <Action code="$"/>                      <Action code="%40"/><!-- @ -->          <Action code="'"/>
+                    <Action code="&quot;"/>                 <Action code="%3f"/><!-- ? -->          <Action code="!"/>
+                </State>
+                <State name="shift">
+                    <Action code="^"/>                      <Action code="~"/>                      <Action code="`"/>
+                    <Action code="%23"/><!-- # -->          <Action code="%5C"/><!-- \ -->          <Action code="|"/>
+                </State>
+            </Key>
+
+        </Row>
+
+        <Row name="bottom" has_bottom="0">
+
+            <Key name="misc" has_left="0">
+                <State>
+                    <Action code="%25"/><!-- % -->          <Action code="="/>
+                    <Action text="⇧" mod="shift"/>          <Action text="C" mod="ctrl"/>
+                </State>
+                <State name="shift">
+                    <Action/>                               <Action text="H" mod="hide"/>
+                    <Action text="⇪" lock="shift"/>         <Action text="C" mod="ctrl"/>
+                </State>
+                <State name="spec">
+                    <Action text="E" code="%1b"/><!--esc--> <Action/>
+                    <Action text="⇧" mod="shift"/>          <Action text="C" mod="ctrl"/>
+                </State>
+                <State name="shift,spec">
+                    <Action/>                               <Action/>
+                    <Action/>                               <Action text="C" mod="ctrl"/>
+                </State>
+                <State name="ctrl,spec">
+                    <Action/>                               <Action/>
+                    <Action text="⇧" mod="shift"/>          <Action/>
+                </State>
+            </Key>
+
+            <Key name="s-_">
+                <State>
+                    <Action code="s"/>                      <Action code="t"/>                      <Action code="u"/>
+                    <Action code="y"/>                      <Action code="z"/>                      <Action code="_"/>
+                </State>
+                <State name="shift">
+                    <Action code="S"/>                      <Action code="T"/>                      <Action code="U"/>
+                    <Action code="Y"/>                      <Action code="Z"/>                      <Action/>
+                </State>
+            </Key>
+
+            <Key name="v-x spaces">
+                <State>
+                    <Action code="v"/>                      <Action code="w"/>                       <Action code="x"/>
+                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>              <Action text="⇨" code="%09"/><!-- key="61" -->
+                </State>
+                <State name="shift">
+                    <Action code="V"/>                      <Action code="W"/>                       <Action code="X"/>
+                    <Action/>                               <Action text="▆" key="62"/>              <Action/>
+                </State>
+                <State name="spec">
+                    <Action/>                               <Action/>                                <Action/>
+                    <Action text="↛" code="%1b[3~"/>        <Action/>                                <Action text="↱" code="%1b[2~"/>
+                </State>
+                <State name="shift,spec">
+                    <Action/>                               <Action/>                                <Action/>
+                    <Action text="↛" code="%1b[3;2~"/>      <Action/>                                <Action text="↱" code="%1b[2;2~"/>
+                </State>
+                <State name="ctrl,spec">
+                    <Action/>                               <Action/>                                <Action/>
+                    <Action text="↛" code="%1b[3;5~"/>      <Action/>                                <Action text="↱" code="%1b[2;5~"/>
+                </State>
+                <State name="ctrl,shift,spec">
+                    <Action/>                               <Action/>                                <Action/>
+                    <Action text="↛" code="%1b[3;6~"/>      <Action/>                                <Action text="↱" code="%1b[2;6~"/>
+                </State>
+            </Key>
+
+            <Key name="0-7">
+                <State>
+                    <Action code="0"/>                      <Action code="1"/>                      <Action code="2"/>
+                    <Action code="5"/>                      <Action code="6"/>                      <Action code="7"/>
+                </State>
+                <State name="spec">
+                    <Action text="Ⅰ" code="%1b[OP"/>        <Action text="Ⅱ" code="%1b[OQ"/>        <Action text="Ⅲ" code="%1b[OR"/>
+                    <Action text="Ⅵ" code="%1b[17~"/>       <Action text="Ⅶ" code="%1b[18~"/>       <Action text="Ⅷ" code="%1b[19~"/>
+                </State>
+                <State name="shift,spec">
+                    <Action text="Ⅰ" code="%1b[1;2P"/>      <Action text="Ⅱ" code="%1b[1;2Q"/>      <Action text="Ⅲ" code="%1b[1;2R"/>
+                    <Action text="Ⅵ" code="%1b[17;2~"/>     <Action text="Ⅶ" code="%1b[18;2~"/>     <Action text="Ⅷ" code="%1b[19;2~"/>
+                </State>
+                <State name="ctrl,spec">
+                    <Action text="Ⅰ" code="%1b[1;5P"/>      <Action text="Ⅱ" code="%1b[1;5Q"/>      <Action text="Ⅲ" code="%1b[1;5R"/>
+                    <Action text="Ⅵ" code="%1b[17;5~"/>     <Action text="Ⅶ" code="%1b[18;5~"/>     <Action text="Ⅷ" code="%1b[19;5~"/>
+                </State>
+                <State name="ctrl,shift,spec">
+                    <Action text="Ⅰ" code="%1b[1;6P"/>      <Action text="Ⅱ" code="%1b[1;6Q"/>      <Action text="Ⅲ" code="%1b[1;6R"/>
+                    <Action text="Ⅵ" code="%1b[17;6~"/>     <Action text="Ⅶ" code="%1b[18;6~"/>     <Action text="Ⅷ" code="%1b[19;6~"/>
+                </State>
+            </Key>
+
+            <Key name="3-9" has_right="0">
+                <State>
+                    <Action code="3"/>                      <Action code="4"/>
+                    <Action code="8"/>                      <Action code="9"/>
+                </State>
+                <State name="spec">
+                    <Action text="Ⅳ" code="%1b[OS"/>        <Action text="Ⅴ" code="%1b[15~"/>
+                    <Action text="Ⅸ" code="%1b[20~"/>       <Action text="Ⅹ" code="%1b[21~"/>
+                </State>
+                <State name="shift,spec">
+                    <Action text="Ⅳ" code="%1b[1;2S"/>      <Action text="Ⅴ" code="%1b[15;2~"/>
+                    <Action text="Ⅸ" code="%1b[20;2~"/>     <Action text="Ⅹ" code="%1b[21;2~"/>
+                </State>
+                <State name="ctrl,spec">
+                    <Action text="Ⅳ" code="%1b[1;5S"/>      <Action text="Ⅴ" code="%1b[15;5~"/>
+                    <Action text="Ⅸ" code="%1b[20;5~"/>     <Action text="Ⅹ" code="%1b[21;5~"/>
+                </State>
+                <State name="ctrl,shift,spec">
+                    <Action text="Ⅳ" code="%1b[1;6S"/>      <Action text="Ⅴ" code="%1b[15;6~"/>
+                    <Action text="Ⅸ" code="%1b[20;6~"/>     <Action text="Ⅹ" code="%1b[21;6~"/>
+                </State>
+            </Key>
+
+        </Row>
+
+    </Layout>
+
+    <Layout name="horizontal" key_mm="12">
+        <!-- global swipes -->
+        <Action mod="grave"/>   <Action mod="caret"/>   <Action mod="acute"/>
+        <Action mod="diae"/>    <Action/>               <Action mod="misc"/>
+        <Action mod="tilde"/>   <Action mod="hacek"/>   <Action mod="spec"/>
+
+        <Row name="top" has_top="0">
+
+            <Key name="a-l">
+                <State>
+                    <Action code="a"/>                      <Action code="b"/>                      <Action code="c"/>
+                    <Action code="j"/>                      <Action code="k"/>                      <Action code="l"/>
+                </State>
+                <State name="shift">
+                    <Action code="A"/>                      <Action code="B"/>                      <Action code="C"/>
+                    <Action code="J"/>                      <Action code="K"/>                      <Action code="L"/>
+                </State>
+            </Key>
+
+            <Key name="d-o">
+                <State>
+                    <Action code="d"/>                      <Action code="e"/>                      <Action code="f"/>
+                    <Action code="m"/>                      <Action code="n"/>                      <Action code="o"/>
+                </State>
+                <State name="shift">
+                    <Action code="D"/>                      <Action code="E"/>                      <Action code="F"/>
+                    <Action code="M"/>                      <Action code="N"/>                      <Action code="O"/>
+                </State>
+            </Key>
+
+            <Key name="g-r">
+                <State>
+                    <Action code="g"/>                      <Action code="h"/>                      <Action code="i"/>
+                    <Action code="p"/>                      <Action code="q"/>                      <Action code="r"/>
+                </State>
+                <State name="shift">
+                    <Action code="G"/>                      <Action code="H"/>                      <Action code="I"/>
+                    <Action code="P"/>                      <Action code="Q"/>                      <Action code="R"/>
+                </State>
+            </Key>
+
+            <Key name="nav down">
+                <State>
+                    <Action code="$"/>                      <Action code="%40"/><!-- @ -->          <Action code="%25"/><!-- % -->
+                    <Action code=","/>                      <Action text="↓" key="20"/>             <Action code="."/>
+                </State>
+                <State name="shift">
+                    <Action code="^"/>                      <Action code="~"/>                      <Action/>
+                    <Action/>                               <Action text="↓" code="%1b[1;2B"/>      <Action/>
+                </State>
+                <State name="ctrl">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↓" code="%1b[1;5B"/>      <Action/>
+                </State>
+                <State name="ctrl,shift">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↓" code="%1b[1;6B"/>      <Action/>
+                </State>
+                <State name="spec">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↡" key="93"/>             <Action/>
+                </State>
+                <State name="shift,spec">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↡" code="%1b[6;2~"/>      <Action/>
+                </State>
+                <State name="ctrl,spec">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↡" code="%1b[6;5~"/>      <Action/>
+                </State>
+                <State name="ctrl,shift,spec">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↡" code="%1b[6;6~"/>      <Action/>
+                </State>
+            </Key>
+
+            <Key name="math ops">
+                <State>
+                    <Action code="("/>                      <Action code="%2b"/><!-- + -->          <Action code="*"/>
+                    <Action code=")"/>                      <Action code="-"/>                      <Action code="/"/>
+                </State>
+                <State name="shift">
+                    <Action code="&lt;"/><!-- < -->         <Action code="{"/>                      <Action code="["/>
+                    <Action code="&gt;"/><!-- > -->         <Action code="}"/>                      <Action code="]"/>
+                </State>
+            </Key>
+
+            <Key name="marks" has_right="0">
+                <State>
+                    <Action code="'"/>                      <Action code="&quot;"/><!-- " -->
+                    <Action code="%3f"/><!-- ? -->          <Action code="!"/>
+                </State>
+                <State name="shift">
+                    <Action code="`"/>                      <Action code="%23"/><!-- # -->
+                    <Action code="%5C"/><!-- \ -->          <Action code="|"/>
+                </State>
+            </Key>
+
+        </Row>
+
+        <Row name="bottom" has_bottom="0">
+
+            <Key name="s-u misc">
+                <State>
+                    <Action code="s"/>                      <Action code="t"/>                      <Action code="u"/>
+                    <Action code="="/>                      <Action text="⇧" mod="shift"/>          <Action text="C" mod="ctrl"/>
+                </State>
+                <State name="shift">
+                    <Action code="S"/>                      <Action code="T"/>                      <Action code="U"/>
+                    <Action text="H" mod="hide"/>           <Action text="⇪" lock="shift"/>         <Action text="C" mod="ctrl"/>
+                </State>
+                <State name="spec">
+                    <Action/>                               <Action text="E" code="%1b"/><!--esc--> <Action/>
+                    <Action/>                               <Action text="⇧" mod="shift"/>          <Action text="C" mod="ctrl"/>
+                </State>
+                <State name="shift,spec">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action/>                               <Action text="C" mod="ctrl"/>
+                </State>
+                <State name="ctrl,spec">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="⇧" mod="shift"/>          <Action/>
+                </State>
+            </Key>
+
+            <Key name="v-x spaces">
+                <State>
+                    <Action code="v"/>                      <Action code="w"/>                      <Action code="x"/>
+                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" code="%09"/><!-- key="61" -->
+                </State>
+                <State name="shift">
+                    <Action code="V"/>                      <Action code="W"/>                      <Action code="X"/>
+                    <Action/>                               <Action/>                               <Action/>
+                </State>
+                <State name="spec">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action text="↛" code="%1b[3~"/>        <Action/>                               <Action text="↱" code="%1b[2~"/>
+                </State>
+                <State name="shift,spec">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action text="↛" code="%1b[3;2~"/>      <Action/>                               <Action text="↱" code="%1b[2;2~"/>
+                </State>
+                <State name="ctrl,spec">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action text="↛" code="%1b[3;5~"/>      <Action/>                               <Action text="↱" code="%1b[2;5~"/>
+                </State>
+                <State name="ctrl,shift,spec">
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action text="↛" code="%1b[3;6~"/>      <Action/>                               <Action text="↱" code="%1b[2;6~"/>
+                </State>
+            </Key>
+
+            <Key name="y-_">
+                <State>
+                    <Action code="y"/>                      <Action code="z"/>                      <Action code="_"/>
+                    <Action/>                               <Action/>                               <Action/>
+                </State>
+                <State name="shift">
+                    <Action code="Y"/>                      <Action code="Z"/>                      <Action/>
+                    <Action/>                               <Action/>                               <Action/>
+                </State>
+            </Key>
+
+            <Key name="nav">
+                <State>
+                    <Action code=";"/>                      <Action text="↑" key="19"/>             <Action code=":"/>
+                    <Action text="←" key="21"/>             <Action text="↲" key="66"/>             <Action text="→" key="22"/>
+                </State>
+                <State name="shift">
+                    <Action/>                               <Action text="↑" code="%1b[1;2A"/>      <Action/>
+                    <Action text="←" code="%1b[1;2D"/>      <Action/>                               <Action text="→" code="%1b[1;2C"/>
+                </State>
+                <State name="ctrl">
+                    <Action/>                               <Action text="↑" code="%1b[1;5A"/>      <Action/>
+                    <Action text="←" code="%1b[1;5D"/>      <Action/>                               <Action text="→" code="%1b[1;5C"/>
+                </State>
+                <State name="ctrl,shift">
+                    <Action/>                               <Action text="↑" code="%1b[1;6A"/>      <Action/>
+                    <Action text="←" code="%1b[1;6D"/>      <Action/>                               <Action text="→" code="%1b[1;6C"/>
+                </State>
+                <State name="spec">
+                    <Action/>                               <Action text="↟" key="92"/>             <Action/>
+                    <Action text="↞" code="%1b[H"/>         <Action text="╳" key="23"/>             <Action text="↠" code="%1b[F"/>
+                </State>
+                <State name="shift,spec">
+                    <Action/>                               <Action text="↟" code="%1b[5;2~"/>      <Action/>
+                    <Action text="↞" code="%1b[1;2H"/>      <Action/>                               <Action text="↠" code="%1b[1;2F"/>
+                </State>
+                <State name="ctrl,spec">
+                    <Action/>                               <Action text="↟" code="%1b[5;5~"/>      <Action/>
+                    <Action text="↞" code="%1b[1;5H"/>      <Action/>                               <Action text="↠" code="%1b[1;5F"/>
+                </State>
+                <State name="ctrl,shift,spec">
+                    <Action/>                               <Action text="↟" code="%1b[5;6~"/>      <Action/>
+                    <Action text="↞" code="%1b[1;6H"/>      <Action/>                               <Action text="↠" code="%1b[1;6F"/>
+                </State>
+            </Key>
+
+            <Key name="0-7">
+                <State>
+                    <Action code="0"/>                      <Action code="1"/>                      <Action code="2"/>
+                    <Action code="5"/>                      <Action code="6"/>                      <Action code="7"/>
+                </State>
+                <State name="spec">
+                    <Action text="Ⅰ" code="%1b[OP"/>        <Action text="Ⅱ" code="%1b[OQ"/>        <Action text="Ⅲ" code="%1b[OR"/>
+                    <Action text="Ⅵ" code="%1b[17~"/>       <Action text="Ⅶ" code="%1b[18~"/>       <Action text="Ⅷ" code="%1b[19~"/>
+                </State>
+                <State name="shift,spec">
+                    <Action text="Ⅰ" code="%1b[1;2P"/>      <Action text="Ⅱ" code="%1b[1;2Q"/>      <Action text="Ⅲ" code="%1b[1;2R"/>
+                    <Action text="Ⅵ" code="%1b[17;2~"/>     <Action text="Ⅶ" code="%1b[18;2~"/>     <Action text="Ⅷ" code="%1b[19;2~"/>
+                </State>
+                <State name="ctrl,spec">
+                    <Action text="Ⅰ" code="%1b[1;5P"/>      <Action text="Ⅱ" code="%1b[1;5Q"/>      <Action text="Ⅲ" code="%1b[1;5R"/>
+                    <Action text="Ⅵ" code="%1b[17;5~"/>     <Action text="Ⅶ" code="%1b[18;5~"/>     <Action text="Ⅷ" code="%1b[19;5~"/>
+                </State>
+                <State name="ctrl,shift,spec">
+                    <Action text="Ⅰ" code="%1b[1;6P"/>      <Action text="Ⅱ" code="%1b[1;6Q"/>      <Action text="Ⅲ" code="%1b[1;6R"/>
+                    <Action text="Ⅵ" code="%1b[17;6~"/>     <Action text="Ⅶ" code="%1b[18;6~"/>     <Action text="Ⅷ" code="%1b[19;6~"/>
+                </State>
+            </Key>
+
+            <Key name="3-9" has_right="0">
+                <State>
+                    <Action code="3"/>                      <Action code="4"/>
+                    <Action code="8"/>                      <Action code="9"/>
+                </State>
+                <State name="spec">
+                    <Action text="Ⅳ" code="%1b[OS"/>        <Action text="Ⅴ" code="%1b[15~"/>
+                    <Action text="Ⅸ" code="%1b[20~"/>       <Action text="Ⅹ" code="%1b[21~"/>
+                </State>
+                <State name="shift,spec">
+                    <Action text="Ⅳ" code="%1b[1;2S"/>      <Action text="Ⅴ" code="%1b[15;2~"/>
+                    <Action text="Ⅸ" code="%1b[20;2~"/>     <Action text="Ⅹ" code="%1b[21;2~"/>
+                </State>
+                <State name="ctrl,spec">
+                    <Action text="Ⅳ" code="%1b[1;5S"/>      <Action text="Ⅴ" code="%1b[15;5~"/>
+                    <Action text="Ⅸ" code="%1b[20;5~"/>     <Action text="Ⅹ" code="%1b[21;5~"/>
+                </State>
+                <State name="ctrl,shift,spec">
+                    <Action text="Ⅳ" code="%1b[1;6S"/>      <Action text="Ⅴ" code="%1b[15;6~"/>
+                    <Action text="Ⅸ" code="%1b[20;6~"/>     <Action text="Ⅹ" code="%1b[21;6~"/>
+                </State>
+            </Key>
+
+        </Row>
+
+    </Layout>
+
+</CompassKeyboard>
+
+<!-- unsupported by android charsets:
+        Azeri:  ə,Ə     suggested: ä,Ä
+        Khakas: ƣ,Ƣ     suggested: ğ,Ğ
+        Tatar:  ƶ,Ƶ     suggested: j,J
+     
+     could be supported but doesn't seem to be worth spoiling the layout:
+                Normal  Shift       Ctrl        Ctrl+Shift
+        F11 "Ⅺ" %1b[22~ %1b[22;2~   %1b[22;5~   %1b[22;6~
+        F12 "Ⅻ" %1b[23~ %1b[23;2~   %1b[23;5~   %1b[23;6~ -->
+
+<!-- vim: set ai sw=4 ts=4 et: -->
