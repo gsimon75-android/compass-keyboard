@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+       	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:fules="http://schemas.android.com/apk/res/org.dyndns.fules.ck"
+	android:title="@string/ck_settings"
+        android:key="cube2wallpaper_settings">
+
+	<PreferenceScreen
+		android:key="pg_vibro"
+		android:title="@string/pg_vibro_title"
+		android:summary="@string/pg_vibro_summary"
+		android:orderingFromXml="true">
+		<ListPreference
+			android:key="ck_vibr_key"
+			android:title="@string/ck_vibr_key_title"
+			android:summary="@string/ck_vibr_key_summary"
+			android:entries="@array/ck_vibrnames"
+			android:entryValues="@array/ck_vibrvalues"
+			android:defaultValue="0"/>
+		<ListPreference
+			android:key="ck_vibr_mod"
+			android:title="@string/ck_vibr_mod_title"
+			android:summary="@string/ck_vibr_mod_summary"
+			android:entries="@array/ck_vibrnames"
+			android:entryValues="@array/ck_vibrvalues"
+			android:defaultValue="0"/>
+		<ListPreference
+			android:key="ck_vibr_cancel"
+			android:title="@string/ck_vibr_cancel_title"
+			android:summary="@string/ck_vibr_cancel_summary"
+			android:entries="@array/ck_vibrnames"
+			android:entryValues="@array/ck_vibrvalues"
+			android:defaultValue="0"/>
+	</PreferenceScreen>
+
+	<ListPreference
+		android:key="ck_builtin_layout"
+		android:title="@string/ck_builtin_layout_title"
+		android:summary="@string/ck_builtin_layout_summary"
+		android:entries="@array/ck_layoutnames"
+		android:entryValues="@array/ck_layoutvalues"
+		android:defaultValue="0"/>
+
+	<org.dyndns.fules.ck.FilePickerPreference
+		android:key="ck_layoutfile"
+		android:title="@string/ck_custom_layout_title"
+		android:summary="@string/ck_custom_layout_summary"
+		android:defaultValue=""
+		android:positiveButtonText="@string/ck_custom_layout_positive"
+		android:negativeButtonText="@string/ck_custom_layout_negative"
+		fules:showUnreadable="false"
+		fules:showOthers="false"
+		fules:showFiles="true"
+		fules:showHidden="true"
+		fules:workingDir="/sdcard"
+		fules:mask=".*\.xml"/>
+
+	<PreferenceScreen
+		android:key="pg_about"
+		android:title="@string/pg_about_title"
+		android:summary="@string/pg_about_summary"
+		android:orderingFromXml="true">
+		<Preference
+			android:key="ck_version"
+			android:title="@string/ck_version_title"
+			android:summary="@string/ck_version_summary"
+			android:selectable="false"/>
+		<Preference
+			android:key="ck_source"
+			android:title="@string/ck_source_title"
+			android:summary="@string/ck_source_summary"
+			android:selectable="false"/>
+		<Preference
+			android:key="ck_copyright"
+			android:title="@string/ck_copyright_title"
+			android:summary="@string/ck_copyright_summary"
+			android:selectable="false"/>
+	</PreferenceScreen>
+</PreferenceScreen>
