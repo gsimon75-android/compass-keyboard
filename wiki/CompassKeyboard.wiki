@@ -13,18 +13,25 @@ Supporting these many characters would require quit a lot of keys, way too much 
 
 This behaviour will let you enter nine times more characters than an usual tapping-only keyboard, although it may require some time to get used to it (thanks to the alphabetical ordering, the learning curve is quite steep).
 
-[usage.png]
+[http://compass-keyboard.googlecode.com/files/usage.png]
 
 
 = Built-in layouts =
 
 Currently CompassKeyboard has three built-in layouts, one for the Latin-based alphabets, one for the Cyrillic-based ones and one for the Greek alphabet.
 
-[latin.png]
+== Settings ==
+[http://compass-keyboard.googlecode.com/files/layout_settings.png]
 
-[cyrillic.png]
 
-[greek.png]
+== Latin ==
+[http://compass-keyboard.googlecode.com/files/latin.png]
+
+== Cyrillic ==
+[http://compass-keyboard.googlecode.com/files/cyrillic.png]
+
+== Greek ==
+[http://compass-keyboard.googlecode.com/files/greek.png]
 
 
 = Global swipes =
@@ -34,11 +41,14 @@ If you make a large diagonal swipe from one corner of the keyboard to the opposi
 
 If you would like to enter uppercase accented characters, just tap shift first and then activate the required accented mode by its global swipe.
 
-[global_swipe_horizontal.png]
+== Horizontal ==
+[http://compass-keyboard.googlecode.com/files/global_swipe_horizontal.png]
 
-[global_swipe_vertical.png]
+== Vertical ==
+[http://compass-keyboard.googlecode.com/files/global_swipe_vertical.png]
 
-[global_swipe_diagonal.png]
+== Diagonal ==
+[http://compass-keyboard.googlecode.com/files/global_swipe_diagonal.png]
 
 == in Latin layout ==
 || *Global swipe* || *Accented mode* ||   || *Others* ||
@@ -94,13 +104,13 @@ Some people find useful if there is a sensible feedback of the keyboard events, 
 = Custom layouts =
 Despite the best efforts for defining the default layouts as flexible as possible, you may find that another arrangement would fit your needs better, so CompassKeyboard supports loading a layout from a plain XML file as well. Although this feature gives you a complete control of the key layout and behaviour, designing such a file is somewhat a developers task and it is definitely a tedious work (believe me...), so before you decide to do so, please consider first whether it is really worth your time and efforts, and perhaps consult the document LayoutFormat.README and the built-in layouts, all available as part of the source code.
 
-[custom.png]
+[http://compass-keyboard.googlecode.com/files/custom_filebrowser.png]
 
 
 = Character sets ==
 Not all glyphs are supported on all phone models, so it might happen that instead of some national characters only a placeholder rectangle is displayed (this is the case on Galaxy S with some uppercase vowels with hacek accent).
 
-To check whether your phone supports such a glyph or not, please visit the code charts at http://en.wikipedia.org/wiki/Basic_Multilingual_Plane#Basic_Multilingual_Plane with your browser and check whether its glyph has been displayed correctly.
+To check whether your phone supports such a glyph or not, please visit the code charts of the [http://en.wikipedia.org/wiki/Basic_Multilingual_Plane#Basic_Multilingual_Plane Unicode Basic Multilingual Plane] with your browser and check whether it has been displayed correctly.
 
 Although it would be possible to add any alphabet that has a Unicode mapping, not all character sets are actually supported by the phones, so there are alphabets (like Armenian and Georgian) that aren't yet supported.
 
