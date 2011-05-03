@@ -40,12 +40,12 @@
                 <State name="grave">
                     <Action code="à"/>                      <Action/>                               <Action/>
                     <Action/>                               <Action/>                               <Action code="ì"/>
-                    <Action/>                               <Action/>                               <Action code="ò"/>
+                    <Action/>                               <Action code="ơ"/>                      <Action code="ò"/>
                 </State>
                 <State name="shift,grave">
                     <Action code="À"/>                      <Action/>                               <Action/>
                     <Action/>                               <Action/>                               <Action code="Ì"/>
-                    <Action/>                               <Action/>                               <Action code="Ò"/>
+                    <Action/>                               <Action code="Ơ"/>                      <Action code="Ò"/>
                 </State>
                 <State name="caret">
                     <Action code="â"/>                      <Action/>                               <Action code="ĉ"/>
@@ -316,11 +316,11 @@
                     <Action text="y" code="%19"/>           <Action text="z" code="%1a"/>           <Action/>
                 </State>
                 <State name="grave">
-                    <Action/>                               <Action/>                               <Action code="ù"/>
+                    <Action/>                               <Action code="ư"/>                      <Action code="ù"/>
                     <Action/>                               <Action/>                               <Action/>
                 </State>
                 <State name="shift,grave">
-                    <Action/>                               <Action/>                               <Action code="Ù"/>
+                    <Action/>                               <Action code="Ư"/>                      <Action code="Ù"/>
                     <Action/>                               <Action/>                               <Action/>
                 </State>
                 <State name="caret">
@@ -564,11 +564,11 @@
                 </State>
                 <State name="grave">
                     <Action/>                               <Action code="è"/>                      <Action/>
-                    <Action/>                               <Action/>                               <Action code="ò"/>
+                    <Action/>                               <Action code="ơ"/>                      <Action code="ò"/>
                 </State>
                 <State name="shift,grave">
                     <Action/>                               <Action code="È"/>                      <Action/>
-                    <Action/>                               <Action/>                               <Action code="Ò"/>
+                    <Action/>                               <Action code="Ơ"/>                      <Action code="Ò"/>
                 </State>
                 <State name="caret">
                     <Action/>                               <Action code="ê"/>                      <Action/>
@@ -798,11 +798,11 @@
                     <Action/>                               <Action text="⇧" mod="shift"/>          <Action/>
                 </State>
                 <State name="grave">
-                    <Action/>                               <Action/>                               <Action code="ù"/>
+                    <Action/>                               <Action code="ư"/>                      <Action code="ù"/>
                     <Action/>                               <Action/>                               <Action/>
                 </State>                                                                          
                 <State name="shift,grave">
-                    <Action/>                               <Action/>                               <Action code="Ù"/>
+                    <Action/>                               <Action code="Ư"/>                      <Action code="Ù"/>
                     <Action/>                               <Action/>                               <Action/>
                 </State>                                                                          
                 <State name="caret">                                                              

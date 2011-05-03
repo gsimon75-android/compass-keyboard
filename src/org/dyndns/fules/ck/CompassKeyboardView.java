@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View.MeasureSpec;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.io.IOException;
@@ -99,6 +100,7 @@ public class CompassKeyboardView extends LinearLayout {
 	// Constants
 	private static final String		TAG = "CompassKeyboardView";
 	private static final long[][]		vibratePattern = { { 10, 100 }, { 10, 50, 50, 50 } };
+	private static final int		LONG_TAP_TIMEOUT = 1200;	// timeout in msec after which a tap is considered a long one
 	public static final int			NW	= 0;
 	public static final int			N	= 1;
 	public static final int			NE	= 2;
@@ -130,6 +132,9 @@ public class CompassKeyboardView extends LinearLayout {
 	HashSet<String>				locks;		// currently active locks
 	HashSet<String>				effectiveMods;	// currently active effective modifiers (== symmetric difference of modifiers and locks)
 	LinearLayout.LayoutParams		lp;		// layout params for placing the rows
+
+	LongTap					onLongTap;	// long tap checker
+	boolean					wasLongTap;	// marker to skip processing the release of a long tap
 
 	/*
 	 * <Row> tag
@@ -326,13 +331,26 @@ public class CompassKeyboardView extends LinearLayout {
 					// remember the swipe starting coordinates for checking for global swipes
 					downX = event.getX();
 					downY = event.getY();
+
+					// register a long tap handler
+					wasLongTap = false;
+					postDelayed(onLongTap, LONG_TAP_TIMEOUT);
 					return true;
 				}
 
 				if (action == MotionEvent.ACTION_UP) {
+					// check if this is the end of a long tap
+					if (wasLongTap) {
+						wasLongTap = false;
+						return true;
+					}
+
 					// end of swipe
 					float x = event.getX();
 					float y = event.getY();
+
+					// cancel any pending checks for long tap
+					removeCallbacks(onLongTap);
 
 					// check if global, done if it is
 					if (processGlobalSwipe(downX, downY, x, y))
@@ -372,21 +390,8 @@ public class CompassKeyboardView extends LinearLayout {
 						}
 						
 						// get the corresponding Action, if it is present
-						Action cd = currentState.dir[d];
-
-						// if the Action is valid and specified...
-						if (cd != null) {
-							// the keystroke is valid
-							processed = true;
-
-							// sort by Action type
-							if (cd.mod != null)
-								changeState(cd.mod, cd.isLock);		// process a 'mod' or 'lock'
-							else if (cd.code != null)
-								generateText(cd.code);			// process a 'code'
-							else
-								generateKey(cd.keyCode);		// process a 'key'
-						}
+						if (processAction(currentState.dir[d]))
+							processed = true; // the keystroke is valid
 					}
 
 					// if the swipe was not for a specified action, release the modifiers
@@ -601,6 +606,7 @@ public class CompassKeyboardView extends LinearLayout {
 		textPaint.setShadowLayer(3, 0, 2, 0xff000000);
 
 		vibro = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+		onLongTap = new LongTap();
 		modifiers = new HashSet();
 		locks = new HashSet();
 		effectiveMods = new HashSet();
@@ -704,6 +710,13 @@ public class CompassKeyboardView extends LinearLayout {
 		commitState();
 	}
 
+	private final class LongTap implements Runnable {
+		public void run() {
+			wasLongTap = true;
+			processAction(dir[TAP]);
+		}
+	}
+
 	boolean processGlobalSwipe(float x1, float y1, float x2, float y2) {
 		float w = getWidth() / 3;
 		float h = getHeight() / 4;
@@ -744,18 +757,7 @@ public class CompassKeyboardView extends LinearLayout {
 		else
 			return false;
 
-		Action cd = dir[d];
-		if (cd == null)
-			return false;	
-
-		if (cd.mod != null)
-			changeState(cd.mod, false);
-		else if (cd.code != null)
-			generateText(cd.code);
-		else
-			generateKey(cd.keyCode);
-
-		return true;
+		return processAction(dir[d]);
 	}
 
 	public void setOnKeyboardActionListener(KeyboardView.OnKeyboardActionListener listener) {
@@ -785,6 +787,34 @@ public class CompassKeyboardView extends LinearLayout {
 		}
 	}
 
+	private boolean processAction(Action cd) {
+		if (cd == null)
+			return false;
+
+		if (cd.mod != null) {
+			changeState(cd.mod, cd.isLock);		// process a 'mod' or 'lock'
+		}
+		else if (cd.code != null) {
+			// process a 'code'
+			//Log.v(TAG, "Text: "+cd.code); 
+			resetState();
+			if (actionListener != null)
+				actionListener.onText(cd.code);
+			if (vibrateOnKey >= 0)
+				vibro.vibrate(vibratePattern[vibrateOnKey], -1);
+		}
+		else {
+			// process a 'key'
+			//Log.v(TAG, "Key: "+String.valueOf(cd.keyCode)); 
+			resetState();
+			if (actionListener != null)
+				actionListener.onKey(cd.keyCode, null);
+			if (vibrateOnKey >= 0)
+				vibro.vibrate(vibratePattern[vibrateOnKey], -1);
+		}
+
+		return true;
+	}
 
 	public void resetState() {
 		if (!modifiers.isEmpty()) {
@@ -803,24 +833,6 @@ public class CompassKeyboardView extends LinearLayout {
 		if (!locks.add(name))
 			locks.remove(name);
 		commitState();
-	}
-
-	public void generateKey(int keyCode) {
-		//Log.v(TAG, "Key: "+String.valueOf(keyCode)); 
-		resetState();
-		if (actionListener != null)
-			actionListener.onKey(keyCode, null);
-		if (vibrateOnKey >= 0)
-			vibro.vibrate(vibratePattern[vibrateOnKey], -1);
-	}
-
-	public void generateText(String code) {
-		//Log.v(TAG, "Text: "+code); 
-		resetState();
-		if (actionListener != null)
-			actionListener.onText(code);
-		if (vibrateOnKey >= 0)
-			vibro.vibrate(vibratePattern[vibrateOnKey], -1);
 	}
 
 	public void changeState(String state, boolean isLock) {
