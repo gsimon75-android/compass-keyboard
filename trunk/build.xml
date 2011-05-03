@@ -96,7 +96,18 @@
 	    depends="release">
 	    <exec executable="sh">
 		    <arg value="-c"/>
-		    <arg value="xterm -e apksigner.sh -i ${out.dir}/${ant.project.name}-unsigned.apk -o ${out.dir}/${ant.project.name}.apk -k ${key.private} -c ${key.certificate}"/>
+		    <arg value="xterm -e apksigner.sh -i ${out.dir}/${ant.project.name}-unsigned.apk -o ${out.dir}/${ant.project.name}-unaligned.apk -k ${key.private} -c ${key.certificate}"/>
+	    </exec>
+    </target>
+
+    <target name="align"
+	    description="align the built release package"
+	    depends="sign">
+	    <exec executable="zipalign">
+		    <arg value="-f"/>
+		    <arg value="4"/>
+		    <arg value="${out.dir}/${ant.project.name}-unaligned.apk"/>
+		    <arg value="${out.dir}/${ant.project.name}.apk"/>
 	    </exec>
     </target>
 

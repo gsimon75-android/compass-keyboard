@@ -1,3 +1,12 @@
+2011-05-03 Gabor Simon <gabor.simon@mailbox.hu>
+Long tap support added, two missing Vietnamese characters added, build process improved
+
+	* build.xml: phony target 'align' added for invoking zipalign
+
+	* res/xml/default_latin.xml: two missing Vietnamese characters added
+
+	* src/org/dyndns/fules/ck/CompassKeyboardView.java: long tap now calls the middle global swipe
+
 2011-04-16 Gabor Simon <gabor.simon@mailbox.hu>
 Initial (public) state imported
 
