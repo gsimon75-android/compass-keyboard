@@ -4,8 +4,8 @@
 
 	<string name="ck_settings">Settings</string>
 
-	<string name="pg_vibro_title">Vibration</string>
-	<string name="pg_vibro_summary">Settings of vibration on events</string>
+	<string name="pg_feedback_title">Feedback</string>
+	<string name="pg_feedback_summary">Visual and vibrating feedback settings</string>
 
 	<string name="ck_vibr_key_title">Vibrate on keypress</string>
 	<string name="ck_vibr_key_summary">Vibrate when a key is entered</string>
@@ -15,6 +15,12 @@
 
 	<string name="ck_vibr_cancel_title">Vibrate on cancel</string>
 	<string name="ck_vibr_cancel_summary">Vibrate when a modifier is cancelled</string>
+
+	<string name="ck_feedback_normal_title">Normal feedback</string>
+	<string name="ck_feedback_normal_summary">Visual feedback for normal text</string>
+
+	<string name="ck_feedback_password_title">Password feedback</string>
+	<string name="ck_feedback_password_summary">Visual feedback for passwords</string>
 
 	<string name="ck_builtin_layout_title">Layout</string>
 	<string name="ck_builtin_layout_summary">Layouts for various alphabets</string>
@@ -48,6 +54,18 @@
 		<item>"-1"</item>
 		<item>"0"</item>
 		<item>"1"</item>
+	</string-array>
+	
+	<string-array name="ck_fbnames">
+		<item>"None"</item>
+		<item>"Highlight"</item>
+		<item>"Toast"</item>
+	</string-array>
+
+	<string-array name="ck_fbvalues">
+		<item>"0"</item>
+		<item>"1"</item>
+		<item>"2"</item>
 	</string-array>
 	
 	<string name="pg_about_title">About</string>
