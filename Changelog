@@ -1,3 +1,10 @@
+2011-05-07 Gabor Simon <gabor.simon@mailbox.hu>
+Direction choosing method improved
+
+	* src/org/dyndns/fules/ck/CompassKeyboardView.java: direction choosing is now based on relative movement
+
+	* src/org/dyndns/fules/ck/CompassKeyboard.java: missing initialisation of visual feedback settings added
+
 2011-05-06 Gabor Simon <gabor.simon@mailbox.hu>
 Visual feedback added
 

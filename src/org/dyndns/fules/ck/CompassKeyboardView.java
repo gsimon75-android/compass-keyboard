@@ -294,7 +294,8 @@ public class CompassKeyboardView extends LinearLayout {
 						if (st.nameSet.equals(searchSet))
 							currentState = st;
 					}
-					setCandidate(-1);
+					if (visualFeedback)
+						setCandidate(-1);
 					invalidate();
 				}
 			}
@@ -369,6 +370,40 @@ public class CompassKeyboardView extends LinearLayout {
 				}
 			}
 
+			// figure out the direction of the swipe
+			int getDirection(float x, float y) {
+				int d;
+				float dx = (x - downX) * 2;
+				float dy = (y - downY) * 2;
+
+				if (dx < -xmax) {
+					if (dy < -ymax)
+						d = NW;
+					else if (dy < ymax)
+						d = W;
+					else
+						d = SW;
+				}
+				else if (dx < xmax) {
+					if (dy < -ymax)
+						d = N;
+					else if (dy < ymax)
+						d = TAP;
+					else
+						d = S;
+				}
+				else {
+					if (dy < -ymax)
+						d = NE;
+					else if (dy < ymax)
+						d = E;
+					else
+						d = SE;
+				}
+
+				return d;
+			}
+
 			// Touch event handler
 			@Override public boolean onTouchEvent(MotionEvent event) {
 				int action = event.getAction();
@@ -379,7 +414,8 @@ public class CompassKeyboardView extends LinearLayout {
 					downX = event.getX();
 					downY = event.getY();
 
-					setCandidate(-1);
+					if (visualFeedback)
+						setCandidate(-1);
 
 					// register a long tap handler
 					wasLongTap = false;
@@ -400,53 +436,16 @@ public class CompassKeyboardView extends LinearLayout {
 
 					// cancel any pending checks for long tap
 					removeCallbacks(onLongTap);
-
-					setCandidate(-1);
+					// deactivate the visual feedback
+					if (visualFeedback)
+						setCandidate(-1);
 
 					// check if global, done if it is
 					if (processGlobalSwipe(downX, downY, x, y))
 						return true;
 
-					// unspecified keys are used for releasing modifier state, so we must recognise this case
-					boolean processed = false;
-
-					// if the key is valid in this state...
-					if (currentState != null) {
-						int d;
-
-						// figure out the direction of the swipe
-						if (x < 0) {
-							if (y < 0)
-								d = NW;
-							else if (y < ymax)
-								d = W;
-							else
-								d = SW;
-						}
-						else if (x < xmax) {
-							if (y < 0)
-								d = N;
-							else if (y < ymax)
-								d = TAP;
-							else
-								d = S;
-						}
-						else {
-							if (y < 0)
-								d = NE;
-							else if (y < ymax)
-								d = E;
-							else
-								d = SE;
-						}
-						
-						// get the corresponding Action, if it is present
-						if (processAction(currentState.dir[d]))
-							processed = true; // the keystroke is valid
-					}
-
-					// if the swipe was not for a specified action, release the modifiers
-					if (!processed)
+					// if the key is not valid in this state or there is no corresponding Action for it, then release the modifiers
+					if ((currentState == null) || !processAction(currentState.dir[getDirection(x, y)]))
 						changeState(null, false);
 
 					// touch event processed
@@ -456,50 +455,8 @@ public class CompassKeyboardView extends LinearLayout {
 				if (action == MotionEvent.ACTION_MOVE) {
 					// cancel any pending checks for long tap
 					removeCallbacks(onLongTap);
-
-					if (visualFeedback) {
-						// end of swipe
-						float x = event.getX();
-						float y = event.getY();
-
-						// check if global, done if it is
-						//if (processGlobalSwipe(downX, downY, x, y))
-						//	return true;
-
-						// if the key is valid in this state...
-						if (currentState != null) {
-							int d;
-
-							// figure out the direction of the swipe
-							if (x < 0) {
-								if (y < 0)
-									d = NW;
-								else if (y < ymax)
-									d = W;
-								else
-									d = SW;
-							}
-							else if (x < xmax) {
-								if (y < 0)
-									d = N;
-								else if (y < ymax)
-									d = TAP;
-								else
-									d = S;
-							}
-							else {
-								if (y < 0)
-									d = NE;
-								else if (y < ymax)
-									d = E;
-								else
-									d = SE;
-							}
-							setCandidate(d);
-						}
-						// touch event processed
-						//return true;
-					}
+					if (visualFeedback && (currentState != null))
+						setCandidate(getDirection(event.getX(), event.getY()));
 				}
 
 				// we're not interested in other kinds of events

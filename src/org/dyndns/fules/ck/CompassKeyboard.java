@@ -154,6 +154,8 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		onSharedPreferenceChanged(mPrefs, "ck_vibr_mod");
 		onSharedPreferenceChanged(mPrefs, "ck_vibr_cancel");
 		onSharedPreferenceChanged(mPrefs, "ck_builtin_layout");
+		onSharedPreferenceChanged(mPrefs, "ck_feedback_normal");
+		onSharedPreferenceChanged(mPrefs, "ck_feedback_password");
 	}
 
 	// Select the layout view appropriate for the screen direction, if there is more than one
