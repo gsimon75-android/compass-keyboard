@@ -6,9 +6,9 @@
         android:key="cube2wallpaper_settings">
 
 	<PreferenceScreen
-		android:key="pg_vibro"
-		android:title="@string/pg_vibro_title"
-		android:summary="@string/pg_vibro_summary"
+		android:key="pg_feedback"
+		android:title="@string/pg_feedback_title"
+		android:summary="@string/pg_feedback_summary"
 		android:orderingFromXml="true">
 		<ListPreference
 			android:key="ck_vibr_key"
@@ -16,21 +16,35 @@
 			android:summary="@string/ck_vibr_key_summary"
 			android:entries="@array/ck_vibrnames"
 			android:entryValues="@array/ck_vibrvalues"
-			android:defaultValue="0"/>
+			android:defaultValue="-1"/>
 		<ListPreference
 			android:key="ck_vibr_mod"
 			android:title="@string/ck_vibr_mod_title"
 			android:summary="@string/ck_vibr_mod_summary"
 			android:entries="@array/ck_vibrnames"
 			android:entryValues="@array/ck_vibrvalues"
-			android:defaultValue="0"/>
+			android:defaultValue="1"/>
 		<ListPreference
 			android:key="ck_vibr_cancel"
 			android:title="@string/ck_vibr_cancel_title"
 			android:summary="@string/ck_vibr_cancel_summary"
 			android:entries="@array/ck_vibrnames"
 			android:entryValues="@array/ck_vibrvalues"
-			android:defaultValue="0"/>
+			android:defaultValue="2"/>
+		<ListPreference
+			android:key="ck_feedback_normal"
+			android:title="@string/ck_feedback_normal_title"
+			android:summary="@string/ck_feedback_normal_summary"
+			android:entries="@array/ck_fbnames"
+			android:entryValues="@array/ck_fbvalues"
+			android:defaultValue="2"/>
+		<ListPreference
+			android:key="ck_feedback_password"
+			android:title="@string/ck_feedback_password_title"
+			android:summary="@string/ck_feedback_password_summary"
+			android:entries="@array/ck_fbnames"
+			android:entryValues="@array/ck_fbvalues"
+			android:defaultValue="1"/>
 	</PreferenceScreen>
 
 	<ListPreference

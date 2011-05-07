@@ -1,3 +1,13 @@
+2011-05-06 Gabor Simon <gabor.simon@mailbox.hu>
+Visual feedback added
+
+	* src/org/dyndns/fules/ck/CompassKeyboardView.java: two kinds of visual feedback added
+
+	* src/org/dyndns/fules/ck/CompassKeyboard.java: settings for visual feedback added, input type handling improved
+	* res/values/constants.xml: labels for feedback settings added
+
+	* res/xml/ck_settings.xml: feedback preferences added, default vibrations changed
+
 2011-05-03 Gabor Simon <gabor.simon@mailbox.hu>
 Long tap support added, two missing Vietnamese characters added, build process improved
 

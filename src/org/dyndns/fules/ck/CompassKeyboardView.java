@@ -10,15 +10,18 @@ import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
 import android.inputmethodservice.KeyboardView;
+import android.text.InputType;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View.MeasureSpec;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -110,11 +113,15 @@ public class CompassKeyboardView extends LinearLayout {
 	public static final int			SW	= 6;
 	public static final int			S	= 7;
 	public static final int			SE	= 8;
+	public static final int			FEEDBACK_HIGHLIGHT	= 1;
+	public static final int			FEEDBACK_TOAST		= 2;
 
 	// Parameters
 	int					vibrateOnKey = 0;
 	int					vibrateOnModifier = 0;
 	int					vibrateOnCancel = 0;
+	int					feedbackNormal = 0;
+	int					feedbackPassword = 0;		// FIXME: not yet used!
 	float					keyMM;				// maximal key size in mm-s
 
 	// Internal params
@@ -123,9 +130,11 @@ public class CompassKeyboardView extends LinearLayout {
 	float					gap;		// gap between keys in pixels
 	float					fontSize;	// height of the key caption font in pixels
 	float					fontDispY;	// Y-displacement of key caption font (top to baseline)
+	boolean					isTypingPassword; // is the user typing a password
 
 	Vibrator				vibro;		// vibrator
 	Paint					textPaint;	// Paint for drawing key captions
+	Paint					candidatePaint;	// Paint for drawing candidate key captions
 	KeyboardView.OnKeyboardActionListener	actionListener;	// owner of the callback methods, result is passed to this instance
 	Action[]				dir;		// global swipe <Action>s
 	HashSet<String>				modifiers;	// currently active modifiers
@@ -135,6 +144,8 @@ public class CompassKeyboardView extends LinearLayout {
 
 	LongTap					onLongTap;	// long tap checker
 	boolean					wasLongTap;	// marker to skip processing the release of a long tap
+	boolean					visualFeedback;	// draw visual feedback or not
+	Toast					toast;
 
 	/*
 	 * <Row> tag
@@ -159,6 +170,7 @@ public class CompassKeyboardView extends LinearLayout {
 			ArrayList<State> 	state;			// the modifier <State> tags within this <Key>
 			State			currentState = null;	// the currently selected <State>, according to @CompassKeyboardView::modifiers
 			boolean			hasLeft, hasRight;	// does the key have the given left and right symbols?
+			int			candidateDir;		// the direction into which a drag is in progress, or -1 if inactive
 
 			/*
 			 * <State> tag
@@ -268,6 +280,8 @@ public class CompassKeyboardView extends LinearLayout {
 				if (!parser.getName().contentEquals("Key"))
 					throw new XmlPullParserException("Expected </Key>", parser, null);
 				parser.nextTag();
+
+				candidateDir = -1;
 			}
 
 			// Search a State that represents searchSet and set currentState accordingly (null if there is no such state)
@@ -280,6 +294,7 @@ public class CompassKeyboardView extends LinearLayout {
 						if (st.nameSet.equals(searchSet))
 							currentState = st;
 					}
+					setCandidate(-1);
 					invalidate();
 				}
 			}
@@ -322,6 +337,38 @@ public class CompassKeyboardView extends LinearLayout {
 				return Row.this.processGlobalSwipe(x1 + l, y1 + t, x2 + l, y2 + t);
 			}
 
+			void setCandidate(int d) {
+				int fb;
+
+				if (isTypingPassword)
+					fb = feedbackPassword;
+				else
+					fb = feedbackNormal;
+
+				if (fb == FEEDBACK_HIGHLIGHT) {
+					if (candidateDir != d) {
+						candidateDir = d;
+						invalidate();
+					}
+				}
+				else if (fb == FEEDBACK_TOAST) {
+					Action cd;
+
+					if (0 <= d)
+						cd = currentState.dir[d];
+					else
+						cd = null;
+
+					if (cd != null) {
+						toast.setText(cd.text);
+						toast.show();
+					}
+					else {
+						toast.cancel();
+					}
+				}
+			}
+
 			// Touch event handler
 			@Override public boolean onTouchEvent(MotionEvent event) {
 				int action = event.getAction();
@@ -331,6 +378,8 @@ public class CompassKeyboardView extends LinearLayout {
 					// remember the swipe starting coordinates for checking for global swipes
 					downX = event.getX();
 					downY = event.getY();
+
+					setCandidate(-1);
 
 					// register a long tap handler
 					wasLongTap = false;
@@ -351,6 +400,8 @@ public class CompassKeyboardView extends LinearLayout {
 
 					// cancel any pending checks for long tap
 					removeCallbacks(onLongTap);
+
+					setCandidate(-1);
 
 					// check if global, done if it is
 					if (processGlobalSwipe(downX, downY, x, y))
@@ -402,14 +453,67 @@ public class CompassKeyboardView extends LinearLayout {
 					return true;
 				}
 
+				if (action == MotionEvent.ACTION_MOVE) {
+					// cancel any pending checks for long tap
+					removeCallbacks(onLongTap);
+
+					if (visualFeedback) {
+						// end of swipe
+						float x = event.getX();
+						float y = event.getY();
+
+						// check if global, done if it is
+						//if (processGlobalSwipe(downX, downY, x, y))
+						//	return true;
+
+						// if the key is valid in this state...
+						if (currentState != null) {
+							int d;
+
+							// figure out the direction of the swipe
+							if (x < 0) {
+								if (y < 0)
+									d = NW;
+								else if (y < ymax)
+									d = W;
+								else
+									d = SW;
+							}
+							else if (x < xmax) {
+								if (y < 0)
+									d = N;
+								else if (y < ymax)
+									d = TAP;
+								else
+									d = S;
+							}
+							else {
+								if (y < 0)
+									d = NE;
+								else if (y < ymax)
+									d = E;
+								else
+									d = SE;
+							}
+							setCandidate(d);
+						}
+						// touch event processed
+						//return true;
+					}
+				}
+
 				// we're not interested in other kinds of events
 				return false;
 			}
 
 			// Draw a Action symbol label if it is specified
 			protected void drawLabel(Canvas canvas, int d, int x, int y) {
-				if (currentState.dir[d] != null)
-					canvas.drawText(currentState.dir[d].text, x, y, textPaint);
+				if (currentState.dir[d] != null) {
+					if (d == candidateDir)
+						canvas.drawText(currentState.dir[d].text, x, y, candidatePaint);
+					else
+						canvas.drawText(currentState.dir[d].text, x, y, textPaint);
+				}
 			}
 
 			// Redraw the key
@@ -605,11 +709,20 @@ public class CompassKeyboardView extends LinearLayout {
 		textPaint.setTextAlign(Paint.Align.CENTER);
 		textPaint.setShadowLayer(3, 0, 2, 0xff000000);
 
+		candidatePaint = new Paint();
+		candidatePaint.setAntiAlias(true);
+		candidatePaint.setColor(Color.YELLOW);
+		candidatePaint.setTextAlign(Paint.Align.CENTER);
+		candidatePaint.setShadowLayer(3, 0, 2, 0xff000000);
+
 		vibro = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
 		onLongTap = new LongTap();
 		modifiers = new HashSet();
 		locks = new HashSet();
 		effectiveMods = new HashSet();
+
+		visualFeedback = true; // for testing, if it turns out to be useful, there will be a Preference option for it
+		toast = Toast.makeText(context, "<none>", Toast.LENGTH_SHORT);
 	}
 
 	// Read the layout from an XML parser
@@ -697,11 +810,14 @@ public class CompassKeyboardView extends LinearLayout {
 
 		// construct the Paint used for printing the labels
 		textPaint.setTextSize(nFontSize);
+		candidatePaint.setTextSize(nFontSize * 3 / 2);
 		Paint.FontMetrics fm = textPaint.getFontMetrics();
 		fontSize = fm.descent - fm.ascent;
 		fontDispY = -fm.ascent;
 		//Log.i(TAG, "reqFS="+String.valueOf(nFontSize)+", fs="+String.valueOf(fontSize)+", asc="+String.valueOf(fm.ascent)+", desc="+String.valueOf(fm.descent));
 	
+		toast.setGravity(Gravity.TOP + Gravity.CENTER_HORIZONTAL, 0, -nFontSize);
+
 		int n = getChildCount();
 		for (int i = 0; i < n; i++) {
 			Row r = (Row)getChildAt(i);
@@ -712,8 +828,7 @@ public class CompassKeyboardView extends LinearLayout {
 
 	private final class LongTap implements Runnable {
 		public void run() {
-			wasLongTap = true;
-			processAction(dir[TAP]);
+			wasLongTap = processAction(dir[TAP]);
 		}
 	}
 
@@ -764,6 +879,11 @@ public class CompassKeyboardView extends LinearLayout {
 		actionListener = listener;
 	}
 
+	public void setInputType(int type) {
+		isTypingPassword = ((type & InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_TEXT) &&
+				   ((type & InputType.TYPE_MASK_VARIATION) == InputType.TYPE_TEXT_VARIATION_PASSWORD);
+	}
+
 	public void commitState() {
 		// calculate the effectiveMods (== symmetric difference of locks and modifiers)
 		effectiveMods = (HashSet<String>)modifiers.clone();
@@ -788,6 +908,7 @@ public class CompassKeyboardView extends LinearLayout {
 	}
 
 	private boolean processAction(Action cd) {
+		toast.cancel();
 		if (cd == null)
 			return false;
 
@@ -874,4 +995,13 @@ public class CompassKeyboardView extends LinearLayout {
 	public void setVibrateOnCancel(int n) {
 		vibrateOnCancel = n;
 	}
+
+	public void setFeedbackNormal(int n) {
+		feedbackNormal = n;
+	}
+
+	public void setFeedbackPassword(int n) {
+		feedbackPassword = n;
+	}
+
 }

@@ -182,15 +182,19 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 
 	@Override public void onStartInputView(EditorInfo attribute, boolean restarting) {
 		super.onStartInputView(attribute, restarting);
-		if (ckv != null)
+		if (ckv != null) {
 			ckv.resetState();
+			ckv.setInputType(attribute.inputType);
+		}
 	}
 
 
 	@Override public void onStartInput(EditorInfo attribute, boolean restarting) {
 		super.onStartInput(attribute, restarting); 
-		if (ckv != null)
+		if (ckv != null) {
 			ckv.resetState();
+			ckv.setInputType(attribute.inputType);
+		}
 	}
 
 	// Process a generated keycode
@@ -254,6 +258,16 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			int v = getPrefInt(prefs, key, 0);
 			ckvHorizontal.setVibrateOnCancel(v);
 			ckvVertical.setVibrateOnCancel(v);
+		}
+		else if (key.contentEquals("ck_feedback_normal")) {
+			int v = getPrefInt(prefs, key, 0);
+			ckvHorizontal.setFeedbackNormal(v);
+			ckvVertical.setFeedbackNormal(v);
+		}
+		else if (key.contentEquals("ck_feedback_password")) {
+			int v = getPrefInt(prefs, key, 0);
+			ckvHorizontal.setFeedbackPassword(v);
+			ckvVertical.setFeedbackPassword(v);
 		}
 		else if (key.contentEquals("ck_builtin_layout") ||
 			 key.contentEquals("ck_layoutfile")) {
