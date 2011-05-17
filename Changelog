@@ -1,3 +1,9 @@
+2011-05-17 Gabor Simon <gabor.simon@mailbox.hu>
+
+	* src/org/dyndns/fules/ck/CompassKeyboard.java, CompassKeyboardSettings.java: code cleanup
+
+	* src/org/dyndns/fules/ck/FilePicker.java: choiceMode bug fixed
+
 2011-05-16 Gabor Simon <gabor.simon@mailbox.hu>
 
 	* AndroidManifest.xml: TextDialogPreference added, typo in the name of FilePickerPreference fixed, version increased

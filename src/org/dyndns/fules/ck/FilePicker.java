@@ -326,7 +326,6 @@ public class FilePicker extends ListView implements AdapterView.OnItemClickListe
 	}
 
 	void initialise(Context context) {
-		setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		setAdapter(new FileInfoAdapter(context, workingDir, settings));
 		setOnItemClickListener(this);
 	}
@@ -334,7 +333,6 @@ public class FilePicker extends ListView implements AdapterView.OnItemClickListe
 	public void onItemClick(AdapterView parent, View view, int position, long id) {
 		FileInfoView fiv = (FileInfoView)getAdapter().getItem(position);
 
-		Log.d(TAG, "onItemClick");
 		if ((fiv.type == FileInfoView.TYPE_DIR) && !fiv.iconClicked) {
 			String oldWorkingDir = workingDir;
 			workingDir = fiv.file.getPath();
@@ -343,17 +341,6 @@ public class FilePicker extends ListView implements AdapterView.OnItemClickListe
 				propertyChangeListener.propertyChange(new PropertyChangeEvent(this, "workingDir", oldWorkingDir, workingDir));
 
 			setAdapter(new FileInfoAdapter(parent.getContext(), fiv.file, settings));
-		}
-		else {
-			switch (getChoiceMode()) {
-				case CHOICE_MODE_SINGLE:
-					Log.d(TAG, "Clearing choices");
-					clearChoices();
-					// NOTE: intentional fallthrough
-				case CHOICE_MODE_MULTIPLE:
-					fiv.toggle();
-					break;
-			}
 		}
 	}
 
