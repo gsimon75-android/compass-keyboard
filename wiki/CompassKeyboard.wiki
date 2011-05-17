@@ -20,9 +20,13 @@ This behaviour will let you enter nine times more characters than an usual tappi
 
 Currently CompassKeyboard has three built-in layouts, one for the Latin-based alphabets, one for the Cyrillic-based ones and one for the Greek alphabet.
 
-== Settings ==
-[http://compass-keyboard.googlecode.com/files/layout_settings.png]
+You may switch between the layouts (built-in or custom as well) without leaving the keyboard, just do a big swipe across the keyboard from top-left to bottom-right ('Spec' global swipe, see below) and choose one of L0..L5 on the top-leftmost key.
 
+
+== Settings ==
+In the settings you may review the currently installed layouts. The first three of them are the built-in ones that cannot be changed, but you are free to add any custom layouts from XML files by choosing the last option. These custom layouts will instantly appear on the list, provided that they are syntactically valid.
+Custom layouts can be removed from the list, for this just tap on them, and then confirm your decision on the appearing dialog (please note that they will be removed only from the list, their XML file remains unchanged). 
+[http://compass-keyboard.googlecode.com/files/layout_settings_v1.1.png]
 
 == Latin ==
 [http://compass-keyboard.googlecode.com/files/latin.png]
@@ -49,6 +53,9 @@ If you would like to enter uppercase accented characters, just tap shift first a
 
 == Diagonal ==
 [http://compass-keyboard.googlecode.com/files/global_swipe_diagonal.png]
+
+== Long tap ==
+Although not used by the built-in layouts, there is a 9th global swipe, the long tap. To activate it (for a custom layout, for example), tap the screen and hold it for 1.5 seconds.
 
 == in Latin layout ==
 || *Global swipe* || *Accented mode* ||   || *Others* ||
@@ -95,10 +102,19 @@ The most frequently used non-alphabetic characters are available in the default 
 || Del            || ↛ || on the lower-centermost key in 'Spec' mode ||
 || Ins            || ↱ || ||
 || F1..F10        || Ⅰ..Ⅹ || on the numbers in 'Spec' mode ||
-
+|| Layout 0..5    || L0..L5 || on the top-leftmost key in 'Spec' mode ||
 
 = Vibration =
 Some people find useful if there is a sensible feedback of the keyboard events, so you may configure an optional single or double vibration signal when entering a character, choosing a modifier or cancelling an accented mode.
+
+= Visual feedback =
+If you prefer having a visual feedback about the symbols you are about to enter, you may choose two kinds of feedback (in addition to 'none') in the settings menu, separately for normal texts and for passwords:
+
+== Toast ==
+In this mode the currently selected symbol is displayed in the top-center of the screen in a floating box that disappears in a short time or when the symbol is entered.
+
+== Highlight ==
+Less visible than the previous (thus more useful for entering passwords), in this mode the currently selected symbol appears only on the key itself, but with a slightly larger font and a different colour.
 
 
 = Custom layouts =
@@ -119,8 +135,6 @@ Although it would be possible to add any alphabet that has a Unicode mapping, no
 
 == Eastern languages like Chinese and Japanese ==
 They have a writing system that is completely different from the alphabetic ones, so the best I can think of is to have an input area where the user could start drawing the (simplified) brush-strokes of the character, while the most frequent matching characters are displayed in the background, so he could either narrow the search by adding new strokes or select the wanted character by tapping it if it has already appeared. 
-
-For me it seems feasible, but as I can neither speak nor write in these languages, I can't even tell if this input method would feel convenient for them or not.
 
 == Arabic and Farsi ==
 These languages use a right-to-left writing, don't distinguish upper- and lowercase letters, mark the vowels only by modifier 'accents', but they have different forms of letters at the beginning, in the middle and at the end of the words, or when used separately.
