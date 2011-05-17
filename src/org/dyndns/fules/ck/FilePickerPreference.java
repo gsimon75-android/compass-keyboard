@@ -52,30 +52,22 @@ public class FilePickerPreference extends Preference implements PropertyChangeLi
 	public void propertyChange(PropertyChangeEvent event) {
 		String propName = event.getPropertyName();
 		if (propName.contentEquals("workingDir")) {
-			String s = (String)event.getNewValue();
-			dia.setTitle(s);
+			dia.setTitle((String)event.getNewValue());
 		}
 	}
 
 	@Override protected void onClick() {
+		fp.clearChoices();
 		dia.show();
 	}
 
 	public void onClick(DialogInterface dialog, int which) {
 		if (which == DialogInterface.BUTTON_POSITIVE) {
-			//Log.d(TAG, "Clicked Positive");
 			String[] files = fp.getSelectedFiles();
 			int n = files.length;
 
-			/*for (int i = 0; i < n; i++)
-				Log.d(TAG, "file["+String.valueOf(i)+"] = '"+files[i]+"'");*/
-
 			SharedPreferences.Editor ed = getEditor();
-			if (n > 0)
-				ed.putString(getKey(), files[0]);
-			else
-				ed.putString(getKey(), "");
-
+			ed.putString(getKey(), (n > 0) ? files[0] : "");
 			ed.commit();
 		}
 	}

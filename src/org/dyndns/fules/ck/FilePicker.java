@@ -59,34 +59,19 @@ class FileInfoSettings {
 		String s;
 
 		s = a.getString(R.styleable.FilePicker_mask);
-		if (s != null)
-			filter = new RegexFilter(s);
-		else
-			filter = null;
+		filter = (s != null) ? new RegexFilter(s) : null;
 
 		s = a.getString(R.styleable.FilePicker_showHidden);
-		if (s != null)
-			showHidden = Boolean.parseBoolean(s.toString());
-		else
-			showHidden = true;
+		showHidden = (s != null) ? Boolean.parseBoolean(s.toString()) : true;
 
 		s = a.getString(R.styleable.FilePicker_showFiles);
-		if (s != null)
-			showFiles = Boolean.parseBoolean(s.toString());
-		else
-			showFiles = true;
+		showFiles = (s != null) ? Boolean.parseBoolean(s.toString()) : true;
 
 		s = a.getString(R.styleable.FilePicker_showOthers);
-		if (s != null)
-			showOthers = Boolean.parseBoolean(s.toString());
-		else
-			showOthers = true;
+		showOthers = (s != null) ? Boolean.parseBoolean(s.toString()) : true;
 
 		s = a.getString(R.styleable.FilePicker_showUnreadable);
-		if (s != null)
-			showUnreadable = Boolean.parseBoolean(s.toString());
-		else
-			showUnreadable = true;
+		showUnreadable = (s != null) ? Boolean.parseBoolean(s.toString()) : true;
 	}
 
 }
@@ -140,10 +125,7 @@ class FileInfoView extends LinearLayout implements Checkable, View.OnTouchListen
 			type = TYPE_OTHER;
 		}
 
-		if (s == null)
-			dispName = file.getName();
-		else
-			dispName = s;
+		dispName = (s == null) ? file.getName() : s;
 		tv.setText(dispName);
 
 		checked = true;
@@ -175,21 +157,35 @@ class FileInfoView extends LinearLayout implements Checkable, View.OnTouchListen
 			checked = c;
 			if (checked) {
 				tv.setTextColor(0xffffff00);
-				if (type == TYPE_FILE)
-					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_file));
-				else if (type == TYPE_DIR)
-					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_folder));
-				else if (type == TYPE_BROKEN)
-					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_broken));
+				switch (type) {
+					case TYPE_FILE:
+						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_file));
+						break;
+
+					case TYPE_DIR:
+						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_folder));
+						break;
+
+					case TYPE_BROKEN:
+						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_broken));
+						break;
+				}
 			}
 			else {
 				tv.setTextColor(0xffffffff);
-				if (type == TYPE_FILE)
-					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_file));
-				else if (type == TYPE_DIR)
-					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_folder));
-				else if (type == TYPE_BROKEN)
-					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_broken));
+				switch (type) {
+					case TYPE_FILE:
+						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_file));
+						break;
+
+					case TYPE_DIR:
+						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_folder));
+						break;
+
+					case TYPE_BROKEN:
+						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_broken));
+						break;
+				}
 			}
 			iconClicked = false;
 		}
@@ -321,10 +317,7 @@ public class FilePicker extends ListView implements AdapterView.OnItemClickListe
 
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FilePicker);
 		s = a.getString(R.styleable.FilePicker_workingDir);
-		if (s != null)
-			workingDir = s.toString();
-		else
-			workingDir = "/";
+		workingDir = (s != null) ? s.toString() : "/";
 
 		settings = new FileInfoSettings(a);
 		a.recycle();
@@ -341,6 +334,7 @@ public class FilePicker extends ListView implements AdapterView.OnItemClickListe
 	public void onItemClick(AdapterView parent, View view, int position, long id) {
 		FileInfoView fiv = (FileInfoView)getAdapter().getItem(position);
 
+		Log.d(TAG, "onItemClick");
 		if ((fiv.type == FileInfoView.TYPE_DIR) && !fiv.iconClicked) {
 			String oldWorkingDir = workingDir;
 			workingDir = fiv.file.getPath();
@@ -351,7 +345,15 @@ public class FilePicker extends ListView implements AdapterView.OnItemClickListe
 			setAdapter(new FileInfoAdapter(parent.getContext(), fiv.file, settings));
 		}
 		else {
-			fiv.toggle();
+			switch (getChoiceMode()) {
+				case CHOICE_MODE_SINGLE:
+					Log.d(TAG, "Clearing choices");
+					clearChoices();
+					// NOTE: intentional fallthrough
+				case CHOICE_MODE_MULTIPLE:
+					fiv.toggle();
+					break;
+			}
 		}
 	}
 
@@ -384,6 +386,5 @@ public class FilePicker extends ListView implements AdapterView.OnItemClickListe
 	public void setPropertyChangeListener(PropertyChangeListener l) {
 		propertyChangeListener = l;
 	}
-
 }
 

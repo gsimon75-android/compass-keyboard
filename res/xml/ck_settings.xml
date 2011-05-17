@@ -47,27 +47,44 @@
 			android:defaultValue="1"/>
 	</PreferenceScreen>
 
-	<ListPreference
-		android:key="ck_builtin_layout"
-		android:title="@string/ck_builtin_layout_title"
-		android:summary="@string/ck_builtin_layout_summary"
-		android:entries="@array/ck_layoutnames"
-		android:entryValues="@array/ck_layoutvalues"
-		android:defaultValue="0"/>
-
-	<org.dyndns.fules.ck.FilePickerPreference
-		android:key="ck_layoutfile"
-		android:title="@string/ck_custom_layout_title"
-		android:summary="@string/ck_custom_layout_summary"
-		android:defaultValue=""
-		android:positiveButtonText="@string/ck_custom_layout_positive"
-		android:negativeButtonText="@string/ck_custom_layout_negative"
-		fules:showUnreadable="false"
-		fules:showOthers="false"
-		fules:showFiles="true"
-		fules:showHidden="true"
-		fules:workingDir="/sdcard"
-		fules:mask=".*\.xml"/>
+	<PreferenceScreen
+		android:key="pg_layouts"
+		android:title="@string/ck_layout_title"
+		android:summary="@string/ck_layout_summary">
+		<Preference
+			android:key="ck_builtin_latin"
+			android:title="@string/ck_latin_layout_title"
+			android:summary="@string/ck_latin_layout_summary"
+			android:order="0"
+			android:selectable="false"/>
+		<Preference
+			android:key="ck_builtin_cyrillic"
+			android:title="@string/ck_cyrillic_layout_title"
+			android:summary="@string/ck_cyrillic_layout_summary"
+			android:order="1"
+			android:selectable="false"/>
+		<Preference
+			android:key="ck_builtin_greek"
+			android:title="@string/ck_greek_layout_title"
+			android:summary="@string/ck_greek_layout_summary"
+			android:order="2"
+			android:selectable="false"/>
+		<org.dyndns.fules.ck.FilePickerPreference
+			android:key="ck_custom_layout"
+			android:title="@string/ck_custom_layout_title"
+			android:summary="@string/ck_custom_layout_summary"
+			android:order="1000"
+			android:defaultValue=""
+			android:choiceMode="singleChoice"
+			android:positiveButtonText="@string/ck_custom_layout_positive"
+			android:negativeButtonText="@string/ck_custom_layout_negative"
+			fules:showUnreadable="false"
+			fules:showOthers="false"
+			fules:showFiles="true"
+			fules:showHidden="true"
+			fules:workingDir="/sdcard"
+			fules:mask=".*\.xml"/>
+	</PreferenceScreen>
 
 	<PreferenceScreen
 		android:key="pg_about"

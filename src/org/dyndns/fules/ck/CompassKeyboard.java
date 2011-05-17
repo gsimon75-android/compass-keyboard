@@ -20,6 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -33,8 +34,7 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 	private SharedPreferences	mPrefs;					// the preferences instance
 	CompassKeyboardView		ckvHorizontal, ckvVertical;		// the layout views for horizontal and vertical screens
 	CompassKeyboardView		ckv;					// the current layout view, either @ckvHorizontal or @ckvVertical
-	int				currentBuiltinLayout = 0;
-	String				currentLayoutFile;
+	int				currentLayout;
 
 	// send an auto-revoked notification with a title and a message
 	void sendNotification(String title, String msg) {
@@ -47,68 +47,75 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 	}
 
 	// Read a layout from a parser, both horizontal and vertical, if possible
-	void updateLayoutFromParser(XmlPullParser parser) throws XmlPullParserException, java.io.IOException {
+	String updateLayoutFromParser(XmlPullParser parser) throws XmlPullParserException, java.io.IOException {
+		String name;
+
 		while (parser.getEventType() == XmlPullParser.START_DOCUMENT)
 			parser.next();
 
 		if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("CompassKeyboard"))
 			throw new XmlPullParserException("Expected <CompassKeyboard>", parser, null);
+
+		name = parser.getAttributeValue(null, "name");
+		if (name != null)
+			Log.i(TAG, "Loading keyboard '"+name+"'");
 		parser.nextTag();
 
 		while (parser.getEventType() != XmlPullParser.END_TAG) {
 			if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Layout"))
 				throw new XmlPullParserException("Expected <Layout>", parser, null);
-			String name = parser.getAttributeValue(null, "name");
-			//Log.d(TAG, "Reading layout '"+name+"'");
+			String layoutName = parser.getAttributeValue(null, "name");
 
-			if (name.contentEquals("horizontal"))
+			if (layoutName.contentEquals("horizontal"))
 				ckvHorizontal.readLayout(parser);
-			else if (name.contentEquals("vertical"))
+			else if (layoutName.contentEquals("vertical"))
 				ckvVertical.readLayout(parser);
 			else
-				throw new XmlPullParserException("Invalid Layout name '"+name+"'", parser, null);
+				throw new XmlPullParserException("Invalid Layout name '"+layoutName+"'", parser, null);
 		}
 
 		if (!parser.getName().contentEquals("CompassKeyboard"))
 			throw new XmlPullParserException("Expected </CompassKeyboard>", parser, null);
 		parser.next();
+		
+		return name;
 	}
 
 	// Update the layout if needed
-	boolean updateLayout(int i, String fname) {
+	public String updateLayout(int i) {
+		String name = null;
 		String err = null;
 
-		// a custom layout without a file selected means reverting to the 1st built-in
-		if ((i < 0) && ((fname == null) || fname.contentEquals("")))
-			i = 0;
+		if ((i < 0) || (i == currentLayout))
+			return "same";
 
-		// a custom layout with too big index means reverting to the 1st built-in
-		if ((i >= 0) && (i >= builtinLayouts.length)) {
-			sendNotification("Invalid index", String.valueOf(i)+", reverting to 0");
-			i = 0;
-		}
-
+		Log.d(TAG, "Loading layout '"+String.valueOf(i)+"'");
 		try {
-			if (i < 0) {
-				// don't reload the already loaded file
-				if ((i == currentBuiltinLayout) && (currentLayoutFile != null) && currentLayoutFile.contentEquals(fname))
-					return true;
+			switch (i) {
+				case 0:
+					name = updateLayoutFromParser(getResources().getXml(R.xml.default_latin));
+					break;
 
-				Log.d(TAG, "Loading custom layout '"+fname+"'");
-				FileInputStream is = new FileInputStream(fname);
-				XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-				factory.setNamespaceAware(false);
-				XmlPullParser parser = factory.newPullParser();
-				parser.setInput(is, null);
-				updateLayoutFromParser(parser);
-			}
-			else {
-				// don't reload the already loaded built-in layout
-				if (i == currentBuiltinLayout)
-					return true;
+				case 1:
+					name = updateLayoutFromParser(getResources().getXml(R.xml.default_cyrillic));
+					break;
 
-				Log.d(TAG, "Loading built-in layout '"+String.valueOf(i)+"'");
-				updateLayoutFromParser(getResources().getXml(builtinLayouts[i]));
+				case 2:
+					name = updateLayoutFromParser(getResources().getXml(R.xml.default_greek));
+					break;
+
+				default:
+					String s = mPrefs.getString("ck_layout_file["+String.valueOf(i)+"]", "");
+					if ((s == null) || s.contentEquals(""))
+						throw new FileNotFoundException("Invalid Layout index '"+String.valueOf(i)+"'");
+
+					FileInputStream is = new FileInputStream(s);
+					XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+					factory.setNamespaceAware(false);
+					XmlPullParser parser = factory.newPullParser();
+					parser.setInput(is, null);
+					name = updateLayoutFromParser(parser);
+					break;
 			}
 		}
 		catch (FileNotFoundException e)		{ err = e.getMessage(); }
@@ -117,21 +124,16 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		catch (java.io.IOException e)		{ err = e.getMessage(); }
 
 		if (err == null) {
-			currentBuiltinLayout = i;
-			currentLayoutFile = fname;
-			return true;
+			currentLayout = i;
+			return name;
 		}
 
-		if (i < 0)
-			sendNotification("Invalid layout file '"+fname+"'", err);
-		else
-			sendNotification("Invalid built-in layout "+String.valueOf(i), err);
-
-		// no layout this far, so use the 1st built-in, unless we have just tried that one
+		sendNotification("Invalid layout '"+String.valueOf(i)+"'", err);
+		// revert to default latin, unless this was the one that has failed
 		if (i == 0)
-			return false;
-		currentBuiltinLayout = -1;
-		return updateLayout(0, null);
+			return null;
+		currentLayout = -1;
+		return updateLayout(0);
 	}
 
 	@Override public void onInitializeInterface() {
@@ -145,15 +147,15 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 
 		ckv = ckvVertical;
 
-		int i = currentBuiltinLayout;
-		currentBuiltinLayout--; // enforce reload
-		updateLayout(i, currentLayoutFile);
+		int i = currentLayout;
+		currentLayout = -1;			// enforce reloading layout
+		updateLayout(i);
 
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
 		onSharedPreferenceChanged(mPrefs, "ck_vibr_key");
 		onSharedPreferenceChanged(mPrefs, "ck_vibr_mod");
 		onSharedPreferenceChanged(mPrefs, "ck_vibr_cancel");
-		onSharedPreferenceChanged(mPrefs, "ck_builtin_layout");
+		onSharedPreferenceChanged(mPrefs, "ck_layout");
 		onSharedPreferenceChanged(mPrefs, "ck_feedback_normal");
 		onSharedPreferenceChanged(mPrefs, "ck_feedback_password");
 	}
@@ -162,18 +164,10 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 	@Override public View onCreateInputView() {
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 
-		if (metrics.widthPixels > metrics.heightPixels) {
-			if (ckvHorizontal != null)
-				ckv = ckvHorizontal;
-			else
-				ckv = ckvVertical;
-		}
-		else {
-			if (ckvVertical != null)
-				ckv = ckvVertical;
-			else
-				ckv = ckvHorizontal;
-		}
+		if (metrics.widthPixels > metrics.heightPixels)
+			ckv = (ckvHorizontal != null) ? ckvHorizontal : ckvVertical;
+		else
+			ckv = (ckvVertical != null) ? ckvVertical : ckvHorizontal;
 
 		if (ckv != null)
 			ckv.calculateSizesForMetrics(metrics);
@@ -244,7 +238,7 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 
 	// Handle one change in the preferences
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-		//Log.d(TAG, "Changing pref "+key);
+		//Log.d(TAG, "Changing pref "+key+" to "+prefs.getString(key, ""));
 
 		if (key.contentEquals("ck_vibr_key")) {
 			int v = getPrefInt(prefs, key, 0);
@@ -271,27 +265,25 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			ckvHorizontal.setFeedbackPassword(v);
 			ckvVertical.setFeedbackPassword(v);
 		}
-		else if (key.contentEquals("ck_builtin_layout") ||
-			 key.contentEquals("ck_layoutfile")) {
-			int i = getPrefInt(prefs, "ck_builtin_layout", -2);
-			String filename = prefs.getString("ck_layoutfile", "");
-			Log.d(TAG, "Layout settings changed; l='"+String.valueOf(i)+"', file='"+filename+"'");
+		else if (key.contentEquals("ck_layout")) {
+			int i = getPrefInt(prefs, key, 0);
+			updateLayout(i);
+		}
+		else if (key.contentEquals("ck_custom_layout")) {
+			SharedPreferences.Editor edit = mPrefs.edit();
+			String s = prefs.getString(key, "");
 
-			if (i >= 0) {
-				// built-in layout requested
-				updateLayout(i, null);
-			}
-			else if (i == -1) {
-				// custom layout requested
-				if ((filename != null) && !filename.contentEquals(""))
-					updateLayout(-1, filename);
-				else
-					updateLayout(0, null);
-			}
-			else {
-				// no layout selected at all -> revert to the 1st built-in
-				updateLayout(0, null);
-			}
+			int n = getPrefInt(prefs, "ck_num_layouts", 3);
+			String sn = "["+String.valueOf(n)+"]";
+
+			edit.putString("ck_layout_file"+sn, s);
+			edit.putString("ck_num_layouts", String.valueOf(n + 1));
+			edit.commit();
+
+			String name = updateLayout(n);
+
+			edit.putString("ck_layout_name"+sn, name);
+			edit.commit();
 		}
 	}
 }

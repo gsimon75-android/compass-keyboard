@@ -34,7 +34,7 @@ import org.xmlpull.v1.XmlPullParserException;
  * <Action> tag
  */
 class Action {
-	int		keyCode;
+	int		keyCode, layout;
 	String		code, mod, text, s;
 	boolean		isLock, isEmpty;
 
@@ -45,10 +45,17 @@ class Action {
 			throw new XmlPullParserException("Expected <Action>", parser, null);
 
 		isLock = isEmpty = false;
+		keyCode = layout = -1;
 
 		s = parser.getAttributeValue(null, "key");
 		if (s != null) {
 			keyCode = Integer.parseInt(s);
+			n++;
+		}
+
+		s = parser.getAttributeValue(null, "layout");
+		if (s != null) {
+			layout = Integer.parseInt(s);
 			n++;
 		}
 
@@ -85,8 +92,10 @@ class Action {
 				text = code;
 			else if (mod != null)
 				text = mod;
-			else
-				text = String.valueOf(keyCode);
+			else if (keyCode >= 0)
+				text = 'K'+String.valueOf(keyCode);
+			else 
+				text = 'L'+String.valueOf(layout);
 		}
 
 		parser.nextTag();
@@ -121,7 +130,7 @@ public class CompassKeyboardView extends LinearLayout {
 	int					vibrateOnModifier = 0;
 	int					vibrateOnCancel = 0;
 	int					feedbackNormal = 0;
-	int					feedbackPassword = 0;		// FIXME: not yet used!
+	int					feedbackPassword = 0;
 	float					keyMM;				// maximal key size in mm-s
 
 	// Internal params
@@ -186,9 +195,8 @@ public class CompassKeyboardView extends LinearLayout {
 				public State(XmlPullParser parser) throws XmlPullParserException, IOException {
 					int i;
 
-					if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("State")) {
+					if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("State"))
 						throw new XmlPullParserException("Expected <State>", parser, null);
-					}
 
 					nameSet = new HashSet();
 					dir = new Action[9];
@@ -197,9 +205,8 @@ public class CompassKeyboardView extends LinearLayout {
 					if ((name != null) && !name.contentEquals("")) {
 						String[] fields = name.split(",");
 						int numFields = fields.length;
-						for (i = 0; i < numFields; i++) {
+						for (i = 0; i < numFields; i++)
 							nameSet.add(fields[i]);
-						}
 					}
 					
 					parser.nextTag();
@@ -243,10 +250,8 @@ public class CompassKeyboardView extends LinearLayout {
 			public Key(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
 				super(context);
 
-				int eventType, n, i;
 				String s;
 
-				eventType = parser.getEventType();
 				if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Key"))
 					throw new XmlPullParserException("Expected <Key>", parser, null);
 
@@ -254,22 +259,16 @@ public class CompassKeyboardView extends LinearLayout {
 				state = new ArrayList();
 
 				s = parser.getAttributeValue(null, "name");
-				if (s != null)
-					Log.d(TAG, "Loading key '"+s+"'");
+				//if (s != null)
+				//	Log.d(TAG, "Loading key '"+s+"'");
 
 				s = parser.getAttributeValue(null, "has_left");
-				if (s != null) {
-					i = Integer.parseInt(s);
-					if (i == 0)
-						hasLeft = false;
-				}
+				if ((s != null) && (Integer.parseInt(s) == 0))
+					hasLeft = false;
 
 				s = parser.getAttributeValue(null, "has_right");
-				if (s != null) {
-					i = Integer.parseInt(s);
-					if (i == 0)
-						hasRight = false;
-				}
+				if ((s != null) && (Integer.parseInt(s) == 0))
+					hasRight = false;
 
 				parser.nextTag();
 				while (parser.getEventType() != XmlPullParser.END_TAG) {
@@ -339,34 +338,25 @@ public class CompassKeyboardView extends LinearLayout {
 			}
 
 			void setCandidate(int d) {
-				int fb;
+				switch (isTypingPassword ? feedbackPassword : feedbackNormal) {
+					case FEEDBACK_HIGHLIGHT:
+						if (candidateDir != d) {
+							candidateDir = d;
+							invalidate();
+						}
+						break;
 
-				if (isTypingPassword)
-					fb = feedbackPassword;
-				else
-					fb = feedbackNormal;
+					case FEEDBACK_TOAST:
+						Action cd = (0 <= d) ? currentState.dir[d] : null;
 
-				if (fb == FEEDBACK_HIGHLIGHT) {
-					if (candidateDir != d) {
-						candidateDir = d;
-						invalidate();
-					}
-				}
-				else if (fb == FEEDBACK_TOAST) {
-					Action cd;
-
-					if (0 <= d)
-						cd = currentState.dir[d];
-					else
-						cd = null;
-
-					if (cd != null) {
-						toast.setText(cd.text);
-						toast.show();
-					}
-					else {
-						toast.cancel();
-					}
+						if (cd != null) {
+							toast.setText(cd.text);
+							toast.show();
+						}
+						else {
+							toast.cancel();
+						}
+						break;
 				}
 			}
 
@@ -499,18 +489,8 @@ public class CompassKeyboardView extends LinearLayout {
 			// Report the size of the key
 			@Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 				// policy: if not specified by the parent as EXACTLY, use our own ideas
-				int w, h;
-
-				if (View.MeasureSpec.getMode(widthMeasureSpec) == View.MeasureSpec.EXACTLY)
-					w = View.MeasureSpec.getSize(widthMeasureSpec);
-				else
-					w = xmax;
-
-				if (View.MeasureSpec.getMode(heightMeasureSpec) == View.MeasureSpec.EXACTLY)
-					h = View.MeasureSpec.getSize(heightMeasureSpec);
-				else
-					h = ymax;
-
+				int w = (View.MeasureSpec.getMode(widthMeasureSpec) == View.MeasureSpec.EXACTLY) ? View.MeasureSpec.getSize(widthMeasureSpec) : xmax;
+				int h = (View.MeasureSpec.getMode(heightMeasureSpec) == View.MeasureSpec.EXACTLY) ? View.MeasureSpec.getSize(heightMeasureSpec) : ymax;
 				setMeasuredDimension(w, h);
 			}
 		}
@@ -522,7 +502,6 @@ public class CompassKeyboardView extends LinearLayout {
 		public Row(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
 			super(context);
 
-			int i;
 			String s;
 
 			setOrientation(android.widget.LinearLayout.HORIZONTAL);
@@ -548,18 +527,12 @@ public class CompassKeyboardView extends LinearLayout {
 				throw new XmlPullParserException("Expected <Row>", parser, null);
 
 			s = parser.getAttributeValue(null, "has_top");
-			if (s != null) {
-				i = Integer.parseInt(s);
-				if (i == 0)
-					hasTop = false;
-			}
+			if ((s != null) && (Integer.parseInt(s) == 0))
+				hasTop = false;
 
 			s = parser.getAttributeValue(null, "has_bottom");
-			if (s != null) {
-				i = Integer.parseInt(s);
-				if (i == 0)
-					hasBottom = false;
-			}
+			if ((s != null) && (Integer.parseInt(s) == 0))
+				hasBottom = false;
 
 			parser.nextTag();
 			columns = 0;
@@ -853,14 +826,8 @@ public class CompassKeyboardView extends LinearLayout {
 
 		int n = getChildCount();
 		for (int i = 0; i < n; i++) {
-			try {
-				Row r = (Row)getChildAt(i);
-				r.setState(effectiveMods);
-			}
-			catch (ClassCastException e)
-			{
-				// ignoring intentionally
-			}
+			Row r = (Row)getChildAt(i);
+			r.setState(effectiveMods);
 		}
 	}
 
@@ -872,21 +839,31 @@ public class CompassKeyboardView extends LinearLayout {
 		if (cd.mod != null) {
 			changeState(cd.mod, cd.isLock);		// process a 'mod' or 'lock'
 		}
-		else if (cd.code != null) {
-			// process a 'code'
-			//Log.v(TAG, "Text: "+cd.code); 
-			resetState();
-			if (actionListener != null)
-				actionListener.onText(cd.code);
-			if (vibrateOnKey >= 0)
-				vibro.vibrate(vibratePattern[vibrateOnKey], -1);
-		}
 		else {
-			// process a 'key'
-			//Log.v(TAG, "Key: "+String.valueOf(cd.keyCode)); 
-			resetState();
-			if (actionListener != null)
-				actionListener.onKey(cd.keyCode, null);
+			if (cd.code != null) {
+				// process a 'code'
+				//Log.v(TAG, "Text: "+cd.code); 
+				resetState();
+				if (actionListener != null)
+					actionListener.onText(cd.code);
+			}
+			else if (cd.keyCode >= 0) {
+				// process a 'key'
+				//Log.v(TAG, "Key: "+String.valueOf(cd.keyCode)); 
+				resetState();
+				if (actionListener != null)
+					actionListener.onKey(cd.keyCode, null);
+			}
+			else if (cd.layout >= 0) {
+				// process a 'layout'
+				//Log.v(TAG, "Layout: "+String.valueOf(cd.layout)); 
+				resetState();
+				if ((actionListener != null) && (actionListener instanceof CompassKeyboard)) {
+					CompassKeyboard ck = (CompassKeyboard)actionListener;
+					ck.updateLayout(cd.layout);
+				}
+			}
+
 			if (vibrateOnKey >= 0)
 				vibro.vibrate(vibratePattern[vibrateOnKey], -1);
 		}
@@ -960,5 +937,4 @@ public class CompassKeyboardView extends LinearLayout {
 	public void setFeedbackPassword(int n) {
 		feedbackPassword = n;
 	}
-
 }

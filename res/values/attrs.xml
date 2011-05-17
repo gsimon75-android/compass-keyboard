@@ -16,5 +16,7 @@
         <attr name="showUnreadable"/>
         <attr name="mask"/>
     </declare-styleable>
+    <declare-styleable name="TextDialogPreference">
+    </declare-styleable>
 </resources>
 

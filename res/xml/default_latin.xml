@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<CompassKeyboard name="default_latin">
+<CompassKeyboard name="Latin">
 
     <Layout name="vertical" key_mm="12">
         <!-- global swipes -->
@@ -12,12 +12,19 @@
 
             <Key name="math ops" has_left="0">
                 <State>
-                    <Action code="("/>                      <Action code=")"/>                      <Action code="%2b"/> <!-- + -->
-                    <Action code="-"/>                      <Action code="*"/>                      <Action code="/"/>
+                    <Action code="("/>                      <Action code=")"/>
+                    <Action code="%2b"/> <!-- + -->         <Action code="-"/>
+                    <Action code="*"/>                      <Action code="/"/>
                 </State>
                 <State name="shift">
-                    <Action code="&lt;"/>                   <Action code="&gt;"/>                   <Action code="{"/>
-                    <Action code="}"/>                      <Action code="["/>                      <Action code="]"/>
+                    <Action code="&lt;"/>                   <Action code="&gt;"/>
+                    <Action code="{"/>                      <Action code="}"/>
+                    <Action code="["/>                      <Action code="]"/>
+                </State>
+                <State name="spec">
+                    <Action text="L0" layout="0"/>          <Action text="L1" layout="1"/>
+                    <Action text="L2" layout="2"/>          <Action text="L3" layout="3"/>
+                    <Action text="L4" layout="4"/>          <Action text="L5" layout="5"/>
                 </State>
             </Key>
 
@@ -262,16 +269,19 @@
 
             <Key name="marks" has_right="0">
                 <State>
-                    <Action code="$"/>                      <Action code="%40"/><!-- @ -->          <Action code="'"/>
-                    <Action code="&quot;"/>                 <Action code="%3f"/><!-- ? -->          <Action code="!"/>
+                    <Action code="$"/>                      <Action code="%40"/><!-- @ -->
+                    <Action code="'"/>                      <Action code="&quot;"/>
+                    <Action code="%3f"/><!-- ? -->          <Action code="!"/>
                 </State>
                 <State name="shift">
-                    <Action code="^"/>                      <Action code="~"/>                      <Action code="`"/>
-                    <Action code="%23"/><!-- # -->          <Action code="%5C"/><!-- \ -->          <Action code="|"/>
+                    <Action code="^"/>                      <Action code="~"/>
+                    <Action code="`"/>                      <Action code="%23"/><!-- # -->
+                    <Action code="%5C"/><!-- \ -->          <Action code="|"/>
                 </State>
                 <State name="spec">
-                    <Action/>                               <Action/>                               <Action/>
-                    <Action/>                               <Action code="¿"/>                      <Action code="¡"/>
+                    <Action/>                               <Action/>
+                    <Action/>                               <Action/>
+                    <Action code="¿"/>                      <Action code="¡"/>
                 </State>
             </Key>
 
@@ -750,6 +760,10 @@
                 <State name="shift">
                     <Action code="&lt;"/><!-- < -->         <Action code="{"/>                      <Action code="["/>
                     <Action code="&gt;"/><!-- > -->         <Action code="}"/>                      <Action code="]"/>
+                </State>
+                <State name="spec">
+                    <Action text="L0" layout="0"/>          <Action text="L1" layout="1"/>          <Action text="L2" layout="2"/>
+                    <Action text="L3" layout="3"/>          <Action text="L4" layout="4"/>          <Action text="L5" layout="5"/>
                 </State>
             </Key>
 
