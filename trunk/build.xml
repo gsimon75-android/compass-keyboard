@@ -85,6 +85,7 @@
 	    description="install the built debug package on the emulator"
 	    depends="debug">
 	    <exec executable="adb">
+		    <arg value="-e"/>
 		    <arg value="install"/>
 		    <arg value="-r"/>
 		    <arg value="${out.dir}/${ant.project.name}-debug.apk"/>
@@ -107,6 +108,17 @@
 		    <arg value="-f"/>
 		    <arg value="4"/>
 		    <arg value="${out.dir}/${ant.project.name}-unaligned.apk"/>
+		    <arg value="${out.dir}/${ant.project.name}.apk"/>
+	    </exec>
+    </target>
+
+    <target name="relinstall"
+	    description="install the built release package on the device"
+	    depends="align">
+	    <exec executable="adb">
+		    <arg value="-d"/>
+		    <arg value="install"/>
+		    <arg value="-r"/>
 		    <arg value="${out.dir}/${ant.project.name}.apk"/>
 	    </exec>
     </target>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="org.dyndns.fules.ck"
-	android:versionCode="11"
+	android:versionCode="12"
 	android:versionName="@string/ck_version_summary">
 	<uses-sdk
 		android:minSdkVersion="7"
@@ -16,6 +16,9 @@
 			<intent-filter>
 				<action android:name="android.view.InputMethod"/>
 			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.DELETE"/>
+			</intent-filter>
 			<meta-data android:name="android.view.im" android:resource="@xml/method"/>
 		</service>
 
@@ -26,7 +29,12 @@
 		</activity>
 
 		<activity
-			android:name="org.dyndns.fules.utils.FilePickerPreference"
+			android:name="org.dyndns.fules.ck.FilePickerPreference"
+			android:exported="true">
+		</activity>
+
+		<activity
+			android:name="org.dyndns.fules.ck.TextDialogPreference"
 			android:exported="true">
 		</activity>
 
