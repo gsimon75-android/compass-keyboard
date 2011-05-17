@@ -20,8 +20,13 @@ Ezen módon kilencszer annyi karaktert tudunk bevinni, mint a hagyományos, csak
 
 Jelenleg a CompassKeyboard három alapértelmezett kiosztást támogat, egyet a latin-alapú ábécékhez, egyet a cirill-alapúakhoz, egyet pedig a göröghöz.
 
+A kiosztások (beépítettek és egyediek egyaránt) között a billentyűzet elhagyása nélkül is válthatunk, ehhez csak egy nagy átlós vonalat kell húzni a billentyűzet bal-felső sarkából a jobb-alsóba ('Spec' módosító, lásd lentebb), majd a bal-felső gombon megjelenő L0..L6 közül kiválaszthatjuk a kívánt kiosztást.
+
+
 == Beállítások ==
-[http://compass-keyboard.googlecode.com/files/layout_settings.png]
+A beállítások között megtekinthetjük az aktuálisan elérhető kiosztásokat. Ezek közül az első három a beépített kiosztások, ezek nem változtathatóak meg, viszont szabadon adhatunk a listához továbbiakat XML file-okból az utolsó menüpont használatával. Ezen egyedileg hozzáadott kiosztások azonnal megjelennek a listában, feltéve, hogy szintaktikailag helyesek voltak.
+Az egyedileg hozzáadott kiosztásokat el is távolíthatjuk a listáról, csak meg kell érintenünk őket, majd a döntésünket jóváhagyni az ezután megjelenő ablakban (fontos tudni, hogy ez csak a listáról távolítja el a kiosztásokat, az őket tartalmazó XML file-ok változatlanul maradnak).
+[http://compass-keyboard.googlecode.com/files/layout_settings_v1.1.png]
 
 
 == Latin ==
@@ -49,6 +54,9 @@ Ha nagybetűs ékezetes betűket szeretnénk, akkor a 'shift' megérintésével 
 
 == Átlós ==
 [http://compass-keyboard.googlecode.com/files/global_swipe_diagonal.png]
+
+== Hosszú érintés ==
+Bár a beépített kiosztások nem használják, van egy kilencedik módosító is: a hosszú érintés. Ennek kiválasztásához (pl. egy egyedileg hozzáadott kiosztás esetére) a billentyűzetet érintsük meg bárhol és tartsuk így 1.5 másodpercig.
 
 == Latin-alapú ábécéknél ==
 || *Ékezetes mód* || *Ékezet* ||     || *Egyebek* ||
@@ -95,10 +103,19 @@ A leggyakrabban használatos ábécén kívüli írásjelek az összes elrendez�
 || Del            || ↛ || az alsó-középső gombon 'Spec' módban ||
 || Ins            || ↱ || ||
 || F1..F10        || Ⅰ..Ⅹ || a számoknál 'Spec' módban ||
-
+|| 0..5 kiosztások|| L0..L5 || a bal-felső billentyűn 'Spec' módban ||
 
 = Rezgés =
 Vannak, akik hasznosnak találják, ha érzékelhető visszajelzést kapnak a billentyűzet eseményeiről, így beállítható, hogy egy karakter bevitelekor, egy ékezetes mód kiválasztásakor illetve abból való visszalépéskor kérünk-e rezgő jelzést és ha igen, akkor egy- vagy kétszereset.
+
+= Látható visszajelzés =
+Igény esetén választható az épp bevitel alatt álló szimbólumról látható visszajelzés is, kétféle változatban (a 'semmilyen' mellett), külön-külön a sima szövegekhez és a jelszavak beviteléhez:
+
+== Toast ==
+Ebben a módban az épp kiválasztott szimbólum a képernyő tetejének közepén jelenik meg egy lebegő keretben, ami rövid időn belül vagy legkésőbb a karakter bevitelekor eltűnik.
+
+== Kiemelés ==
+Kevésbé látványos, mint az előző (ezért jelszóbevitelhez alkalmasabb), ebben a módban az épp kiválasztott szimbólum csak a gombon magán jelenik meg, viszont egy kissé nagyobb betűmérettel és más színnel.
 
 
 = Felhasználói elrendezések =
@@ -119,8 +136,6 @@ Bár a billentyű-elrendezésekben bármely Unicode karakter elhelyezhető lenne
 
 == Keleti nyelvek, pl. a japán és a kínai ==
 Mivel az írási rendszerük teljesen különböző az betű-írásos nyelvekétől, a legjobb, amit el tudnék gondolni, az egy beviteli terület, ahol a felhasználó elkezdheti behúzni a kívánt szótag-jel (egyszerűsített) vonalait, és eközben a háttérben megjelennének azon jelek, amelyek az eddig bevitt vonalakra illeszthetőek, így a felhasználó vagy egyre szűkíthetné a lehetőségeket újabb és újabb vonalakkal, vagy kiválaszthatá a kívánt jelet, amennyiben az már megjelent a háttérben.
-
-Számomra mindez lehetségesnek tűnik ugyan, de mivel se beszélni, se írni nem tudok ezen nyelvek egyikén sem, így azt sem tudom felmérni, hogy egy ilyen beviteli mód vajon kézreálló lenne-e avagy sem.
 
 == Az arab és a perzsa ==
 Ezek a nyelvek jobbról balra írnak, nem tesznek különbséget kis- és nagybetűk között, és a magánhangzókat csak mellékjelek formájában jelölik, viszont különböző betűalakokat használnak a szavak elején, közepén, végén ill. ha a betű magában áll.
