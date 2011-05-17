@@ -128,12 +128,13 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			return name;
 		}
 
-		sendNotification("Invalid layout '"+String.valueOf(i)+"'", err);
+		sendNotification("Invalid layout", err);
 		// revert to default latin, unless this was the one that has failed
-		if (i == 0)
-			return null;
-		currentLayout = -1;
-		return updateLayout(0);
+		if (i != 0) {
+			currentLayout = -1;
+			updateLayout(0);
+		}
+		return null;
 	}
 
 	@Override public void onInitializeInterface() {
@@ -281,8 +282,10 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			edit.commit();
 
 			String name = updateLayout(n);
-
-			edit.putString("ck_layout_name"+sn, name);
+			if (name != null)
+				edit.putString("ck_layout_name"+sn, name);
+			else
+				edit.putString("ck_layout_remove"+sn, TextDialogPreference.POSITIVE);
 			edit.commit();
 		}
 	}

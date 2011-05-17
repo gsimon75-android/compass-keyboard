@@ -89,7 +89,7 @@ public class CompassKeyboardSettings extends PreferenceActivity implements Share
 				else
 					addLayoutPref(prefKey, keyIndex, prefs.getString(key, "unnamed"), "none");
 			}
-			else if (keyName.contentEquals("ck_layout_remove") && prefs.getString(key, "none").contentEquals("positive"))
+			else if (keyName.contentEquals("ck_layout_remove") && prefs.getString(key, "none").contentEquals(TextDialogPreference.POSITIVE))
 			{
 				int n = Integer.parseInt(prefs.getString("ck_num_layouts", "3"));
 				String sn1 = "["+String.valueOf(n - 1)+"]";
