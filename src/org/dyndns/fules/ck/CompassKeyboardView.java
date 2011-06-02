@@ -655,6 +655,11 @@ public class CompassKeyboardView extends LinearLayout {
 		toast = Toast.makeText(context, "<none>", Toast.LENGTH_SHORT);
 	}
 
+    void vibrateCode(int n) {
+        if ((n >= 0) && (n < vibratePattern.length))
+            vibro.vibrate(vibratePattern[n], -1);
+    }
+
 	// Read the layout from an XML parser
 	public void readLayout(XmlPullParser parser) throws XmlPullParserException, IOException {
 		int i;
@@ -864,8 +869,7 @@ public class CompassKeyboardView extends LinearLayout {
 				}
 			}
 
-			if (vibrateOnKey >= 0)
-				vibro.vibrate(vibratePattern[vibrateOnKey], -1);
+            vibrateCode(vibrateOnKey);
 		}
 
 		return true;
@@ -893,8 +897,7 @@ public class CompassKeyboardView extends LinearLayout {
 	public void changeState(String state, boolean isLock) {
 		if (state == null) {
 			resetState();
-			if (vibrateOnCancel >= 0)
-				vibro.vibrate(vibratePattern[vibrateOnCancel], -1);
+            vibrateCode(vibrateOnCancel);
 		}
 		else if (state.contentEquals("hide")) {
 			//Log.v(TAG, "Hide");
@@ -907,14 +910,12 @@ public class CompassKeyboardView extends LinearLayout {
 			//Log.v(TAG, "Lock: "+state); 
 			resetState();
 			toggleLock(state);
-			if (vibrateOnModifier >= 0)
-				vibro.vibrate(vibratePattern[vibrateOnModifier], -1);
+            vibrateCode(vibrateOnModifier);
 		}
 		else {
 			//Log.v(TAG, "State: "+state); 
 			addState(state);
-			if (vibrateOnModifier >= 0)
-				vibro.vibrate(vibratePattern[vibrateOnModifier], -1);
+            vibrateCode(vibrateOnModifier);
 		}
 	}
 

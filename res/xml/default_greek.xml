@@ -123,7 +123,7 @@
                     <Action text="⇧" mod="shift"/>          <Action text="C" mod="ctrl"/>
                 </State>
                 <State name="shift">
-                    <Action/>                               <Action text="H" mod="hide"/>
+                    <Action code="&amp;"/>                  <Action text="H" mod="hide"/>
                     <Action text="⇪" lock="shift"/>         <Action text="C" mod="ctrl"/>
                 </State>
                 <State name="spec">
@@ -279,7 +279,7 @@
                     <Action code=","/>                      <Action text="↓" key="20"/>             <Action code="."/>
                 </State>
                 <State name="shift">
-                    <Action code="^"/>                      <Action code="~"/>                      <Action/>
+                    <Action code="^"/>                      <Action code="~"/>                      <Action code="&amp;"/>
                     <Action/>                               <Action text="↓" code="%1b[1;2B"/>      <Action/>
                 </State>
                 <State name="ctrl">

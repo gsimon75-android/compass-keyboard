@@ -1,10 +1,22 @@
-2011-05-17 Gabor Simon <gabor.simon@mailbox.hu>
+2011-06-02 Gabor Simon <gabor.simon@mailbox.hu>
+Missing key added, reported error fixed
 
+    * local.properties: reference to new sdk location fixed
+
+    * AndroidManifest.xml, res/values/constants.xml: version increased
+
+    * src/org/dyndns/fules/ck/CompassKeyboardView.java: OutOfBounds error fixed
+
+    * res/xml/default_*.xml: missing ampersand sign added
+
+2011-05-17 Gabor Simon <gabor.simon@mailbox.hu>
+Minor bugs fixed
 	* src/org/dyndns/fules/ck/CompassKeyboard.java, CompassKeyboardSettings.java: code cleanup
 
 	* src/org/dyndns/fules/ck/FilePicker.java: choiceMode bug fixed
 
 2011-05-16 Gabor Simon <gabor.simon@mailbox.hu>
+Layout switching improved
 
 	* AndroidManifest.xml: TextDialogPreference added, typo in the name of FilePickerPreference fixed, version increased
 
