@@ -51,12 +51,12 @@
                 </State>
 				<State name="soft">
                     <Action code="я"/>                      <Action/>                               <Action/>
-                    <Action/>                               <Action/>                               <Action code="й"/>
+                    <Action code="ѕ"/>                      <Action code="ј"/>                      <Action code="й"/>
                     <Action code="њ"/>                      <Action code="ё"/>                      <Action/>
 				</State>
 				<State name="shift,soft">
                     <Action code="Я"/>                      <Action/>                               <Action/>
-                    <Action/>                               <Action/>                               <Action code="Й"/>
+                    <Action code="Ѕ"/>                      <Action code="Ј"/>                      <Action code="Й"/>
                     <Action code="Њ"/>                      <Action code="Ё"/>                      <Action/>
 				</State>
 				<State name="variant">
@@ -93,23 +93,23 @@
                     <Action code="Р"/>                      <Action code="С"/>                      <Action code="Т"/>
                 </State>
 				<State name="spec">
-                    <Action/>                               <Action/>                               <Action/>
+                    <Action code="ѓ"/>                      <Action/>                               <Action/>
                     <Action code="қ"/>                      <Action/>                               <Action/>
                     <Action/>                               <Action/>                               <Action/>
 				</State>
 				<State name="shift,spec">
-                    <Action/>                               <Action/>                               <Action/>
+                    <Action code="Ѓ"/>                      <Action/>                               <Action/>
                     <Action code="Қ"/>                      <Action/>                               <Action/>
                     <Action/>                               <Action/>                               <Action/>
                 </State>
 				<State name="soft">
                     <Action/>                               <Action/>                               <Action code="э"/>
-                    <Action/>                               <Action code="љ"/>                      <Action/>
+                    <Action code="ќ"/>                      <Action code="љ"/>                      <Action/>
                     <Action/>                               <Action/>                               <Action/>
 				</State>
 				<State name="shift,soft">
                     <Action/>                               <Action/>                               <Action code="Э"/>
-                    <Action/>                               <Action code="Љ"/>                      <Action/>
+                    <Action code="Ќ"/>                      <Action code="Љ"/>                      <Action/>
                     <Action/>                               <Action/>                               <Action/>
 				</State>
 				<State name="variant">
@@ -360,11 +360,11 @@
                 </State>
 				<State name="soft">
                     <Action code="я"/>                      <Action/>                               <Action/>
-                    <Action/>                               <Action code="љ"/>                      <Action/>
+                    <Action code="ќ"/>                      <Action code="љ"/>                      <Action/>
 				</State>
 				<State name="shift,soft">
                     <Action code="Я"/>                      <Action/>                               <Action/>
-                    <Action/>                               <Action code="Љ"/>                      <Action/>
+                    <Action code="Ќ"/>                      <Action code="Љ"/>                      <Action/>
 				</State>
             </Key>
 
@@ -378,11 +378,11 @@
                     <Action code="Н"/>                      <Action code="О"/>                      <Action code="П"/>
                 </State>
 				<State name="spec">
-                    <Action/>                               <Action/>                               <Action/>
+                    <Action code="ѓ"/>                      <Action/>                               <Action/>
                     <Action code="ң"/>                      <Action/>                               <Action/>
 				</State>
 				<State name="shift,spec">
-                    <Action/>                               <Action/>                               <Action/>
+                    <Action code="Ѓ"/>                      <Action/>                               <Action/>
                     <Action code="Ң"/>                      <Action/>                               <Action/>
                 </State>
 				<State name="soft">
@@ -421,11 +421,11 @@
                     <Action/>                               <Action/>                               <Action/>
                 </State>
 				<State name="soft">
-                    <Action/>                               <Action/>                               <Action code="й"/>
+                    <Action code="ѕ"/>                      <Action code="ј"/>                      <Action code="й"/>
                     <Action/>                               <Action/>                               <Action/>
 				</State>
 				<State name="shift,soft">
-                    <Action/>                               <Action/>                               <Action code="Й"/>
+                    <Action code="Ѕ"/>                      <Action code="Ј"/>                      <Action code="Й"/>
                     <Action/>                               <Action/>                               <Action/>
 				</State>
 				<State name="variant">
