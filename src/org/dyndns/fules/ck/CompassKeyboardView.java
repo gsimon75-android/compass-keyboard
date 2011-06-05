@@ -404,8 +404,8 @@ public class CompassKeyboardView extends LinearLayout {
 					downX = event.getX();
 					downY = event.getY();
 
-					if (visualFeedback)
-						setCandidate(-1);
+					if (visualFeedback && (currentState != null))
+						setCandidate(getDirection(event.getX(), event.getY()));
 
 					// register a long tap handler
 					wasLongTap = false;

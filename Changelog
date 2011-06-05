@@ -1,3 +1,14 @@
+2011-06-05 Gabor Simon <gabor.simon@mailbox.hu>
+Candidate showing and horizontal displaying improved, missing Macedonian letters added
+
+    * src/org/dyndns/fules/ck/CompassKeyboardView.java: candidates are shown from the beginning of a swipe
+
+    * src/org/dyndns/fules/ck/CompassKeyboard.java: horizontal layout no longer forces fullscreen keyboard
+
+    * res/xml/default_cyrillic.xml: missing letters "ѕ", "ј", "ѓ", "ќ" added
+
+    * res/values/constants.xml: version set to v1.2
+
 2011-06-02 Gabor Simon <gabor.simon@mailbox.hu>
 Missing key added, reported error fixed
 

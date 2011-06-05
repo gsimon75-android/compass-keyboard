@@ -77,7 +77,7 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		if (!parser.getName().contentEquals("CompassKeyboard"))
 			throw new XmlPullParserException("Expected </CompassKeyboard>", parser, null);
 		parser.next();
-		
+
 		return name;
 	}
 
@@ -194,6 +194,10 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		}
 	}
 
+	@Override public boolean onEvaluateFullscreenMode() {
+		return false; // never require fullscreen
+	}
+
 	// Process a generated keycode
 	public void onKey(int primaryCode, int[] keyCodes) {
 		getCurrentInputConnection().sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, primaryCode));
@@ -238,7 +242,7 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 	}
 
 	// Handle one change in the preferences
-        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 		//Log.d(TAG, "Changing pref "+key+" to "+prefs.getString(key, ""));
 
 		if (key.contentEquals("ck_vibr_key")) {
