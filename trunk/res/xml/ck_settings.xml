@@ -87,6 +87,28 @@
 	</PreferenceScreen>
 
 	<PreferenceScreen
+		android:key="pg_margins"
+		android:title="@string/pg_margins_title"
+		android:summary="@string/pg_margins_summary"
+		android:orderingFromXml="true">
+		<EditTextPreference
+			android:key="ck_margin_left"
+			android:title="@string/ck_margin_left_title"
+			android:summary="@string/ck_margin_left_summary"
+			android:defaultValue="0"/>
+		<EditTextPreference
+			android:key="ck_margin_right"
+			android:title="@string/ck_margin_right_title"
+			android:summary="@string/ck_margin_right_summary"
+			android:defaultValue="0"/>
+		<EditTextPreference
+			android:key="ck_margin_bottom"
+			android:title="@string/ck_margin_bottom_title"
+			android:summary="@string/ck_margin_bottom_summary"
+			android:defaultValue="0"/>
+	</PreferenceScreen>
+
+	<PreferenceScreen
 		android:key="pg_about"
 		android:title="@string/pg_about_title"
 		android:summary="@string/pg_about_summary"

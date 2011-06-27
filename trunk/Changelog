@@ -1,3 +1,14 @@
+2011-06-27 Gabor Simon <gabor.simon@mailbox.hu>
+Support for alignment started
+
+    * src/org/dyndns/fules/ck/CompassKeyboardView.java: support for margins added, 'Align' tag added
+    
+    * src/org/dyndns/fules/ck/CompassKeyboard.java: handling of  margin preferences added
+
+    * res/values/constants.xml: labels for preferences added
+
+    * res/xml/ck_settings.xml: margin prefs added
+
 2011-06-05 Gabor Simon <gabor.simon@mailbox.hu>
 Candidate showing and horizontal displaying improved, missing Macedonian letters added
 
