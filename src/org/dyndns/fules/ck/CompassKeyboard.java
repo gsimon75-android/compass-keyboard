@@ -159,6 +159,9 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		onSharedPreferenceChanged(mPrefs, "ck_layout");
 		onSharedPreferenceChanged(mPrefs, "ck_feedback_normal");
 		onSharedPreferenceChanged(mPrefs, "ck_feedback_password");
+		onSharedPreferenceChanged(mPrefs, "ck_margin_left");
+		onSharedPreferenceChanged(mPrefs, "ck_margin_right");
+		onSharedPreferenceChanged(mPrefs, "ck_margin_bottom");
 	}
 
 	// Select the layout view appropriate for the screen direction, if there is more than one
@@ -241,6 +244,15 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 
 	}
 
+	float getPrefFloat(SharedPreferences prefs, String key, float def) {
+		String s = prefs.getString(key, "");
+
+		if ((s == null) || s.contentEquals(""))
+			return def;
+		return Float.parseFloat(s);
+
+	}
+
 	// Handle one change in the preferences
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 		//Log.d(TAG, "Changing pref "+key+" to "+prefs.getString(key, ""));
@@ -269,6 +281,21 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			int v = getPrefInt(prefs, key, 0);
 			ckvHorizontal.setFeedbackPassword(v);
 			ckvVertical.setFeedbackPassword(v);
+		}
+		else if (key.contentEquals("ck_margin_left")) {
+			float f = getPrefFloat(prefs, key, 0);
+			ckvHorizontal.setLeftMargin(f);
+			ckvVertical.setLeftMargin(f);
+		}
+		else if (key.contentEquals("ck_margin_right")) {
+			float f = getPrefFloat(prefs, key, 0);
+			ckvHorizontal.setRightMargin(f);
+			ckvVertical.setRightMargin(f);
+		}
+		else if (key.contentEquals("ck_margin_bottom")) {
+			float f = getPrefFloat(prefs, key, 0);
+			ckvHorizontal.setBottomMargin(f);
+			ckvVertical.setBottomMargin(f);
 		}
 		else if (key.contentEquals("ck_layout")) {
 			int i = getPrefInt(prefs, key, 0);
