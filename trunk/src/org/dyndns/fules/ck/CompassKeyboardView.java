@@ -163,6 +163,54 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 	LongTap					onLongTap;	// long tap checker
 	boolean					wasLongTap;	// marker to skip processing the release of a long tap
 	Toast					toast;
+	float					downX, downY, upX, upY;	// the coordinates of a swipe, used for recognising global swipes
+
+	// Common touch event handler
+	public boolean processTouchEvent(MotionEvent event) {
+		switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				// remember the swipe starting coordinates for checking for global swipes
+				downX = event.getX();
+				downY = event.getY();
+				// register a long tap handler
+				wasLongTap = false;
+				postDelayed(onLongTap, LONG_TAP_TIMEOUT);
+				return true;
+
+			case MotionEvent.ACTION_UP:
+				// end of swipe
+				upX = event.getX();
+				upY = event.getY();
+				// check if this is the end of a long tap
+				if (wasLongTap) {
+					wasLongTap = false;
+					return true;
+				}
+				// cancel any pending checks for long tap
+				removeCallbacks(onLongTap);
+				// touch event processed
+				return true;
+
+			case MotionEvent.ACTION_MOVE:
+				// cancel any pending checks for long tap
+				removeCallbacks(onLongTap);
+				return false;
+		}
+		// we're not interested in other kinds of events
+		return false;
+	}
+
+	@Override public boolean onTouchEvent(MotionEvent event) {
+		boolean res = processTouchEvent(event);
+
+		switch (event.getAction()) {
+			case MotionEvent.ACTION_UP:
+				// check if global, done if it is
+				if (!processGlobalSwipe(downX, downY, upX, upY))
+					changeState(null, false);
+		}
+		return res;
+	}
 
 	/*
 	 * <Align> tag
@@ -170,7 +218,6 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 	class Align extends View implements EmbeddableItem {
 		ContainerItem parent;
 		int width, height;
-		float downX, downY;
 		int xmax, ymax;
 
 		public Align(Context context, XmlPullParser parser, ContainerItem p) throws XmlPullParserException, IOException {
@@ -182,7 +229,7 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 			if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Align"))
 				throw new XmlPullParserException("Expected <Align>", parser, null);
 
-			width = height = 1;
+			width = height = 0;
 
 			s = parser.getAttributeValue(null, "width");
 			if (s != null)
@@ -200,8 +247,6 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 
 		// Recalculate the drawing coordinates according to the symbol size
 		public void calculateSizes(float symbolSize) {
-			/*xmax = Math.round((width + 1) * gap + width * symbolSize);
-			ymax = Math.round(gap + height * fontSize + fontDispY);*/
 			xmax = Math.round(width * (symbolSize + gap));
 			ymax = Math.round(height * fontSize);
 		}
@@ -212,64 +257,6 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 			int h = (View.MeasureSpec.getMode(heightMeasureSpec) == View.MeasureSpec.EXACTLY) ? View.MeasureSpec.getSize(heightMeasureSpec) : ymax;
 			setMeasuredDimension(w, h);
 		}
-
-		// Check if the swipe is a global one
-		boolean processGlobalSwipe(float x1, float y1, float x2, float y2) {
-			// transform to the basis of the Row and ask it to decide
-			float l = getLeft();
-			float t = getTop();
-			return parent.processGlobalSwipe(x1 + l, y1 + t, x2 + l, y2 + t);
-		}
-
-		// Touch event handler
-		@Override public boolean onTouchEvent(MotionEvent event) {
-			int action = event.getAction();
-
-			if (action == MotionEvent.ACTION_DOWN)
-			{
-				// remember the swipe starting coordinates for checking for global swipes
-				downX = event.getX();
-				downY = event.getY();
-
-				// register a long tap handler
-				wasLongTap = false;
-				postDelayed(onLongTap, LONG_TAP_TIMEOUT);
-				return true;
-			}
-
-			if (action == MotionEvent.ACTION_UP) {
-				// check if this is the end of a long tap
-				if (wasLongTap) {
-					wasLongTap = false;
-					return true;
-				}
-
-				// end of swipe
-				float x = event.getX();
-				float y = event.getY();
-
-				// cancel any pending checks for long tap
-				removeCallbacks(onLongTap);
-
-				// check if global, done if it is
-				if (processGlobalSwipe(downX, downY, x, y))
-					return true;
-
-				changeState(null, false);
-
-				// touch event processed
-				return true;
-			}
-
-			if (action == MotionEvent.ACTION_MOVE) {
-				// cancel any pending checks for long tap
-				removeCallbacks(onLongTap);
-			}
-
-			// we're not interested in other kinds of events
-			return false;
-		}
-
 	}
 
 	/*
@@ -289,7 +276,6 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 		class Key extends View implements EmbeddableItem {
 			RectF			fullRect;		// the rectangle of the key frame
 			RectF			innerRect;		// the rectangle of the key body
-			float			downX, downY;		// the coordinates of the start of a swipe, used for recognising global swipes
 			int			xmax;			// width of the key
 			int			x1, x2, x3;		// x positions of the symbol columns within the key
 			ArrayList<State> 	state;			// the modifier <State> tags within this <Key>
@@ -511,60 +497,28 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 
 			// Touch event handler
 			@Override public boolean onTouchEvent(MotionEvent event) {
-				int action = event.getAction();
-
-				if (action == MotionEvent.ACTION_DOWN)
-				{
-					// remember the swipe starting coordinates for checking for global swipes
-					downX = event.getX();
-					downY = event.getY();
-
+				boolean res = processTouchEvent(event);
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
 					if (currentState != null)
 						setCandidate(getDirection(event.getX(), event.getY()));
-
-					// register a long tap handler
-					wasLongTap = false;
-					postDelayed(onLongTap, LONG_TAP_TIMEOUT);
 					return true;
-				}
 
-				if (action == MotionEvent.ACTION_UP) {
-					// check if this is the end of a long tap
-					if (wasLongTap) {
-						wasLongTap = false;
-						return true;
-					}
-
-					// end of swipe
-					float x = event.getX();
-					float y = event.getY();
-
-					// cancel any pending checks for long tap
-					removeCallbacks(onLongTap);
-					// deactivate the visual feedback
-					setCandidate(-1);
-
+					case MotionEvent.ACTION_UP:
 					// check if global, done if it is
-					if (processGlobalSwipe(downX, downY, x, y))
+					if (processGlobalSwipe(downX, downY, upX, upY))
 						return true;
-
 					// if the key is not valid in this state or there is no corresponding Action for it, then release the modifiers
-					if ((currentState == null) || !processAction(currentState.dir[getDirection(x, y)]))
+					if ((currentState == null) || !processAction(currentState.dir[getDirection(upX, upY)]))
 						changeState(null, false);
-
 					// touch event processed
 					return true;
-				}
 
-				if (action == MotionEvent.ACTION_MOVE) {
-					// cancel any pending checks for long tap
-					removeCallbacks(onLongTap);
+					case MotionEvent.ACTION_MOVE:
 					if (currentState != null)
 						setCandidate(getDirection(event.getX(), event.getY()));
 				}
-
-				// we're not interested in other kinds of events
-				return false;
+				return res;
 			}
 
 			// Draw a Action symbol label if it is specified

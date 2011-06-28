@@ -1,3 +1,9 @@
+2011-06-28 Gabor Simon <gabor.simon@mailbox.hu>
+Touch handling of aligmnent areas improved
+
+    * src/org/dyndns/fules/ck/CompassKeyboardView.java: margins and Align items now check for global swipes
+
+
 2011-06-27 Gabor Simon <gabor.simon@mailbox.hu>
 Support for alignment started
 
