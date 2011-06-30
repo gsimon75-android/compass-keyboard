@@ -84,12 +84,12 @@ class FileInfoView extends LinearLayout implements Checkable, View.OnTouchListen
 	static final int		TYPE_BROKEN = 3;
 	static final int		TYPE_MAX = 4;
 
-	File		file;
-	String		dispName;
-	int		type;
-	boolean		checked, iconClicked;
-	TextView	tv;
-	ImageView	iv;
+	File				file;
+	String				dispName;
+	int				type;
+	boolean				checked, iconClicked;
+	TextView			tv;
+	ImageView			iv;
 
 	public FileInfoView(Context context, String path, String s) {
 		super(context);
@@ -146,49 +146,49 @@ class FileInfoView extends LinearLayout implements Checkable, View.OnTouchListen
 		}
 	};
 
-        public boolean onTouch(View v, MotionEvent event) {
+	public boolean onTouch(View v, MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 			iconClicked = true;
 		return false;
 	}
 
 	public void setChecked(boolean c) {
-		if (c != checked) {
-			checked = c;
-			if (checked) {
-				tv.setTextColor(0xffffff00);
-				switch (type) {
-					case TYPE_FILE:
-						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_file));
-						break;
+		if (c == checked)
+			return;
+		checked = c;
+		if (checked) {
+			tv.setTextColor(0xffffff00);
+			switch (type) {
+				case TYPE_FILE:
+					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_file));
+					break;
 
-					case TYPE_DIR:
-						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_folder));
-						break;
+				case TYPE_DIR:
+					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_folder));
+					break;
 
-					case TYPE_BROKEN:
-						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_broken));
-						break;
-				}
+				case TYPE_BROKEN:
+					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_active_broken));
+					break;
 			}
-			else {
-				tv.setTextColor(0xffffffff);
-				switch (type) {
-					case TYPE_FILE:
-						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_file));
-						break;
-
-					case TYPE_DIR:
-						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_folder));
-						break;
-
-					case TYPE_BROKEN:
-						iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_broken));
-						break;
-				}
-			}
-			iconClicked = false;
 		}
+		else {
+			tv.setTextColor(0xffffffff);
+			switch (type) {
+				case TYPE_FILE:
+					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_file));
+					break;
+
+				case TYPE_DIR:
+					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_folder));
+					break;
+
+				case TYPE_BROKEN:
+					iv.setImageDrawable(getResources().getDrawable(R.drawable.icon_list_passive_broken));
+					break;
+			}
+		}
+		iconClicked = false;
 	}
 
 	public void toggle() {
@@ -375,3 +375,4 @@ public class FilePicker extends ListView implements AdapterView.OnItemClickListe
 	}
 }
 
+// vim: set ai si sw=8 ts=8 noet:

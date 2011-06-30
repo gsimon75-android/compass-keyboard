@@ -36,3 +36,5 @@ public class TextDialogPreference extends DialogPreference {
 		notifyChanged();
 	}
 }
+
+// vim: set ai si sw=8 ts=8 noet:
