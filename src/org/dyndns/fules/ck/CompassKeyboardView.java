@@ -30,10 +30,6 @@ import java.util.Iterator;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-interface ContainerItem {
-	boolean processGlobalSwipe(float x1, float y1, float x2, float y2);
-}
-
 interface EmbeddableItem {
 	public void calculateSizes(float symbolSize);
 }
@@ -116,7 +112,7 @@ class Action {
 /*
  * <Layout> tag
  */
-public class CompassKeyboardView extends LinearLayout implements ContainerItem {
+public class CompassKeyboardView extends LinearLayout {
 	// Constants
 	private static final String		TAG = "CompassKeyboardView";
 	private static final long[][]		vibratePattern = { { 10, 100 }, { 10, 50, 50, 50 } };
@@ -165,71 +161,30 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 	Toast					toast;
 	float					downX, downY, upX, upY;	// the coordinates of a swipe, used for recognising global swipes
 
-	// Common touch event handler
-	public boolean processTouchEvent(MotionEvent event) {
-		switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				// remember the swipe starting coordinates for checking for global swipes
-				downX = event.getX();
-				downY = event.getY();
-				// register a long tap handler
-				wasLongTap = false;
-				postDelayed(onLongTap, LONG_TAP_TIMEOUT);
-				return true;
-
-			case MotionEvent.ACTION_UP:
-				// end of swipe
-				upX = event.getX();
-				upY = event.getY();
-				// check if this is the end of a long tap
-				if (wasLongTap) {
-					wasLongTap = false;
-					return true;
-				}
-				// cancel any pending checks for long tap
-				removeCallbacks(onLongTap);
-				// touch event processed
-				return true;
-
-			case MotionEvent.ACTION_MOVE:
-				// cancel any pending checks for long tap
-				removeCallbacks(onLongTap);
-				return false;
+	/*
+	 * Long tap handler
+	 */
+	private final class LongTap implements Runnable {
+		public void run() {
+			wasLongTap = processAction(dir[TAP]);
 		}
-		// we're not interested in other kinds of events
-		return false;
-	}
-
-	@Override public boolean onTouchEvent(MotionEvent event) {
-		boolean res = processTouchEvent(event);
-
-		switch (event.getAction()) {
-			case MotionEvent.ACTION_UP:
-				// check if global, done if it is
-				if (!processGlobalSwipe(downX, downY, upX, upY))
-					changeState(null, false);
-		}
-		return res;
 	}
 
 	/*
 	 * <Align> tag
 	 */
 	class Align extends View implements EmbeddableItem {
-		ContainerItem parent;
 		int width, height;
 		int xmax, ymax;
 
-		public Align(Context context, XmlPullParser parser, ContainerItem p) throws XmlPullParserException, IOException {
+		public Align(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
 			super(context);
-			setBackgroundColor(0xff3f0000); // for debugging placement
 			String s;
 
-			parent = p;
 			if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Align"))
 				throw new XmlPullParserException("Expected <Align>", parser, null);
 
-			width = height = 0;
+			width = height = xmax = ymax = 0;
 
 			s = parser.getAttributeValue(null, "width");
 			if (s != null)
@@ -262,7 +217,7 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 	/*
 	 * <Row> tag
 	 */ 
-	class Row extends LinearLayout implements ContainerItem, EmbeddableItem {
+	class Row extends LinearLayout implements EmbeddableItem {
 		int	ymax;					// height of the row
 		int	y1, y2, y3;				// y positions of the symbol rows within the keys
 		int	columns;				// number of symbol columns (eg. 3 for full key, 2 for side key), used for size calculations
@@ -278,7 +233,7 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 			RectF			innerRect;		// the rectangle of the key body
 			int			xmax;			// width of the key
 			int			x1, x2, x3;		// x positions of the symbol columns within the key
-			ArrayList<State> 	state;			// the modifier <State> tags within this <Key>
+			ArrayList<State>	state;			// the modifier <State> tags within this <Key>
 			State			currentState = null;	// the currently selected <State>, according to @CompassKeyboardView::modifiers
 			boolean			hasLeft, hasRight;	// does the key have the given left and right symbols?
 			int			candidateDir;		// the direction into which a drag is in progress, or -1 if inactive
@@ -295,8 +250,6 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 				 */
 
 				public State(XmlPullParser parser) throws XmlPullParserException, IOException {
-					int i;
-
 					if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("State"))
 						throw new XmlPullParserException("Expected <State>", parser, null);
 
@@ -307,7 +260,7 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 					if ((name != null) && !name.contentEquals("")) {
 						String[] fields = name.split(",");
 						int numFields = fields.length;
-						for (i = 0; i < numFields; i++)
+						for (int i = 0; i < numFields; i++)
 							nameSet.add(fields[i]);
 					}
 
@@ -334,7 +287,7 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 					}
 
 					// delete empty entries
-					for (i = 0; i < 9; i++) {
+					for (int i = 0; i < 9; i++) {
 						if ((dir[i] != null) && dir[i].isEmpty)
 							dir[i] = null;
 					}
@@ -360,7 +313,7 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 				hasLeft = hasRight = true;
 				state = new ArrayList();
 
-				s = parser.getAttributeValue(null, "name");
+				//s = parser.getAttributeValue(null, "name");
 				//if (s != null)
 				//	Log.d(TAG, "Loading key '"+s+"'");
 
@@ -422,20 +375,12 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 						x3	= Math.round(2 * gap + 1.5f * symbolSize);
 					}
 					else {
-						xmax	= Math.round(2 * gap + symbolSize);
+						xmax	= Math.round(2 * gap +        symbolSize);
 						x1 = x2 = x3 = Math.round(gap + 0.5f * symbolSize);
 					}
 				}
 				fullRect = new RectF(0, 0, xmax - 1, ymax - 1);
 				innerRect = new RectF(2, 2, xmax - 3, ymax - 3);
-			}
-
-			// Check if the swipe is a global one
-			boolean processGlobalSwipe(float x1, float y1, float x2, float y2) {
-				// transform to the basis of the Row and ask it to decide
-				float l = getLeft();
-				float t = getTop();
-				return Row.this.processGlobalSwipe(x1 + l, y1 + t, x2 + l, y2 + t);
 			}
 
 			void setCandidate(int d) {
@@ -500,35 +445,34 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 				boolean res = processTouchEvent(event);
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN:
-					if (currentState != null)
-						setCandidate(getDirection(event.getX(), event.getY()));
-					return true;
+						if (currentState != null)
+							setCandidate(getDirection(event.getX(), event.getY()));
+						return true;
 
 					case MotionEvent.ACTION_UP:
-					// check if global, done if it is
-					if (processGlobalSwipe(downX, downY, upX, upY))
+						// check if global: transform to the basis of the CompassKeyboardView and ask it to decide
+						float l = getLeft() + Row.this.getLeft();
+						float t = getTop() + Row.this.getTop();
+						if (processGlobalSwipe(downX + l, downY + t, upX + l, upY + t))
+							return true;
+						// if the key is not valid in this state or there is no corresponding Action for it, then release the modifiers
+						if ((currentState == null) || !processAction(currentState.dir[getDirection(upX, upY)]))
+							changeState(null, false);
+						// touch event processed
 						return true;
-					// if the key is not valid in this state or there is no corresponding Action for it, then release the modifiers
-					if ((currentState == null) || !processAction(currentState.dir[getDirection(upX, upY)]))
-						changeState(null, false);
-					// touch event processed
-					return true;
 
 					case MotionEvent.ACTION_MOVE:
-					if (currentState != null)
-						setCandidate(getDirection(event.getX(), event.getY()));
+						if (currentState != null)
+							setCandidate(getDirection(event.getX(), event.getY()));
+						break;
 				}
 				return res;
 			}
 
 			// Draw a Action symbol label if it is specified
 			protected void drawLabel(Canvas canvas, int d, int x, int y) {
-				if (currentState.dir[d] != null) {
-					if (d == candidateDir)
-						canvas.drawText(currentState.dir[d].text, x, y, candidatePaint);
-					else
-						canvas.drawText(currentState.dir[d].text, x, y, textPaint);
-				}
+				if (currentState.dir[d] != null)
+					canvas.drawText(currentState.dir[d].text, x, y, (d == candidateDir) ? candidatePaint : textPaint);
 			}
 
 			// Redraw the key
@@ -619,7 +563,7 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 					addView(nk, lp);
 				}
 				else if (parser.getName().contentEquals("Align")) {
-					Align na = new Align(getContext(), parser, this);
+					Align na = new Align(getContext(), parser);
 
 					columns += na.width;
 					addView(na, lp);
@@ -646,21 +590,21 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 			if (hasTop) {
 				if (hasBottom) {
 					ymax	= Math.round(2 * gap + 3 * fontSize);
-					y1	= Math.round(gap +         fontDispY);
-					y2	= Math.round(gap + 1 * fontSize + fontDispY);
-					y3	= Math.round(gap + 2 * fontSize + fontDispY);
+					y1	= Math.round(    gap +                fontDispY);
+					y2	= Math.round(    gap + 1 * fontSize + fontDispY);
+					y3	= Math.round(    gap + 2 * fontSize + fontDispY);
 				}
 				else {
 					ymax	= Math.round(2 * gap + 2 * fontSize);
-					y1	= Math.round(gap +         fontDispY);
-					y2 = y3	= Math.round(gap + 1 * fontSize + fontDispY);
+					y1	= Math.round(    gap +                fontDispY);
+					y2 = y3	= Math.round(    gap + 1 * fontSize + fontDispY);
 				}
 			}
 			else {
 				if (hasBottom) {
 					ymax	= Math.round(2 * gap + 2 * fontSize);
-					y1 = y2	= Math.round(gap +         fontDispY);
-					y3	= Math.round(gap + 1 * fontSize + fontDispY);
+					y1 = y2	= Math.round(    gap +                fontDispY);
+					y3	= Math.round(    gap + 1 * fontSize + fontDispY);
 				}
 				else {
 					ymax	= Math.round(2 * gap + fontSize);
@@ -676,20 +620,7 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 			for (int i = 0; i < n; i++) {
 				EmbeddableItem e = (EmbeddableItem)getChildAt(i);
 				e.calculateSizes(symbolSize);
-				/*View v = getChildAt(i);
-				if (v instanceof Key) 
-					((Key)v).calculateSizes(symbolSize);
-				else if (v instanceof Align) 
-					((Align)v).calculateSizes(symbolSize);*/
 			}
-		}
-
-		// Check if the swipe is a global one
-		public boolean processGlobalSwipe(float x1, float y1, float x2, float y2) {
-			// transform to the basis of the CompassKeyboardView and ask it to decide
-			float l = getLeft();
-			float t = getTop();
-			return CompassKeyboardView.this.processGlobalSwipe(x1 + l, y1 + t, x2 + l, y2 + t);
 		}
 
 		// Report the size of the row
@@ -747,14 +678,11 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 
 	// Read the layout from an XML parser
 	public void readLayout(XmlPullParser parser) throws XmlPullParserException, IOException {
-		int i;
-		String s;
-
 		int eventType = parser.getEventType();
 		if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Layout"))
 			throw new XmlPullParserException("Expected <Layout>", parser, null);
 
-		s = parser.getAttributeValue(null, "key_mm");
+		String s = parser.getAttributeValue(null, "key_mm");
 		if (s == null)
 			throw new XmlPullParserException("Missing key_mm value", parser, null);
 		keyMM = Float.parseFloat(s);
@@ -772,7 +700,7 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 		dir[SW]  = new Action(parser);
 		dir[S]   = new Action(parser);
 		dir[SE]  = new Action(parser);
-		for (i = 0; i < 9; i++) {
+		for (int i = 0; i < 9; i++) {
 			if ((dir[i] != null) && dir[i].isEmpty)
 				dir[i] = null;
 		}
@@ -795,7 +723,7 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 					nKeys = nc;
 			}
 			else if (parser.getName().contentEquals("Align")) {
-				Align na = new Align(getContext(), parser, this);
+				Align na = new Align(getContext(), parser);
 				addView(na, lp);
 
 				if (columns < na.width)
@@ -849,19 +777,55 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 		for (int i = 0; i < n; i++) {
 			EmbeddableItem e = (EmbeddableItem)getChildAt(i);
 			e.calculateSizes(nFontSize);
-			/*View v = getChildAt(i);
-			if (v instanceof Row)
-				((Row)v).calculateSizes(nFontSize);
-			else if (v instanceof Align)
-				((Align)v).calculateSizes(nFontSize);*/
 		}
 		commitState();
 	}
 
-	private final class LongTap implements Runnable {
-		public void run() {
-			wasLongTap = processAction(dir[TAP]);
+	// Common touch event handler - record coordinates and manage long tap handlers
+	public boolean processTouchEvent(MotionEvent event) {
+		switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				// remember the swipe starting coordinates for checking for global swipes
+				downX = event.getX();
+				downY = event.getY();
+				// register a long tap handler
+				wasLongTap = false;
+				postDelayed(onLongTap, LONG_TAP_TIMEOUT);
+				return true;
+
+			case MotionEvent.ACTION_UP:
+				// end of swipe
+				upX = event.getX();
+				upY = event.getY();
+				// check if this is the end of a long tap
+				if (wasLongTap) {
+					wasLongTap = false;
+					return true;
+				}
+				// cancel any pending checks for long tap
+				removeCallbacks(onLongTap);
+				// touch event processed
+				return true;
+
+			case MotionEvent.ACTION_MOVE:
+				// cancel any pending checks for long tap
+				removeCallbacks(onLongTap);
+				return false;
 		}
+		// we're not interested in other kinds of events
+		return false;
+	}
+
+	@Override public boolean onTouchEvent(MotionEvent event) {
+		boolean res = processTouchEvent(event);
+		switch (event.getAction()) {
+			case MotionEvent.ACTION_UP:
+				// check if global, done if it is
+				if (!processGlobalSwipe(downX, downY, upX, upY))
+					changeState(null, false);
+				break;
+		}
+		return res;
 	}
 
 	public boolean processGlobalSwipe(float x1, float y1, float x2, float y2) {
@@ -942,31 +906,14 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 		if (cd.mod != null) {
 			changeState(cd.mod, cd.isLock);		// process a 'mod' or 'lock'
 		}
-		else {
-			if (cd.code != null) {
-				// process a 'code'
-				//Log.v(TAG, "Text: "+cd.code); 
-				resetState();
-				if (actionListener != null)
-					actionListener.onText(cd.code);
-			}
-			else if (cd.keyCode >= 0) {
-				// process a 'key'
-				//Log.v(TAG, "Key: "+String.valueOf(cd.keyCode)); 
-				resetState();
-				if (actionListener != null)
-					actionListener.onKey(cd.keyCode, null);
-			}
-			else if (cd.layout >= 0) {
-				// process a 'layout'
-				//Log.v(TAG, "Layout: "+String.valueOf(cd.layout)); 
-				resetState();
-				if ((actionListener != null) && (actionListener instanceof CompassKeyboard)) {
-					CompassKeyboard ck = (CompassKeyboard)actionListener;
-					ck.updateLayout(cd.layout);
-				}
-			}
-
+		else if (actionListener != null) {
+			resetState();
+			if (cd.code != null)
+				actionListener.onText(cd.code); // process a 'code'
+			else if (cd.keyCode >= 0)
+				actionListener.onKey(cd.keyCode, null); // process a 'key'
+			else if ((cd.layout >= 0) && (actionListener instanceof CompassKeyboard))
+				((CompassKeyboard)actionListener).updateLayout(cd.layout); // process a 'layout'
 			vibrateCode(vibrateOnKey);
 		}
 
@@ -986,7 +933,6 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 	}
 
 	public void toggleLock(String name) {
-		//Log.d(TAG, "Toggling lock '"+name+"'");
 		if (!locks.add(name))
 			locks.remove(name);
 		commitState();
@@ -998,20 +944,17 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 			vibrateCode(vibrateOnCancel);
 		}
 		else if (state.contentEquals("hide")) {
-			//Log.v(TAG, "Hide");
 			resetState();
 			if (actionListener != null)
 				actionListener.swipeDown(); // simulate hiding request
 
 		}
 		else if (isLock){
-			//Log.v(TAG, "Lock: "+state); 
 			resetState();
 			toggleLock(state);
 			vibrateCode(vibrateOnModifier);
 		}
 		else {
-			//Log.v(TAG, "State: "+state); 
 			addState(state);
 			vibrateCode(vibrateOnModifier);
 		}
@@ -1054,4 +997,3 @@ public class CompassKeyboardView extends LinearLayout implements ContainerItem {
 }
 
 // vim: set ai si sw=8 ts=8 noet:
-

@@ -30,12 +30,12 @@ public class CompassKeyboardSettings extends PreferenceActivity implements Share
 			layoutPrefs = (PreferenceScreen)p;
 
 		// A regex for recognising strings like 'something[42]' would be /([^[]*)\[(\d*)\]/, but
-	       	// java.util.regex seems to have troubles with /[^[]/, most probably because Java developers
+		// java.util.regex seems to have troubles with /[^[]/, most probably because Java developers
 		// tried to 'invent' a syntax for unions and intersections of character classes like 
 		// '[[a-f][0-9]]' and '[[a-z]&&[jkl]]'.
 		// They made the '[' a special character inside of character classes, so now it has to be
 		// escaped (btw, backslash is NOT a special char in POSIX char classes), and hence the
-	        // Java-regexes are incompatible with the rest of the world, POSIX included.
+		// Java-regexes are incompatible with the rest of the world, POSIX included.
 		// Well, this was not the best idea. Perhaps reading the POSIX docs first would have been
 		// a better approach...
 		indexedExpr = Pattern.compile("([^\\[]*)\\[([\\d]*)\\]");
@@ -114,3 +114,5 @@ public class CompassKeyboardSettings extends PreferenceActivity implements Share
 		}
 	}
 }
+
+// vim: set ai si sw=8 ts=8 noet:

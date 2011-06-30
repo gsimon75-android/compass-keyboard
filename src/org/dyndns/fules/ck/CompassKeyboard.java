@@ -321,3 +321,5 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		}
 	}
 }
+
+// vim: set ai si sw=8 ts=8 noet:

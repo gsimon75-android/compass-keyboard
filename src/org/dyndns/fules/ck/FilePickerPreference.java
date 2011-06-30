@@ -23,8 +23,8 @@ import java.beans.PropertyChangeListener;
 
 public class FilePickerPreference extends Preference implements PropertyChangeListener, DialogInterface.OnClickListener {
 	private static final String	TAG = "FilePickerPreference";
-	AlertDialog	dia;
-	FilePicker	fp;
+	AlertDialog			dia;
+	FilePicker			fp;
 
 	public FilePickerPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -51,9 +51,8 @@ public class FilePickerPreference extends Preference implements PropertyChangeLi
 
 	public void propertyChange(PropertyChangeEvent event) {
 		String propName = event.getPropertyName();
-		if (propName.contentEquals("workingDir")) {
+		if (propName.contentEquals("workingDir"))
 			dia.setTitle((String)event.getNewValue());
-		}
 	}
 
 	@Override protected void onClick() {
@@ -72,3 +71,5 @@ public class FilePickerPreference extends Preference implements PropertyChangeLi
 		}
 	}
 }
+
+// vim: set ai si sw=8 ts=8 noet:
