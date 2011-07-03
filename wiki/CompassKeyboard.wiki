@@ -116,6 +116,12 @@ In this mode the currently selected symbol is displayed in the top-center of the
 == Highlight ==
 Less visible than the previous (thus more useful for entering passwords), in this mode the currently selected symbol appears only on the key itself, but with a slightly larger font and a different colour.
 
+= Sizing =
+
+Mostly for the keys on the sides the border of the screen may make it difficult to perform outward movements, therefore you may find the width settings of the left, right and bottom margins useful.
+
+Likewise, mostly in case of devices with large screens it you may find it annoying that the maximal size for the keys is limited, so here you may reconfigure this upper limit as well.
+
 
 = Custom layouts =
 Despite the best efforts for defining the default layouts as flexible as possible, you may find that another arrangement would fit your needs better, so CompassKeyboard supports loading a layout from a plain XML file as well. Although this feature gives you a complete control of the key layout and behaviour, designing such a file is somewhat a developers task and it is definitely a tedious work (believe me...), so before you decide to do so, please consider first whether it is really worth your time and efforts, and perhaps consult the document LayoutFormat.README and the built-in layouts, all available as part of the source code.
@@ -151,4 +157,4 @@ If you have some ideas how CompassKeyboard could be improved, some features you 
 
 
 = Thanks =
-Finally, I'd like to say thanks to my family, friends, teachers, colleagues, and above all, to the Big Boss Above All :).
+I'd like to say thanks to Christian Marg for his development ideas and suggestions, to my family, friends, teachers, colleagues for the unceasing support and inspiration, and above all, to the Big Boss Above All :).
