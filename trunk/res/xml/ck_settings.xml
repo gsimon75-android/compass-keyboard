@@ -87,9 +87,9 @@
 	</PreferenceScreen>
 
 	<PreferenceScreen
-		android:key="pg_margins"
-		android:title="@string/pg_margins_title"
-		android:summary="@string/pg_margins_summary"
+		android:key="pg_sizes"
+		android:title="@string/pg_sizes_title"
+		android:summary="@string/pg_sizes_summary"
 		android:orderingFromXml="true">
 		<EditTextPreference
 			android:key="ck_margin_left"
@@ -106,6 +106,11 @@
 			android:title="@string/ck_margin_bottom_title"
 			android:summary="@string/ck_margin_bottom_summary"
 			android:defaultValue="0"/>
+		<EditTextPreference
+			android:key="ck_max_keysize"
+			android:title="@string/ck_max_keysize_title"
+			android:summary="@string/ck_max_keysize_summary"
+			android:defaultValue="12"/>
 	</PreferenceScreen>
 
 	<PreferenceScreen

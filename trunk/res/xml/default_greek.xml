@@ -2,7 +2,7 @@
 
 <CompassKeyboard name="Ελληνικό">
 
-    <Layout name="vertical" key_mm="12">
+    <Layout name="vertical">
         <!-- global swipes -->
         <Action/>   <Action/>   <Action/>
         <Action/>   <Action/>   <Action/>
@@ -228,7 +228,7 @@
 
     </Layout>
 
-    <Layout name="horizontal" key_mm="12">
+    <Layout name="horizontal">
         <!-- global swipes -->
         <Action/>   <Action/>   <Action/>
         <Action/>   <Action/>   <Action/>

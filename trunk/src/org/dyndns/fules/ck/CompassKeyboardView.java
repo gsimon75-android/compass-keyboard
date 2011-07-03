@@ -135,8 +135,8 @@ public class CompassKeyboardView extends LinearLayout {
 	int					vibrateOnCancel = 0;
 	int					feedbackNormal = 0;
 	int					feedbackPassword = 0;
-	float					keyMM;				// maximal key size in mm-s
-	float					marginLeft = 0, marginRight = 0, marginBottom = 0; // in mm-s
+	float					keyMM = 12;	// maximal key size in mm-s
+	float					marginLeft = 0, marginRight = 0, marginBottom = 0; // margins in mm-s
 
 	// Internal params
 	int					columns;	// maximal number of symbol columns (eg. 3 for full key, 2 for side key), used for size calculations
@@ -450,6 +450,7 @@ public class CompassKeyboardView extends LinearLayout {
 						return true;
 
 					case MotionEvent.ACTION_UP:
+						setCandidate(-1);
 						// check if global: transform to the basis of the CompassKeyboardView and ask it to decide
 						float l = getLeft() + Row.this.getLeft();
 						float t = getTop() + Row.this.getTop();
@@ -681,11 +682,6 @@ public class CompassKeyboardView extends LinearLayout {
 		int eventType = parser.getEventType();
 		if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Layout"))
 			throw new XmlPullParserException("Expected <Layout>", parser, null);
-
-		String s = parser.getAttributeValue(null, "key_mm");
-		if (s == null)
-			throw new XmlPullParserException("Missing key_mm value", parser, null);
-		keyMM = Float.parseFloat(s);
 
 		parser.nextTag();
 
@@ -992,6 +988,11 @@ public class CompassKeyboardView extends LinearLayout {
 
 	public void setBottomMargin(float f) {
 		marginBottom = f;
+		calculateSizesForMetrics(getResources().getDisplayMetrics());
+	}
+
+	public void setMaxKeySize(float f) {
+		keyMM = f > 0 ? f : 12;
 		calculateSizesForMetrics(getResources().getDisplayMetrics());
 	}
 }

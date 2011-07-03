@@ -2,7 +2,7 @@
 
 <CompassKeyboard name="Кириллица">
 
-    <Layout name="vertical" key_mm="12">
+    <Layout name="vertical">
         <!-- global swipes -->
         <Action mod="variant"/> <Action/>   <Action mod="soft"/>
         <Action/>               <Action/>   <Action/>
@@ -333,7 +333,7 @@
 
     </Layout>
 
-    <Layout name="horizontal" key_mm="12">
+    <Layout name="horizontal">
         <!-- global swipes -->
         <Action mod="variant"/> <Action/>   <Action mod="soft"/>
         <Action/>               <Action/>   <Action/>
