@@ -1,4 +1,13 @@
 2011-07-03 Gabor Simon <gabor.simon@mailbox.hu>
+Documentation fixed
+
+    * misc/LayoutFormat.README: description of <Align> tags and long tap global swipes added
+
+    * misc/layout_template.xml: actualised according to default_latin.xml
+
+    * misc/README: removed because it has been moved to the Wiki
+
+2011-07-03 Gabor Simon <gabor.simon@mailbox.hu>
 User-configurable key size constraints added, build system improved
 
     * AndroidManifest.xml: version code incremented

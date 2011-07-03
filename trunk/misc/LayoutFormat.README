@@ -3,10 +3,10 @@ The format of a layout XML file can be illustrated by the excerpt based on the d
 <?xml version="1.0" encoding="utf-8"?>
 <CompassKeyboard name="sample_based_on_default_latin">
 
-    <Layout name="vertical" key_mm="12">
+    <Layout name="vertical">
         <!-- global swipes -->
         <Action mod="grave"/>   <Action mod="caret"/>   <Action mod="acute"/>
-        <Action mod="diae"/>    <Action/>               <Action mod="misc"/>
+        <Action mod="diae"/>    <Action mod="longtap"/> <Action mod="misc"/>
         <Action mod="tilde"/>   <Action mod="hacek"/>   <Action mod="spec"/>
 
         <Row name="top">
@@ -21,6 +21,8 @@ The format of a layout XML file can be illustrated by the excerpt based on the d
                     <Action code="}"/>                      <Action code="["/>                      <Action code="]"/>
                 </State>
             </Key>
+
+            <Align width="2"/>
 
             <Key name="a-o">
                 <State>
@@ -54,6 +56,8 @@ The format of a layout XML file can be illustrated by the excerpt based on the d
 	    <!-- other Key tags -->
         </Row>
 
+        <Align height="1"/>
+
         <Row name="bottom" has_bottom="0">
 	    <!-- other Key tags -->
         </Row>
@@ -61,10 +65,10 @@ The format of a layout XML file can be illustrated by the excerpt based on the d
 	<!-- other Row tags -->
     </Layout>
 
-    <Layout name="horizontal" key_mm="12">
+    <Layout name="horizontal">
         <!-- global swipes -->
         <Action mod="grave"/>   <Action mod="caret"/>   <Action mod="acute"/>
-        <Action mod="diae"/>    <Action/>               <Action mod="misc"/>
+        <Action mod="diae"/>    <Action mod="longtap"/> <Action mod="misc"/>
         <Action mod="tilde"/>   <Action mod="hacek"/>   <Action mod="spec"/>
 
 	<!-- other Row tags -->
@@ -72,9 +76,9 @@ The format of a layout XML file can be illustrated by the excerpt based on the d
 </CompassKeyboard>
 
 As you see, the XML file contains one <CompassKeyboard> tag that may have a name="..." attribute, although this latter serves only debug purposes.
-Within the <CompassKeyboard> there must be exactly two <Layout> tags defined, one with name="horizontal" and one with name="vertical". The key_mm="12" attributes specify that the keys may be at most 12 mm large, even if the screen would permit larger. (Certainly, if the screen is smaller, the keys will be shrinked to fit anyway.)
+Within the <CompassKeyboard> there must be exactly two <Layout> tags defined, one with name="horizontal" and one with name="vertical".
 
-Each <Layout> starts with the definition of its eight global swipes in the form of <Action mod="..."/> tags. Even though currently there is no 'tap' global swipe implemented yet, for further compatibility it must be present and is currently ignored.  The name of the accent modifier may be any arbitrary string as long as it is unique.
+Each <Layout> starts with the definition of its nine global swipes in the form of <Action mod="..."/> tags. The name of the accent modifier may be any arbitrary string as long as it is unique.
 
 The content of the <Layout> continues with any number of <Row> tags, whose name="..." attribute is again only for debug purposes. The <Row> tags may have two further optional attributes: has_top="0" and has_bottom="0", which control whether the keys in the row have their upper and lower directional actions. A non-zero value means that these actions are present, and this is the default behaviour if the has_xxx="" attribute is not present at all.
 
@@ -84,6 +88,10 @@ Within each <Row> you may specify the <Key> tags, with the name="..." attribute 
 The actual arrangement of the layout is defined in the content of the <Key>-s, where you may specify the behaviour of that key in the various modifier states, one by one. You can do this by defining <State> tags whose name="..." attribute must either not be present at all (for referring to the default mode) or match some of the modifiers that you defined at the global swipes or the ones that you define later as modifier keys (like Shift). If you would like to specify the behaviour for a combination of modifiers (like acute + shift), you may do so by separating those modifier names with a comma, the order of the names is irrelevant.
 
 There is a special modifier name 'hide', choosing this the user may request hiding the virtual keyboard.
+
+Another possible item within the <Row>s is the <Align> tag, using this you may insert empty space between otherwise adjacent keys. The width of this space can be specified by the width="..." attribute of the <Align> tag, the unit is the width of a normal symbol column of a key.
+
+The <Align> tags may appear between <Row>s as well, in this case they are used for adding extra vertical space, whose amount can be specified with the height="..." attribute of the <Align> tag. As usual, the the unit is the height of a normal symbol row of a key.
 
 Within each <State> you can specify what should happen if the user performs a directional swipe on the key, by specifying exactly one <Action/> tag for each direction that is relevant for that key, in the order NW, N, NE, W, TAP, E, SW, S, SE. By default this means nine such <Action/> tags, but if the key is located in a row that has has_top="0" or has_bottom="0", then that eliminates the need for the NW, N, NE or the SW, S, SE directions, thus reducing the number of <Action/> tags to 6 (or to 3, if both has_top and has_bottom is zero).
 
@@ -110,7 +118,4 @@ Some general guidelines for designing layouts:
  - Try to use as little part of the screen as possible, this is one of the primary goals of CompassKeyboard.
  - Don't use too complicated modifier combinations, at least not for the frequently used keys, users will consider more than two movements tiresome.
  - If you design more layouts, the more similar you arrange them, the easier your users can switch between them.
-
-
-
 
