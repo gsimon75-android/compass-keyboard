@@ -117,7 +117,7 @@ Ebben a módban az épp kiválasztott szimbólum a képernyő tetejének közep�
 == Kiemelés ==
 Kevésbé látványos, mint az előző (ezért jelszóbevitelhez alkalmasabb), ebben a módban az épp kiválasztott szimbólum csak a gombon magán jelenik meg, viszont egy kissé nagyobb betűmérettel és más színnel.
 
-== Méretezés ==
+= Méretezés =
 
 Főképp a szélső billentyűk esetében zavaró lehet, hogy a képernyő pereme miatt a kifelé irányuló mozdulatok nehezen vihetőek be, ezért a beállítások között módunkban áll a bal- és jobboldali valamint az alsó margó szélességét beállítani.
 
@@ -157,4 +157,4 @@ Ha van valamely elgondolása, amivel a CompassKeyboard-ot tovább lehetne fejles
 
 
 = Köszönet =
-Végezetül szeretnék köszönetet mondani a családomnak, barátaimnak, tanáraimnak és munkatársaimnak, és mindenek felett a Nagy Főnöknek Mindenek Felett :).
+A fejlesztést segítő hasznos elgondolásokért és javaslatokért szeretnék köszönetet mondani Christian Marg-nak, valamint a folyamatos támogatásért és bíztatásért a családomnak, barátaimnak, tanáraimnak és munkatársaimnak, és mindenek felett a Nagy Főnöknek Mindenek Felett :).
