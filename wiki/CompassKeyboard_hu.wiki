@@ -117,6 +117,12 @@ Ebben a módban az épp kiválasztott szimbólum a képernyő tetejének közep�
 == Kiemelés ==
 Kevésbé látványos, mint az előző (ezért jelszóbevitelhez alkalmasabb), ebben a módban az épp kiválasztott szimbólum csak a gombon magán jelenik meg, viszont egy kissé nagyobb betűmérettel és más színnel.
 
+== Méretezés ==
+
+Főképp a szélső billentyűk esetében zavaró lehet, hogy a képernyő pereme miatt a kifelé irányuló mozdulatok nehezen vihetőek be, ezért a beállítások között módunkban áll a bal- és jobboldali valamint az alsó margó szélességét beállítani.
+
+Ehhez hasonlóan főképp nagy kijelzőjű készülékeknél zavaró lehet a billentyűk maximális méretének a lekorlátozása, így ezen felső korlátot is itt állíthatjuk be.
+
 
 = Felhasználói elrendezések =
 Annak ellenére, hogy a beépített elrendezések a legjobb odafigyeléssel lettek kialakítva, hogy a lehető legrugalmasabbak legyenek, előfordulhat, hogy egy másfajta elrendezést kézreállóbbnak találna, ezért a CompassKeyboard lehetővé teszi az elrendezésnek egy sima XML file-ból való betöltését is. Bár ez a lehetőség teljeskörű befolyást ad az elrendezések fölött, egy ilyen file elkészítése már valamelyest fejlesztői feladat és mindenképpen egy időigényes és fárasztó folyamat, úgyhogy mielőtt ebbe belevágna, kérem mindenképpen mérlegelje először, hogy megéri-e az erre fordítandó idejét és fáradságát, valamint érdemes először átnézni a forráskódban található LayoutFormat.README leírást és a beépített elrendezések XML file-jait.
