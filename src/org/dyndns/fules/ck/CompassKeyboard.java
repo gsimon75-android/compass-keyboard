@@ -26,6 +26,10 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import android.inputmethodservice.AbstractInputMethodService;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+
 public class CompassKeyboard extends InputMethodService implements KeyboardView.OnKeyboardActionListener, SharedPreferences.OnSharedPreferenceChangeListener  {
 	public static final String	SHARED_PREFS_NAME = "CompassKeyboardSettings";
 	public static final int[]	builtinLayouts = { R.xml.default_latin, R.xml.default_cyrillic, R.xml.default_greek }; // keep in sync with constants.xml
@@ -137,7 +141,7 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		return null;
 	}
 
-	@Override public void onInitializeInterface() {
+	@Override public AbstractInputMethodService.AbstractInputMethodImpl onCreateInputMethodInterface() {
 		mPrefs = getSharedPreferences(SHARED_PREFS_NAME, 0);
 
 		ckvHorizontal = new CompassKeyboardView(this);
@@ -162,6 +166,9 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		onSharedPreferenceChanged(mPrefs, "ck_margin_left");
 		onSharedPreferenceChanged(mPrefs, "ck_margin_right");
 		onSharedPreferenceChanged(mPrefs, "ck_margin_bottom");
+		onSharedPreferenceChanged(mPrefs, "ck_max_keysize");
+
+		return super.onCreateInputMethodInterface();
 	}
 
 	// Select the layout view appropriate for the screen direction, if there is more than one
@@ -177,6 +184,10 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			ckv.calculateSizesForMetrics(metrics);
 		else
 			Log.e(TAG, "onCreateInputView: ckv is null");
+	
+		ViewParent p = ckv.getParent();
+		if ((p != null) && (p instanceof ViewGroup))
+			((ViewGroup)p).removeView(ckv);
 		return ckv;
 	} 
 
@@ -187,7 +198,6 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			ckv.setInputType(attribute.inputType);
 		}
 	}
-
 
 	@Override public void onStartInput(EditorInfo attribute, boolean restarting) {
 		super.onStartInput(attribute, restarting); 
@@ -286,16 +296,25 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			float f = getPrefFloat(prefs, key, 0);
 			ckvHorizontal.setLeftMargin(f);
 			ckvVertical.setLeftMargin(f);
+			getWindow().dismiss();
 		}
 		else if (key.contentEquals("ck_margin_right")) {
 			float f = getPrefFloat(prefs, key, 0);
 			ckvHorizontal.setRightMargin(f);
 			ckvVertical.setRightMargin(f);
+			getWindow().dismiss();
 		}
 		else if (key.contentEquals("ck_margin_bottom")) {
 			float f = getPrefFloat(prefs, key, 0);
 			ckvHorizontal.setBottomMargin(f);
 			ckvVertical.setBottomMargin(f);
+			getWindow().dismiss();
+		}
+		else if (key.contentEquals("ck_max_keysize")) {
+			float f = getPrefFloat(prefs, key, 12);
+			ckvHorizontal.setMaxKeySize(f);
+			ckvVertical.setMaxKeySize(f);
+			getWindow().dismiss();
 		}
 		else if (key.contentEquals("ck_layout")) {
 			int i = getPrefInt(prefs, key, 0);

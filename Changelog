@@ -1,3 +1,23 @@
+2011-07-03 Gabor Simon <gabor.simon@mailbox.hu>
+User-configurable key size constraints added, build system improved
+
+    * AndroidManifest.xml: version code incremented
+
+    * src/org/dyndns/fules/ck/CompassKeyboardView.java: maximal key size setting made dynamic
+
+    * src/org/dyndns/fules/ck/CompassKeyboard.java:  maximal key size setting made dynamic,
+    instantiation efficiency increased
+
+    * res/values/constants.xml: version incremented, key size related labels added
+
+    * res/xml/default_*.xml: key size hints removed
+
+    * res/xml/ck_settings.xml: key size preference added
+
+    * build.properties: comments reindented
+
+    * build.xml: dependency checking of build phases imlemented
+
 2011-06-30 Gabor Simon <gabor.simon@mailbox.hu>
 Some code cleanup done
 
