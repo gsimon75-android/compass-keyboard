@@ -8,7 +8,7 @@ User-configurable key size constraints added, build system improved
     * src/org/dyndns/fules/ck/CompassKeyboard.java:  maximal key size setting made dynamic,
     instantiation efficiency increased
 
-    * res/values/constants.xml: version incremented, key size related labels added
+    * res/values/constants.xml: version incremented to v1.3, key size related labels added
 
     * res/xml/default_*.xml: key size hints removed
 
@@ -26,7 +26,7 @@ Some code cleanup done
     * src/org/dyndns/fules/ck/*.java: indentation fixed
 
 2011-06-28 Gabor Simon <gabor.simon@mailbox.hu>
-Touch handling of aligmnent areas improved
+Touch handling of alignment areas improved
 
     * src/org/dyndns/fules/ck/CompassKeyboardView.java: margins and Align items now check for global swipes
 
