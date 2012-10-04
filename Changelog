@@ -1,3 +1,10 @@
+2012-10-04 Gabor Simon <gabor.simon75@gmail.com>
+Placement fixed, CTRL handling fixed, tick feedback added, currency symbols added, clipboard features added
+
+    * src/org/dyndns/fules/ck/*: gap calculation fixed, tick feedback added, clipbrd features added
+
+    * res/xml/default_*.xml: ctrl handling fixed, currency symbols added
+
 2011-07-03 Gabor Simon <gabor.simon@mailbox.hu>
 Documentation fixed
 
