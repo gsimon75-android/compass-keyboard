@@ -1,139 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="CompassKeyboard" default="help">
+<project name="ck" default="help">
 
     <!-- The local.properties file is created and updated by the 'android' tool.
-     It contains the path to the SDK. It should *NOT* be checked into Version Control Systems. -->
-    <property file="local.properties"/>
+         It contains the path to the SDK. It should *NOT* be checked into
+         Version Control Systems. -->
+    <property file="local.properties" />
 
-    <!-- The build.properties file can be created by you and is never touched by the 'android' tool.
-    This is the place to change some of the default property values used by the Ant rules.
-    Here are some properties you may want to change/update:
+    <!-- The ant.properties file can be created by you. It is only edited by the
+         'android' tool to add properties to it.
+         This is the place to change some Ant specific build properties.
+         Here are some properties you may want to change/update:
 
          source.dir
              The name of the source directory. Default is 'src'.
          out.dir
              The name of the output directory. Default is 'bin'.
 
-    Properties related to the SDK location or the project target should be updated using the 'android' tool with the 'update' action.
-    This file is an integral part of the build system for your application and should be checked into Version Control Systems.  -->
-    <property file="build.properties"/>
+         For other overridable properties, look at the beginning of the rules
+         files in the SDK, at tools/ant/build.xml
 
-    <!-- The default.properties file is created and updated by the 'android' tool, as well as ADT.
-    This file is an integral part of the build system for your application and should be checked into Version Control Systems. -->
-    <property file="default.properties"/>
+         Properties related to the SDK location or the project target should
+         be updated using the 'android' tool with the 'update' action.
 
-    <!-- Custom Android task to deal with the project target, and import the proper rules. This requires ant 1.6.0 or above. -->
-    <path id="android.antlibs">
-        <pathelement path="${sdk.dir}/tools/lib/anttasks.jar"/>
-        <pathelement path="${sdk.dir}/tools/lib/sdklib.jar"/>
-        <pathelement path="${sdk.dir}/tools/lib/androidprefs.jar"/>
-    </path>
+         This file is an integral part of the build system for your
+         application and should be checked into Version Control Systems.
 
-    <taskdef name="setup" classname="com.android.ant.SetupTask" classpathref="android.antlibs"/>
+         -->
+    <property file="ant.properties" />
 
-    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+    <!-- The project.properties file is created and updated by the 'android'
+         tool, as well as ADT.
 
-    <!-- Execute the Android Setup task that will setup some properties specific to the target, and import the build rules files.
-    The rules file is imported from <SDK>/platforms/<target_platform>/ant/ant_rules_r#.xml
+         This contains project specific properties such as project target, and library
+         dependencies. Lower level build properties are stored in ant.properties
+         (or in .classpath for Eclipse projects).
 
-    To customize existing targets, there are two options:
-     - Customize only one target:
-         - copy/paste the target into this file, *before* the <setup> task.
-         - customize it to your needs.
-     - Customize the whole script.
-         - copy/paste the content of the rules files (minus the top node) into this file, *after* the <setup> task
-         - disable the import of the rules by changing the setup task below to <setup import="false"/>.
-         - customize to your needs.
+         This file is an integral part of the build system for your
+         application and should be checked into Version Control Systems. -->
+    <loadproperties srcFile="project.properties" />
+
+    <!-- quick check on sdk.dir -->
+    <fail
+            message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through an env var"
+            unless="sdk.dir"
+    />
+
+    <!--
+        Import per project custom build rules if present at the root of the project.
+        This is the place to put custom intermediary targets such as:
+            -pre-build
+            -pre-compile
+            -post-compile (This is typically used for code obfuscation.
+                           Compiled code location: ${out.classes.absolute.dir}
+                           If this is not done in place, override ${out.dex.input.absolute.dir})
+            -post-package
+            -post-build
+            -pre-clean
     -->
-    <setup/>
+    <import file="custom_rules.xml" optional="true" />
 
-    <target name="dbg" description="default target 'debug' but with dependency checking">
-        <outofdate>
-            <deletetargets failonerror="true"/>
-            <sourcefiles>
-                <fileset dir="src">
-                    <include name="**/*.java"/>
-                </fileset>
-                <fileset dir="res">
-                    <include name="**/*.xml"/>
-                    <include name="**/*.png"/>
-                </fileset>
-            </sourcefiles>
-            <targetfiles>
-                <pathelement path="${out.dir}/${ant.project.name}-debug.apk"/>
-            </targetfiles>
-            <sequential>
-                <runtarget target="debug"/>
-            </sequential>
-        </outofdate>
-    </target>
+    <!-- Import the actual build file.
 
-    <target name="rel" description="default target 'release' but with dependency checking">
-        <outofdate>
-            <deletetargets failonerror="true"/>
-            <sourcefiles>
-                <fileset dir="src">
-                    <include name="**/*.java"/>
-                </fileset>
-                <fileset dir="res">
-                    <include name="**/*.xml"/>
-                    <include name="**/*.png"/>
-                </fileset>
-            </sourcefiles>
-            <targetfiles>
-                <pathelement path="${out.dir}/${ant.project.name}-unsigned.apk"/>
-            </targetfiles>
-            <sequential>
-                <runtarget target="release"/>
-            </sequential>
-        </outofdate>
-    </target>
+         To customize existing targets, there are two options:
+         - Customize only one target:
+             - copy/paste the target into this file, *before* the
+               <import> task.
+             - customize it to your needs.
+         - Customize the whole content of build.xml
+             - copy/paste the content of the rules files (minus the top node)
+               into this file, replacing the <import> task.
+             - customize to your needs.
 
-    <target name="install" depends="dbg" description="install the built debug package on the emulator">
-        <shellscript shell="bash" dir="${out.dir}" failonerror="true">
-            adb -e install -r ${ant.project.name}-debug.apk
-        </shellscript>
-    </target>
-
-    <target name="sign" depends="rel" description="sign the built release package">
-        <outofdate>
-            <deletetargets failonerror="true"/>
-            <sourcefiles>
-                <pathelement path="${out.dir}/${ant.project.name}-unsigned.apk"/>
-            </sourcefiles>
-            <targetfiles>
-                <pathelement path="${out.dir}/${ant.project.name}-unaligned.apk"/>
-            </targetfiles>
-            <sequential>
-                <shellscript shell="bash" dir="${out.dir}" failonerror="true">
-		            xterm -e apksigner.sh -i ${ant.project.name}-unsigned.apk -o ${ant.project.name}-unaligned.apk -k ${key.private} -c ${key.certificate}
-		            [ ${ant.project.name}-unsigned.apk -ot ${ant.project.name}-unaligned.apk ]
-                </shellscript>
-            </sequential>
-        </outofdate>
-    </target>
-
-    <target name="align" depends="sign" description="align the built release package">
-        <outofdate>
-            <deletetargets failonerror="true"/>
-            <sourcefiles>
-                <pathelement path="${out.dir}/${ant.project.name}-unaligned.apk"/>
-            </sourcefiles>
-            <targetfiles>
-                <pathelement path="${out.dir}/${ant.project.name}.apk"/>
-            </targetfiles>
-            <sequential>
-                <shellscript shell="bash" dir="${out.dir}" failonerror="true">
-	                zipalign -f 4 ${ant.project.name}-unaligned.apk ${ant.project.name}.apk
-                </shellscript>
-            </sequential>
-        </outofdate>
-    </target>
-
-    <target name="relinstall" depends="align" description="install the built release package on the device">
-        <shellscript shell="bash" dir="${out.dir}" failonerror="true">
-            adb -d install -r ${ant.project.name}.apk
-        </shellscript>
-    </target>
-
+         ***********************
+         ****** IMPORTANT ******
+         ***********************
+         In all cases you must update the value of version-tag below to read 'custom' instead of an integer,
+         in order to avoid having your file be overridden by tools such as "android update project"
+    -->
+    <!-- version-tag: 1 -->
+    <import file="${sdk.dir}/tools/ant/build.xml" />
 </project>

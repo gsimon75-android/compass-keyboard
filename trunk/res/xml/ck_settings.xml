@@ -11,39 +11,39 @@
 		android:summary="@string/pg_feedback_summary"
 		android:orderingFromXml="true">
 		<ListPreference
-			android:key="ck_vibr_key"
-			android:title="@string/ck_vibr_key_title"
-			android:summary="@string/ck_vibr_key_summary"
-			android:entries="@array/ck_vibrnames"
-			android:entryValues="@array/ck_vibrvalues"
+			android:key="ck_key_fb_key"
+			android:title="@string/ck_key_fb_key_title"
+			android:summary="@string/ck_key_fb_key_summary"
+			android:entries="@array/ck_key_fbnames"
+			android:entryValues="@array/ck_key_fbvalues"
 			android:defaultValue="-1"/>
 		<ListPreference
-			android:key="ck_vibr_mod"
-			android:title="@string/ck_vibr_mod_title"
-			android:summary="@string/ck_vibr_mod_summary"
-			android:entries="@array/ck_vibrnames"
-			android:entryValues="@array/ck_vibrvalues"
+			android:key="ck_key_fb_mod"
+			android:title="@string/ck_key_fb_mod_title"
+			android:summary="@string/ck_key_fb_mod_summary"
+			android:entries="@array/ck_key_fbnames"
+			android:entryValues="@array/ck_key_fbvalues"
 			android:defaultValue="1"/>
 		<ListPreference
-			android:key="ck_vibr_cancel"
-			android:title="@string/ck_vibr_cancel_title"
-			android:summary="@string/ck_vibr_cancel_summary"
-			android:entries="@array/ck_vibrnames"
-			android:entryValues="@array/ck_vibrvalues"
+			android:key="ck_key_fb_cancel"
+			android:title="@string/ck_key_fb_cancel_title"
+			android:summary="@string/ck_key_fb_cancel_summary"
+			android:entries="@array/ck_key_fbnames"
+			android:entryValues="@array/ck_key_fbvalues"
 			android:defaultValue="2"/>
 		<ListPreference
-			android:key="ck_feedback_normal"
-			android:title="@string/ck_feedback_normal_title"
-			android:summary="@string/ck_feedback_normal_summary"
-			android:entries="@array/ck_fbnames"
-			android:entryValues="@array/ck_fbvalues"
+			android:key="ck_text_fb_normal"
+			android:title="@string/ck_text_fb_normal_title"
+			android:summary="@string/ck_text_fb_normal_summary"
+			android:entries="@array/ck_text_fbnames"
+			android:entryValues="@array/ck_text_fbvalues"
 			android:defaultValue="2"/>
 		<ListPreference
-			android:key="ck_feedback_password"
-			android:title="@string/ck_feedback_password_title"
-			android:summary="@string/ck_feedback_password_summary"
-			android:entries="@array/ck_fbnames"
-			android:entryValues="@array/ck_fbvalues"
+			android:key="ck_text_fb_password"
+			android:title="@string/ck_text_fb_password_title"
+			android:summary="@string/ck_text_fb_password_summary"
+			android:entries="@array/ck_text_fbnames"
+			android:entryValues="@array/ck_text_fbvalues"
 			android:defaultValue="1"/>
 	</PreferenceScreen>
 
@@ -84,6 +84,10 @@
 			fules:showHidden="true"
 			fules:workingDir="/sdcard"
 			fules:mask=".*\.xml"/>
+		<CheckBoxPreference
+			android:key="ck_portrait_only"
+			android:title="@string/ck_portrait_only"
+			android:summary="@string/ck_portrait_only_summary"/>
 	</PreferenceScreen>
 
 	<PreferenceScreen
