@@ -7,20 +7,20 @@
 	<string name="pg_feedback_title">Feedback</string>
 	<string name="pg_feedback_summary">Visual and vibrating feedback settings</string>
 
-	<string name="ck_vibr_key_title">Vibrate on keypress</string>
-	<string name="ck_vibr_key_summary">Vibrate when a key is entered</string>
+	<string name="ck_key_fb_key_title">Key press feedback</string>
+	<string name="ck_key_fb_key_summary">Vibrate/tick when a key is entered</string>
 
-	<string name="ck_vibr_mod_title">Vibrate on modifier</string>
-	<string name="ck_vibr_mod_summary">Vibrate when a modifier is selected</string>
+	<string name="ck_key_fb_mod_title">Modifier feedback</string>
+	<string name="ck_key_fb_mod_summary">Vibrate/tick when a modifier is selected</string>
 
-	<string name="ck_vibr_cancel_title">Vibrate on cancel</string>
-	<string name="ck_vibr_cancel_summary">Vibrate when a modifier is cancelled</string>
+	<string name="ck_key_fb_cancel_title">Cancel feedback</string>
+	<string name="ck_key_fb_cancel_summary">Vibrate/tick when a modifier is cancelled</string>
 
-	<string name="ck_feedback_normal_title">Normal feedback</string>
-	<string name="ck_feedback_normal_summary">Visual feedback for normal text</string>
+	<string name="ck_text_fb_normal_title">Normal text feedback</string>
+	<string name="ck_text_fb_normal_summary">Visual feedback for normal text</string>
 
-	<string name="ck_feedback_password_title">Password feedback</string>
-	<string name="ck_feedback_password_summary">Visual feedback for passwords</string>
+	<string name="ck_text_fb_password_title">Password feedback</string>
+	<string name="ck_text_fb_password_summary">Visual feedback for passwords</string>
 
     <string name="pg_sizes_title">Sizes</string>
     <string name="pg_sizes_summary">Keyboard layout sizes in mm-s</string>
@@ -55,28 +55,33 @@
 	<string name="ck_custom_layout_positive">OK</string>
 	<string name="ck_custom_layout_negative">Cancel</string>
 
+	<string name="ck_portrait_only">Portrait layout only</string>
+	<string name="ck_portrait_only_summary">Use the portrait layout even in landscape mode</string>
+
 	<string name="ck_delete_layout_title">Delete</string>
 	<string name="ck_delete_layout_message">Do you really want to remove this layout from the list?</string>
 
-	<string-array name="ck_vibrnames">
+	<string-array name="ck_key_fbnames">
 		<item>"None"</item>
-		<item>"Once"</item>
-		<item>"Twice"</item>
+		<item>"Tick"</item>
+		<item>"Vibrate once"</item>
+		<item>"Vibrate twice"</item>
 	</string-array>
 
-	<string-array name="ck_vibrvalues">
+	<string-array name="ck_key_fbvalues">
+		<item>"-2"</item>
 		<item>"-1"</item>
 		<item>"0"</item>
 		<item>"1"</item>
 	</string-array>
 	
-	<string-array name="ck_fbnames">
+	<string-array name="ck_text_fbnames">
 		<item>"None"</item>
 		<item>"Highlight"</item>
 		<item>"Toast"</item>
 	</string-array>
 
-	<string-array name="ck_fbvalues">
+	<string-array name="ck_text_fbvalues">
 		<item>"0"</item>
 		<item>"1"</item>
 		<item>"2"</item>
@@ -86,10 +91,10 @@
 	<string name="pg_about_summary">Miscellaneous information</string>
 
 	<string name="ck_version_title">Version</string>
-	<string name="ck_version_summary">v1.3</string>
+	<string name="ck_version_summary">v1.4rc2</string>
 
 	<string name="ck_copyright_title">Copyright</string>
-	<string name="ck_copyright_summary">2011 Gabor Simon. All rights reserved, New BSD License applies.</string>
+	<string name="ck_copyright_summary">2011-2012 Gabor Simon. All rights reserved, New BSD License applies.</string>
 	<string name="ck_source_title">Source</string>
 	<string name="ck_source_summary">$HeadURL$</string>
 

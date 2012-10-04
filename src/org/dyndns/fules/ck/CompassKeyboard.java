@@ -18,6 +18,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.ExtractedText;
+import android.view.inputmethod.ExtractedTextRequest;
+import android.R.id;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -39,6 +42,10 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 	CompassKeyboardView		ckvHorizontal, ckvVertical;		// the layout views for horizontal and vertical screens
 	CompassKeyboardView		ckv;					// the current layout view, either @ckvHorizontal or @ckvVertical
 	int				currentLayout;
+	boolean				forcePortrait;				// use the portrait layout even for horizontal screens
+
+	ExtractedTextRequest		etreq = new ExtractedTextRequest();
+	int				selectionStart = -1, selectionEnd = -1;
 
 	// send an auto-revoked notification with a title and a message
 	void sendNotification(String title, String msg) {
@@ -143,6 +150,7 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 
 	@Override public AbstractInputMethodService.AbstractInputMethodImpl onCreateInputMethodInterface() {
 		mPrefs = getSharedPreferences(SHARED_PREFS_NAME, 0);
+		etreq.hintMaxChars = etreq.hintMaxLines = 0;
 
 		ckvHorizontal = new CompassKeyboardView(this);
 		ckvHorizontal.setOnKeyboardActionListener(this);
@@ -157,16 +165,17 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		updateLayout(i);
 
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
-		onSharedPreferenceChanged(mPrefs, "ck_vibr_key");
-		onSharedPreferenceChanged(mPrefs, "ck_vibr_mod");
-		onSharedPreferenceChanged(mPrefs, "ck_vibr_cancel");
+		onSharedPreferenceChanged(mPrefs, "ck_key_fb_key");
+		onSharedPreferenceChanged(mPrefs, "ck_key_fb_mod");
+		onSharedPreferenceChanged(mPrefs, "ck_key_fb_cancel");
 		onSharedPreferenceChanged(mPrefs, "ck_layout");
-		onSharedPreferenceChanged(mPrefs, "ck_feedback_normal");
-		onSharedPreferenceChanged(mPrefs, "ck_feedback_password");
+		onSharedPreferenceChanged(mPrefs, "ck_text_fb_normal");
+		onSharedPreferenceChanged(mPrefs, "ck_text_fb_password");
 		onSharedPreferenceChanged(mPrefs, "ck_margin_left");
 		onSharedPreferenceChanged(mPrefs, "ck_margin_right");
 		onSharedPreferenceChanged(mPrefs, "ck_margin_bottom");
 		onSharedPreferenceChanged(mPrefs, "ck_max_keysize");
+		onSharedPreferenceChanged(mPrefs, "ck_portrait_only");
 
 		return super.onCreateInputMethodInterface();
 	}
@@ -175,11 +184,12 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 	@Override public View onCreateInputView() {
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 
-		if (metrics.widthPixels > metrics.heightPixels)
-			ckv = (ckvHorizontal != null) ? ckvHorizontal : ckvVertical;
-		else
+		if (forcePortrait || (metrics.widthPixels <= metrics.heightPixels))
 			ckv = (ckvVertical != null) ? ckvVertical : ckvHorizontal;
+		else
+			ckv = (ckvHorizontal != null) ? ckvHorizontal : ckvVertical;
 
+		Log.v(TAG, "w=" + String.valueOf(metrics.widthPixels) + ", h=" + String.valueOf(metrics.heightPixels) + ", forceP=" + String.valueOf(forcePortrait));
 		if (ckv != null)
 			ckv.calculateSizesForMetrics(metrics);
 		else
@@ -211,16 +221,66 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		return false; // never require fullscreen
 	}
 
+	private void sendModifiers(InputConnection ic, int action) {
+		if (ckv == null)
+			return;
+
+		if (ckv.checkState("shift"))
+			ic.sendKeyEvent(new KeyEvent(action, KeyEvent.KEYCODE_SHIFT_LEFT));
+		if (ckv.checkState("alt"))
+			ic.sendKeyEvent(new KeyEvent(action, KeyEvent.KEYCODE_ALT_LEFT));
+		if (ckv.checkState("altgr"))
+			ic.sendKeyEvent(new KeyEvent(action, KeyEvent.KEYCODE_ALT_RIGHT));
+	}
+
 	// Process a generated keycode
 	public void onKey(int primaryCode, int[] keyCodes) {
-		getCurrentInputConnection().sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, primaryCode));
-		getCurrentInputConnection().sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, primaryCode));
+		InputConnection ic = getCurrentInputConnection();
+		sendModifiers(ic, KeyEvent.ACTION_DOWN);
+		sendDownUpKeyEvents(primaryCode);
+		sendModifiers(ic, KeyEvent.ACTION_UP);
 	}
 
 	// Process the generated text
 	public void onText(CharSequence text) {
-		getCurrentInputConnection().commitText(text, 1);
+		InputConnection ic = getCurrentInputConnection();
+		sendModifiers(ic, KeyEvent.ACTION_DOWN);
+		sendKeyChar(text.charAt(0));
 	} 
+
+	// Process a command
+	public void execCmd(String cmd) {
+		InputConnection ic = getCurrentInputConnection();
+
+		if (cmd.equals("selectStart")) {
+			selectionStart = ic.getExtractedText(etreq, 0).selectionStart;
+			if ((selectionStart >= 0) && (selectionEnd >= 0)) {
+				//Log.v(TAG, "selection " + String.valueOf(selectionStart) + ".." + String.valueOf(selectionEnd));
+				ic.setSelection(selectionStart, selectionEnd);
+				selectionStart = selectionEnd = -1;
+			}
+		}
+		else if (cmd.equals("selectEnd")) {
+			selectionEnd = ic.getExtractedText(etreq, 0).selectionEnd;
+			if ((selectionStart >= 0) && (selectionEnd >= 0)) {
+				//Log.v(TAG, "selection " + String.valueOf(selectionStart) + ".." + String.valueOf(selectionEnd));
+				ic.setSelection(selectionStart, selectionEnd);
+				selectionStart = selectionEnd = -1;
+			}
+		}
+		else if (cmd.equals("selectAll"))
+			ic.performContextMenuAction(android.R.id.selectAll);
+		else if (cmd.equals("copy"))
+			ic.performContextMenuAction(android.R.id.copy);
+		else if (cmd.equals("cut"))
+			ic.performContextMenuAction(android.R.id.cut);
+		else if (cmd.equals("paste"))
+			ic.performContextMenuAction(android.R.id.paste);
+		else if (cmd.equals("switchIM"))
+			ic.performContextMenuAction(android.R.id.switchInputMethod);
+		else
+			Log.w(TAG, "Unknown cmd '" + cmd + "'");
+	}
 
 	public void pickDefaultCandidate() {
 	}
@@ -267,27 +327,27 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 	public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 		//Log.d(TAG, "Changing pref "+key+" to "+prefs.getString(key, ""));
 
-		if (key.contentEquals("ck_vibr_key")) {
+		if (key.contentEquals("ck_key_fb_key")) {
 			int v = getPrefInt(prefs, key, 0);
 			ckvHorizontal.setVibrateOnKey(v);
 			ckvVertical.setVibrateOnKey(v);
 		}
-		else if (key.contentEquals("ck_vibr_mod")) {
+		else if (key.contentEquals("ck_key_fb_mod")) {
 			int v = getPrefInt(prefs, key, 0);
 			ckvHorizontal.setVibrateOnModifier(v);
 			ckvVertical.setVibrateOnModifier(v);
 		}
-		else if (key.contentEquals("ck_vibr_cancel")) {
+		else if (key.contentEquals("ck_key_fb_cancel")) {
 			int v = getPrefInt(prefs, key, 0);
 			ckvHorizontal.setVibrateOnCancel(v);
 			ckvVertical.setVibrateOnCancel(v);
 		}
-		else if (key.contentEquals("ck_feedback_normal")) {
+		else if (key.contentEquals("ck_text_fb_normal")) {
 			int v = getPrefInt(prefs, key, 0);
 			ckvHorizontal.setFeedbackNormal(v);
 			ckvVertical.setFeedbackNormal(v);
 		}
-		else if (key.contentEquals("ck_feedback_password")) {
+		else if (key.contentEquals("ck_text_fb_password")) {
 			int v = getPrefInt(prefs, key, 0);
 			ckvHorizontal.setFeedbackPassword(v);
 			ckvVertical.setFeedbackPassword(v);
@@ -337,6 +397,9 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			else
 				edit.putString("ck_layout_remove"+sn, TextDialogPreference.POSITIVE);
 			edit.commit();
+		}
+		else if (key.contentEquals("ck_portrait_only")) {
+			forcePortrait = prefs.getBoolean(key, false);
 		}
 	}
 }
