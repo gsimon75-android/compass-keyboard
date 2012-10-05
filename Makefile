@@ -2,13 +2,14 @@ PROJECT=ck
 OUTDIR=bin
 PRIVKEY=/root/GaborSimon.key
 CERT=/root/GS_apk.crt
+FLAVOUR=release
 
 .PHONY:     				build
 
 sign:					$(OUTDIR)/$(PROJECT).apk
 
 build:					
-					ant debug
+					ant $(FLAVOUR)
 
 $(OUTDIR)/$(PROJECT)-release.apk:
 					ant release
@@ -16,7 +17,7 @@ $(OUTDIR)/$(PROJECT)-release.apk:
 $(OUTDIR)/$(PROJECT)-debug.apk:
 					ant debug
 
-$(OUTDIR)/$(PROJECT)-signed.apk:	$(OUTDIR)/$(PROJECT)-debug.apk
+$(OUTDIR)/$(PROJECT)-signed.apk:	$(OUTDIR)/$(PROJECT)-$(FLAVOUR).apk
 					apksigner.sh -i $^ -o $@ -k $(PRIVKEY) -c $(CERT)
 
 $(OUTDIR)/$(PROJECT).apk:		$(OUTDIR)/$(PROJECT)-signed.apk
