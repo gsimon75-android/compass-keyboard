@@ -22,20 +22,20 @@
 	<string name="ck_text_fb_password_title">Password feedback</string>
 	<string name="ck_text_fb_password_summary">Visual feedback for passwords</string>
 
-    <string name="pg_sizes_title">Sizes</string>
-    <string name="pg_sizes_summary">Keyboard layout sizes in mm-s</string>
+    	<string name="pg_sizes_title">Sizes</string>
+    	<string name="pg_sizes_summary">Keyboard layout sizes in mm-s</string>
 
-    <string name="ck_margin_left_title">Left</string>
-    <string name="ck_margin_left_summary">Left margin in mm-s</string>
+    	<string name="ck_margin_left_title">Left</string>
+    	<string name="ck_margin_left_summary">Left margin in mm-s</string>
 
-    <string name="ck_margin_right_title">Right</string>
-    <string name="ck_margin_right_summary">Right margin in mm-s</string>
+    	<string name="ck_margin_right_title">Right</string>
+    	<string name="ck_margin_right_summary">Right margin in mm-s</string>
 
-    <string name="ck_margin_bottom_title">Bottom</string>
-    <string name="ck_margin_bottom_summary">Bottom margin in mm-s</string>
+    	<string name="ck_margin_bottom_title">Bottom</string>
+    	<string name="ck_margin_bottom_summary">Bottom margin in mm-s</string>
 
-    <string name="ck_max_keysize_title">Key size</string>
-    <string name="ck_max_keysize_summary">Maximal key size in mm-s</string>
+    	<string name="ck_max_keysize_title">Key size</string>
+    	<string name="ck_max_keysize_summary">Maximal key size in mm-s</string>
 
 	<string name="ck_layout_title">Layouts</string>
 	<string name="ck_layout_summary">Layouts for various alphabets</string>
@@ -91,7 +91,7 @@
 	<string name="pg_about_summary">Miscellaneous information</string>
 
 	<string name="ck_version_title">Version</string>
-	<string name="ck_version_summary">v1.4rc2</string>
+	<string name="ck_version_summary">v1.4rc3</string>
 
 	<string name="ck_copyright_title">Copyright</string>
 	<string name="ck_copyright_summary">2011-2012 Gabor Simon. All rights reserved, New BSD License applies.</string>

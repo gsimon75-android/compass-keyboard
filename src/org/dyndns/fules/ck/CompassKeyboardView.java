@@ -23,6 +23,7 @@ import android.view.View.MeasureSpec;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewParent;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -132,7 +133,7 @@ class Action {
 /*
  * <Layout> tag
  */
-public class CompassKeyboardView extends LinearLayout {
+public class CompassKeyboardView extends FrameLayout {
 	// Constants
 	private static final String		TAG = "CompassKeyboardView";
 	private static final long[][]		vibratePattern = { { 10, 100 }, { 10, 50, 50, 50 } };
@@ -149,6 +150,7 @@ public class CompassKeyboardView extends LinearLayout {
 	public static final int			SW	= 6;
 	public static final int			S	= 7;
 	public static final int			SE	= 8;
+	public static final String[]		globalSwipeSign = { "⇖", "⇑", "⇗", "⇐", "╳", "⇒", "⇙", "⇓", "⇘" };
 
 	public static final int			FEEDBACK_HIGHLIGHT	= 1;
 	public static final int			FEEDBACK_TOAST		= 2;
@@ -181,6 +183,8 @@ public class CompassKeyboardView extends LinearLayout {
 	HashSet<String>				locks;		// currently active locks
 	HashSet<String>				effectiveMods;	// currently active effective modifiers (== symmetric difference of modifiers and locks)
 	LinearLayout.LayoutParams		lp;		// layout params for placing the rows
+	LinearLayout				kbd;  		// the keyboard layer
+	OverlayView				overlay;	// the overlay layer
 
 	LongTap					onLongTap;	// long tap checker
 	boolean					wasLongTap;	// marker to skip processing the release of a long tap
@@ -419,12 +423,14 @@ public class CompassKeyboardView extends LinearLayout {
 					return;
 				switch (isTypingPassword ? feedbackPassword : feedbackNormal) {
 					case FEEDBACK_HIGHLIGHT:
+						/*Action cd = (0 <= d) ? currentState.dir[d] : null;
+						overlay.setCandidate((cd != null) ? cd.text : null);
+						overlay.invalidate(); */
 						invalidate();
 						break;
 
 					case FEEDBACK_TOAST:
 						Action cd = (0 <= d) ? currentState.dir[d] : null;
-
 						if (cd != null) {
 							toast.setText(cd.text);
 							toast.show();
@@ -482,6 +488,7 @@ public class CompassKeyboardView extends LinearLayout {
 
 					case MotionEvent.ACTION_UP:
 						setCandidate(NONE);
+						setGlobalCandidate(NONE);
 
 						// check if global: transform to the basis of the CompassKeyboardView and ask it to decide
 						l = getLeft() + Row.this.getLeft();
@@ -502,10 +509,8 @@ public class CompassKeyboardView extends LinearLayout {
 						t = getTop() + Row.this.getTop();
 						d = getGlobalSwipeDirection(downX + l, downY + t, event.getX() + l, event.getY() + t);
 
-						if (d == NONE)
-							setCandidate(getDirection(event.getX(), event.getY()));
-						else
-							setCandidate(NONE);
+						setCandidate((d == NONE) ? getDirection(event.getX(), event.getY()) : NONE);
+						setGlobalCandidate(d);
 						break;
 				}
 				return res;
@@ -680,14 +685,83 @@ public class CompassKeyboardView extends LinearLayout {
 	}
 
 	/*
+	 * Methods of OverlayView
+	 */
+
+	class OverlayView extends View {
+		String candidate = null;
+		int candidateDir = NONE;
+
+		public OverlayView(Context context) {
+			super(context);
+		}
+
+		@Override protected void onDraw(Canvas canvas) {
+			int w = canvas.getWidth();
+			int h = canvas.getHeight();
+			int cx = w / 2;
+			int cy = h / 2;
+
+			switch (candidateDir) {
+				case NW:
+				case SE:
+					canvas.drawLine(0, 0, w, h, candidatePaint);
+					break;
+
+				case N:
+				case S:
+					canvas.drawLine(cx, 0, cx, h, candidatePaint);
+					break;
+
+				case NE:
+				case SW:
+					canvas.drawLine(w, 0, 0, h, candidatePaint);
+					break;
+
+				case W:
+				case E:
+					canvas.drawLine(0, cy, w, cy, candidatePaint);
+					break;
+
+				case NONE:
+					if ((candidate != null) && (candidate.length() > 0))
+						canvas.drawText(candidate, cx, cy, candidatePaint);
+					break;
+
+				default:
+					break;
+			}
+		}
+
+		@Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+			setMeasuredDimension(kbd.getWidth(), kbd.getHeight());
+		}
+
+		void setCandidate(String s) {
+			candidate = s;
+			invalidate();
+		}
+
+		void setGlobalCandidate(int d) {
+			candidateDir = d;
+			invalidate();
+		}
+	}
+
+	/*
 	 * Methods of CompassKeyboardView
 	 */
 
 	public CompassKeyboardView(Context context) {
 		super(context);
-		setOrientation(android.widget.LinearLayout.VERTICAL);
-		setGravity(android.view.Gravity.TOP);
-		//setBackgroundColor(0xff003f00); // for debugging placement
+		kbd = new LinearLayout(context);
+		kbd.setOrientation(android.widget.LinearLayout.VERTICAL);
+		kbd.setGravity(android.view.Gravity.TOP);
+		//kbd.setBackgroundColor(0xff003f00); // for debugging placement
+		addView(kbd);
+
+		overlay = new OverlayView(context);
+		addView(overlay);
 
 		lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		lp.setMargins(0, 1, 0, 1);
@@ -702,14 +776,18 @@ public class CompassKeyboardView extends LinearLayout {
 		specPaint.setAntiAlias(true);
 		specPaint.setColor(Color.CYAN);
 		specPaint.setTextAlign(Paint.Align.CENTER);
-		specPaint.setTypeface(Typeface.create(specPaint.getTypeface(), Typeface.ITALIC));
 		specPaint.setShadowLayer(3, 0, 2, 0xff000000);
 
 		candidatePaint = new Paint();
 		candidatePaint.setAntiAlias(true);
 		candidatePaint.setColor(Color.YELLOW);
 		candidatePaint.setTextAlign(Paint.Align.CENTER);
-		candidatePaint.setStrokeWidth(3);
+		candidatePaint.setShadowLayer(3, 0, 2, 0xff000000);
+
+		candidatePaint = new Paint();
+		candidatePaint.setAntiAlias(true);
+		candidatePaint.setColor(Color.YELLOW);
+		candidatePaint.setTextAlign(Paint.Align.CENTER);
 		candidatePaint.setShadowLayer(3, 0, 2, 0xff000000);
 
 		vibro = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -755,7 +833,7 @@ public class CompassKeyboardView extends LinearLayout {
 		}
 
 		// drop and re-read all previously existing rows
-		removeAllViews();
+		kbd.removeAllViews();
 		nColumns = nKeys = 0;
 		while (parser.getEventType() != XmlPullParser.END_TAG) {
 			if (parser.getEventType() != XmlPullParser.START_TAG)
@@ -763,7 +841,7 @@ public class CompassKeyboardView extends LinearLayout {
 
 			if (parser.getName().contentEquals("Row")) {
 				Row nr = new CompassKeyboardView.Row(getContext(), parser);
-				addView(nr, lp);
+				kbd.addView(nr, lp);
 
 				int nc = nr.getChildCount();
 				if (nColumns < nr.columns)
@@ -773,7 +851,7 @@ public class CompassKeyboardView extends LinearLayout {
 			}
 			else if (parser.getName().contentEquals("Align")) {
 				Align na = new Align(getContext(), parser);
-				addView(na, lp);
+				kbd.addView(na, lp);
 
 				if (nColumns < na.width)
 					nColumns = na.width;
@@ -832,16 +910,20 @@ public class CompassKeyboardView extends LinearLayout {
 		textPaint.setTextSize(sym);
 		specPaint.setTextSize(sym);
 		candidatePaint.setTextSize(sym * 3 / 2);
+		candidatePaint.setStrokeWidth(gap);
+
 		Paint.FontMetrics fm = textPaint.getFontMetrics();
 		fontSize = fm.descent - fm.ascent;
 		fontDispY = -fm.ascent;
 		Log.v(TAG, "reqFS="+String.valueOf(sym)+", fs="+String.valueOf(fontSize)+", asc="+String.valueOf(fm.ascent)+", desc="+String.valueOf(fm.descent));
 
+		toast = Toast.makeText(getContext(), "<none>", Toast.LENGTH_SHORT); // FIXME: test
+		toast.setGravity(Gravity.BOTTOM, 0, 0); // FIXME: test
 		toast.setGravity(Gravity.TOP + Gravity.CENTER_HORIZONTAL, 0, -sym);
 
-		int n = getChildCount();
+		int n = kbd.getChildCount();
 		for (i = 0; i < n; i++) {
-			EmbeddableItem e = (EmbeddableItem)getChildAt(i);
+			EmbeddableItem e = (EmbeddableItem)kbd.getChildAt(i);
 			e.calculateSizes();
 		}
 		commitState();
@@ -884,16 +966,19 @@ public class CompassKeyboardView extends LinearLayout {
 
 	@Override public boolean onTouchEvent(MotionEvent event) {
 		boolean res = processTouchEvent(event);
+		int d;
+
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_UP:
 				// check if global, done if it is
-				int d = getGlobalSwipeDirection(downX, downY, upX, upY);
+				d = getGlobalSwipeDirection(downX, downY, upX, upY);
 				if ((d == NONE) || !processAction(globalDir[d]))
 					changeState(null, false);
 				break;
 
 			case MotionEvent.ACTION_MOVE:
-				Log.d(TAG, "CKV::onTouch(MOVE)"); // FIXME: global swipe detection here too
+				d = getGlobalSwipeDirection(downX, downY, upX, upY);
+				setGlobalCandidate(d);
 				break;
 		}
 		return res;
@@ -940,6 +1025,29 @@ public class CompassKeyboardView extends LinearLayout {
 			return NONE;
 	}
 
+	void setGlobalCandidate(int d) {
+		if (candidateGlobalDir == d)
+			return;
+		candidateGlobalDir = d;
+		switch (isTypingPassword ? feedbackPassword : feedbackNormal) {
+			case FEEDBACK_HIGHLIGHT:
+				if (overlay != null)
+					overlay.setGlobalCandidate(d);
+				break;
+
+			case FEEDBACK_TOAST:
+				String s = (0 <= d) ? globalSwipeSign[d] : null;
+				if (s != null) {
+					toast.setText(s);
+					toast.show();
+				}
+				else {
+					toast.cancel();
+				}
+				break;
+		}
+	}
+
 	public void setOnKeyboardActionListener(KeyboardView.OnKeyboardActionListener listener) {
 		actionListener = listener;
 	}
@@ -959,9 +1067,9 @@ public class CompassKeyboardView extends LinearLayout {
 				effectiveMods.remove(s);
 		}
 
-		int n = getChildCount();
+		int n = kbd.getChildCount();
 		for (int i = 0; i < n; i++) {
-			View v = getChildAt(i);
+			View v = kbd.getChildAt(i);
 			if (v instanceof Row)
 				((Row)v).setState(effectiveMods);
 		}
