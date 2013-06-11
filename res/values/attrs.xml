@@ -18,5 +18,7 @@
     </declare-styleable>
     <declare-styleable name="TextDialogPreference">
     </declare-styleable>
+    <declare-styleable name="ButtonPreference">
+    </declare-styleable>
 </resources>
 

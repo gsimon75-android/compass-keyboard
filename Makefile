@@ -11,13 +11,13 @@ sign:					$(OUTDIR)/$(PROJECT).apk
 build:					
 					ant $(FLAVOUR)
 
-$(OUTDIR)/$(PROJECT)-release.apk:
+$(OUTDIR)/$(PROJECT)-release-unsigned.apk:
 					ant release
 
 $(OUTDIR)/$(PROJECT)-debug.apk:
 					ant debug
 
-$(OUTDIR)/$(PROJECT)-signed.apk:	$(OUTDIR)/$(PROJECT)-$(FLAVOUR).apk
+$(OUTDIR)/$(PROJECT)-signed.apk:	$(OUTDIR)/$(PROJECT)-$(FLAVOUR)-unsigned.apk
 					apksigner.sh -i $^ -o $@ -k $(PRIVKEY) -c $(CERT)
 
 $(OUTDIR)/$(PROJECT).apk:		$(OUTDIR)/$(PROJECT)-signed.apk

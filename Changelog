@@ -1,3 +1,7 @@
+2013-06-11 Gabor Simon <gabor.simon75@gmail.com>
+Tick fixed, keys got hasTop and hasBottom, globalSwipes are optional, locks toggle instead of set, layouts
+can be chosen from Preferences, prefs handling improved, shift+enter added, shift+numbers added
+
 2012-10-05 Gabor Simon <gabor.simon75@gmail.com>
 Global swipe feedback added
 
