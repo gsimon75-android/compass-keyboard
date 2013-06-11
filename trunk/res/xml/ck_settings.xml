@@ -51,24 +51,27 @@
 		android:key="pg_layouts"
 		android:title="@string/ck_layout_title"
 		android:summary="@string/ck_layout_summary">
-		<Preference
-			android:key="ck_builtin_latin"
+		<org.dyndns.fules.ck.ButtonPreference
+			android:key="ck_layout_click[0]"
 			android:title="@string/ck_latin_layout_title"
 			android:summary="@string/ck_latin_layout_summary"
 			android:order="0"
-			android:selectable="false"/>
-		<Preference
-			android:key="ck_builtin_cyrillic"
+			android:persistent="true"
+			android:selectable="true"/>
+		<org.dyndns.fules.ck.ButtonPreference
+			android:key="ck_layout_click[1]"
 			android:title="@string/ck_cyrillic_layout_title"
 			android:summary="@string/ck_cyrillic_layout_summary"
 			android:order="1"
-			android:selectable="false"/>
-		<Preference
-			android:key="ck_builtin_greek"
+			android:persistent="true"
+			android:selectable="true"/>
+		<org.dyndns.fules.ck.ButtonPreference
+			android:key="ck_layout_click[2]"
 			android:title="@string/ck_greek_layout_title"
 			android:summary="@string/ck_greek_layout_summary"
 			android:order="2"
-			android:selectable="false"/>
+			android:persistent="true"
+			android:selectable="true"/>
 		<org.dyndns.fules.ck.FilePickerPreference
 			android:key="ck_custom_layout"
 			android:title="@string/ck_custom_layout_title"

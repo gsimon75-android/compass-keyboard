@@ -132,7 +132,7 @@
                 </State>
                 <State name="shift">
                     <Action/>                               <Action text="↑" code="%1b[1;2A"/>      <Action/>
-                    <Action text="←" code="%1b[1;2D"/>      <Action/>                               <Action text="→" code="%1b[1;2C"/>
+                    <Action text="←" code="%1b[1;2D"/>      <Action text="↲" key="66"/>             <Action text="→" code="%1b[1;2C"/>
                     <Action/>                               <Action text="↓" code="%1b[1;2B"/>      <Action/>
                 </State>
                 <State name="spec">
@@ -195,7 +195,7 @@
                 </State>
                 <State name="shift">
                     <Action code="У"/>                      <Action code="Ф"/>                      <Action code="Х"/>
-                    <Action code="Щ"/>                      <Action code="Ъ"/>                      <Action/>
+                    <Action code="Щ"/>                      <Action code="Ъ"/>                      <Action code="_"/>
                 </State>
 				<State name="spec">
                     <Action code="ӯ"/>                      <Action code="ү"/>                      <Action code="ҳ"/>
@@ -263,6 +263,10 @@
                     <Action code="0"/>                      <Action code="1"/>                      <Action code="2"/>
                     <Action code="5"/>                      <Action code="6"/>                      <Action code="7"/>
                 </State>
+                <State name="shift">
+                    <Action code="0"/>                      <Action code="1"/>                      <Action code="2"/>
+                    <Action code="5"/>                      <Action code="6"/>                      <Action code="7"/>
+                </State>
                 <State name="spec">
                     <Action text="Ⅰ" code="%1b[OP"/>        <Action text="Ⅱ" code="%1b[OQ"/>        <Action text="Ⅲ" code="%1b[OR"/>
                     <Action text="Ⅵ" code="%1b[17~"/>       <Action text="Ⅶ" code="%1b[18~"/>       <Action text="Ⅷ" code="%1b[19~"/>
@@ -275,6 +279,10 @@
 
             <Key name="3-9" has_right="0">
                 <State>
+                    <Action code="3"/>                      <Action code="4"/>
+                    <Action code="8"/>                      <Action code="9"/>
+                </State>
+                <State name="shift">
                     <Action code="3"/>                      <Action code="4"/>
                     <Action code="8"/>                      <Action code="9"/>
                 </State>
@@ -522,7 +530,7 @@
                     <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="shift">
-                    <Action code="Щ"/>                      <Action code="Ъ"/>                      <Action/>
+                    <Action code="Щ"/>                      <Action code="Ъ"/>                      <Action code="_"/>
                     <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="spec">
@@ -550,7 +558,7 @@
                 </State>
                 <State name="shift">
                     <Action/>                               <Action text="↑" code="%1b[1;2A"/>      <Action/>
-                    <Action text="←" code="%1b[1;2D"/>      <Action/>                               <Action text="→" code="%1b[1;2C"/>
+                    <Action text="←" code="%1b[1;2D"/>      <Action text="↲" key="66"/>             <Action text="→" code="%1b[1;2C"/>
                 </State>
                 <State name="spec">
                     <Action/>                               <Action text="↟" key="92"/>             <Action/>
@@ -567,6 +575,10 @@
                     <Action code="0"/>                      <Action code="1"/>                      <Action code="2"/>
                     <Action code="5"/>                      <Action code="6"/>                      <Action code="7"/>
                 </State>
+                <State name="shift">
+                    <Action code="0"/>                      <Action code="1"/>                      <Action code="2"/>
+                    <Action code="5"/>                      <Action code="6"/>                      <Action code="7"/>
+                </State>
                 <State name="spec">
                     <Action text="Ⅰ" code="%1b[OP"/>        <Action text="Ⅱ" code="%1b[OQ"/>        <Action text="Ⅲ" code="%1b[OR"/>
                     <Action text="Ⅵ" code="%1b[17~"/>       <Action text="Ⅶ" code="%1b[18~"/>       <Action text="Ⅷ" code="%1b[19~"/>
@@ -579,6 +591,10 @@
 
             <Key name="3-9" has_right="0">
                 <State>
+                    <Action code="3"/>                      <Action code="4"/>
+                    <Action code="8"/>                      <Action code="9"/>
+                </State>
+                <State name="shift">
                     <Action code="3"/>                      <Action code="4"/>
                     <Action code="8"/>                      <Action code="9"/>
                 </State>

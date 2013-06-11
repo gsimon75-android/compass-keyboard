@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 public class CompassKeyboardSettings extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-	private static final String	TAG = "CompassKeyboardSettings";
+	private static final String	TAG = "CompassKeyboard";
 	PreferenceScreen		layoutPrefs;
 	Pattern				indexedExpr;
 
@@ -41,9 +41,14 @@ public class CompassKeyboardSettings extends PreferenceActivity implements Share
 		indexedExpr = Pattern.compile("([^\\[]*)\\[([\\d]*)\\]");
 
 		int n = Integer.parseInt(prefs.getString("ck_num_layouts", "3"));
+		//Log.d(TAG, "Number of layouts; n='" + String.valueOf(n) + "'");
 		for (int i = 3; i < n; i++) {
 			String si = "["+String.valueOf(i)+"]";
-			addLayoutPref("ck_layout_remove"+si, i, prefs.getString("ck_layout_name"+si, "none"), prefs.getString("ck_layout_file"+si, "unnamed"));
+			String name = prefs.getString("ck_layout_name"+si, "none");
+			String filename = prefs.getString("ck_layout_file"+si, "unnamed");
+			Log.d(TAG, "Layout; i='" + String.valueOf(i) + "', name='" + name + "', file='" + filename + "'");
+
+			addLayoutPref("ck_layout_click"+si, i, name, filename);
 		}
 	}
 
@@ -73,7 +78,7 @@ public class CompassKeyboardSettings extends PreferenceActivity implements Share
 		if (m.matches()) {
 			String keyName = m.group(1);
 			int keyIndex = Integer.parseInt(m.group(2));
-			String prefKey = "ck_layout_remove["+String.valueOf(keyIndex)+"]";
+			String prefKey = "ck_layout_click["+String.valueOf(keyIndex)+"]";
 
 			if (keyName.contentEquals("ck_layout_file")) {
 				Preference p = layoutPrefs.findPreference(prefKey);
@@ -89,27 +94,48 @@ public class CompassKeyboardSettings extends PreferenceActivity implements Share
 				else
 					addLayoutPref(prefKey, keyIndex, prefs.getString(key, "unnamed"), "none");
 			}
-			else if (keyName.contentEquals("ck_layout_remove") && prefs.getString(key, "none").contentEquals(TextDialogPreference.POSITIVE))
+			else if (keyName.contentEquals("ck_layout_click"))
 			{
-				int n = Integer.parseInt(prefs.getString("ck_num_layouts", "3"));
-				String sn1 = "["+String.valueOf(n - 1)+"]";
-
-				SharedPreferences.Editor edit = prefs.edit();
-				for (int i = keyIndex + 1; i < n; i++) {
-					String si = "["+String.valueOf(i)+"]";
-					String si1 = "["+String.valueOf(i - 1)+"]";
-
-					edit.putString("ck_layout_name"+si1, prefs.getString("ck_layout_name"+si, "none"));
-					edit.putString("ck_layout_file"+si1, prefs.getString("ck_layout_file"+si, "unnamed"));
+				String s;
+				try {
+					s = prefs.getString(key, "none");
 				}
-				edit.remove("ck_layout_name"+sn1);
-				edit.remove("ck_layout_file"+sn1);
-				edit.putString("ck_num_layouts", String.valueOf(n - 1));
-				edit.commit();
+				catch (ClassCastException e) {
+					s = "none";
+				}
+				if (s.contentEquals(TextDialogPreference.POSITIVE)) {
+					// remove the layout from the list
+					int n = Integer.parseInt(prefs.getString("ck_num_layouts", "3"));
+					String sn1 = "["+String.valueOf(n - 1)+"]";
 
-				Preference p = layoutPrefs.findPreference("ck_layout_remove"+sn1);
-				if (p != null)
-					layoutPrefs.removePreference(p);
+					SharedPreferences.Editor edit = prefs.edit();
+					Log.d(TAG, "Removing layout; idx='" + String.valueOf(keyIndex) +"'");
+					for (int i = keyIndex + 1; i < n; i++) {
+						String si = "["+String.valueOf(i)+"]";
+						String si1 = "["+String.valueOf(i - 1)+"]";
+
+						edit.putString("ck_layout_name"+si1, prefs.getString("ck_layout_name"+si, "none"));
+						edit.putString("ck_layout_file"+si1, prefs.getString("ck_layout_file"+si, "unnamed"));
+					}
+					edit.remove("ck_layout_name"+sn1);
+					edit.remove("ck_layout_file"+sn1);
+					//edit.remove(prefKey);
+					edit.remove(key);
+					edit.putString("ck_num_layouts", String.valueOf(n - 1));
+					edit.putString("ck_layout", "0");
+					edit.commit();
+					Preference p = layoutPrefs.findPreference("ck_layout_click"+sn1);
+					if (p != null)
+						layoutPrefs.removePreference(p);
+				}
+				else {
+					// activate the layout
+					SharedPreferences.Editor edit = prefs.edit();
+					edit.remove(key);
+					Log.d(TAG, "Selecting layout; idx='" + String.valueOf(keyIndex) +"'");
+					edit.putString("ck_layout", String.valueOf(keyIndex));
+					edit.commit();
+				}
 			}
 		}
 	}

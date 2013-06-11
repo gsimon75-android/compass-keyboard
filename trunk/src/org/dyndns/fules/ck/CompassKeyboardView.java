@@ -23,6 +23,7 @@ import android.view.View.MeasureSpec;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewParent;
+import android.view.SoundEffectConstants;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,6 +47,12 @@ class Action {
 	int		keyCode, layout;
 	String		code, mod, text, cmd;
 	boolean		isLock, isEmpty, isSpecial;
+
+	public Action() {
+		isLock = isSpecial = false;
+		keyCode = layout = -1;
+		isEmpty = true;
+	}
 
 	public Action(XmlPullParser parser) throws XmlPullParserException, IOException {
 		int n = 0;
@@ -135,11 +142,9 @@ class Action {
  */
 public class CompassKeyboardView extends FrameLayout {
 	// Constants
-	private static final String		TAG = "CompassKeyboardView";
+	private static final String		TAG = "CompassKeyboard";
 	private static final long[][]		vibratePattern = { { 10, 100 }, { 10, 50, 50, 50 } };
 	private static final int		LONG_TAP_TIMEOUT = 1200;	// timeout in msec after which a tap is considered a long one
-	private static final String		TICK_SOUND_FILE = "/system/media/audio/ui/Effect_Tick.ogg";
-	//private static final String		TICK_SOUND_FILE = "/system/media/audio/ui/KeypressStandard.ogg";
 	public static final int			NONE	= -1;
 	public static final int			NW	= 0;
 	public static final int			N	= 1;
@@ -190,8 +195,6 @@ public class CompassKeyboardView extends FrameLayout {
 	boolean					wasLongTap;	// marker to skip processing the release of a long tap
 	Toast					toast;
 	float					downX, downY, upX, upY;	// the coordinates of a swipe, used for recognising global swipes
-
-	MediaPlayer				tick;		// for playing tick sound
 
 	/*
 	 * Long tap handler
@@ -268,6 +271,7 @@ public class CompassKeyboardView extends FrameLayout {
 			ArrayList<State>	state;			// the modifier <State> tags within this <Key>
 			State			currentState = null;	// the currently selected <State>, according to @CompassKeyboardView::modifiers
 			boolean			hasLeft, hasRight;	// does the key have the given left and right symbols?
+			boolean			hasTop, hasBottom;	// does the key have tops and bottoms? (NOTE: can only be stricter than the row!)
 			int			candidateDir;		// the direction into which a drag is in progress, or NONE if inactive
 
 			/*
@@ -298,7 +302,7 @@ public class CompassKeyboardView extends FrameLayout {
 
 					parser.nextTag();
 
-					if (hasTop) {
+					if (Row.this.hasTop && Key.this.hasTop) {
 						if (hasLeft)
 							dir[NW] = new Action(parser);
 						dir[N] = new Action(parser);
@@ -310,7 +314,7 @@ public class CompassKeyboardView extends FrameLayout {
 					dir[TAP] = new Action(parser);
 					if (hasRight)
 						dir[E] = new Action(parser);
-					if (hasBottom) {
+					if (Row.this.hasBottom && Key.this.hasBottom) {
 						if (hasLeft)
 							dir[SW] = new Action(parser);
 						dir[S] = new Action(parser);
@@ -342,12 +346,11 @@ public class CompassKeyboardView extends FrameLayout {
 				if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Key"))
 					throw new XmlPullParserException("Expected <Key>", parser, null);
 
-				hasLeft = hasRight = true;
+				hasLeft = hasRight = hasTop = hasBottom = true;
 				state = new ArrayList();
 
-				//s = parser.getAttributeValue(null, "name");
-				//if (s != null)
-				//	Log.d(TAG, "Loading key '"+s+"'");
+				s = parser.getAttributeValue(null, "name");
+				//if (s != null) Log.d(TAG, "Loading key '"+s+"'");
 
 				s = parser.getAttributeValue(null, "has_left");
 				if ((s != null) && (Integer.parseInt(s) == 0))
@@ -356,6 +359,14 @@ public class CompassKeyboardView extends FrameLayout {
 				s = parser.getAttributeValue(null, "has_right");
 				if ((s != null) && (Integer.parseInt(s) == 0))
 					hasRight = false;
+
+				s = parser.getAttributeValue(null, "has_top");
+				if ((s != null) && (Integer.parseInt(s) == 0))
+					hasTop = false;
+
+				s = parser.getAttributeValue(null, "has_bottom");
+				if ((s != null) && (Integer.parseInt(s) == 0))
+					hasBottom = false;
 
 				parser.nextTag();
 				while (parser.getEventType() != XmlPullParser.END_TAG) {
@@ -581,6 +592,9 @@ public class CompassKeyboardView extends FrameLayout {
 			if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Row"))
 				throw new XmlPullParserException("Expected <Row>", parser, null);
 
+			//s = parser.getAttributeValue(null, "name");
+			//Log.d(TAG, "Reading row; name='" + (s != null ? s : "<null>")  + "'");
+
 			s = parser.getAttributeValue(null, "has_top");
 			if ((s != null) && (Integer.parseInt(s) == 0))
 				hasTop = false;
@@ -770,8 +784,8 @@ public class CompassKeyboardView extends FrameLayout {
 		candidatePaint.setTextAlign(Paint.Align.CENTER);
 		candidatePaint.setShadowLayer(3, 0, 2, 0xff000000);
 
+		setSoundEffectsEnabled(true);
 		vibro = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
-		tick = MediaPlayer.create(context, Uri.parse(TICK_SOUND_FILE));
 		onLongTap = new LongTap();
 		modifiers = new HashSet();
 		locks = new HashSet();
@@ -782,8 +796,9 @@ public class CompassKeyboardView extends FrameLayout {
 	}
 
 	void vibrateCode(int n) {
-		if (n == -1) 
-			tick.start();
+		if (n == -1) {
+			playSoundEffect(SoundEffectConstants.CLICK);
+		}
 		else if ((n >= 0) && (n < vibratePattern.length))
 			vibro.vibrate(vibratePattern[n], -1);
 	}
@@ -796,25 +811,12 @@ public class CompassKeyboardView extends FrameLayout {
 
 		parser.nextTag();
 
-		// read the global swipes
-		globalDir = new Action[9];
-		globalDir[NW]  = new Action(parser);
-		globalDir[N]   = new Action(parser);
-		globalDir[NE]  = new Action(parser);
-		globalDir[W]   = new Action(parser);
-		globalDir[TAP] = new Action(parser);
-		globalDir[E]   = new Action(parser);
-		globalDir[SW]  = new Action(parser);
-		globalDir[S]   = new Action(parser);
-		globalDir[SE]  = new Action(parser);
-		for (int i = 0; i < 9; i++) {
-			if ((globalDir[i] != null) && globalDir[i].isEmpty)
-				globalDir[i] = null;
-		}
-
 		// drop and re-read all previously existing rows
+		globalDir = new Action[9];
+
 		kbd.removeAllViews();
 		nColumns = nKeys = 0;
+		int nextGlobalSwipe = NW;
 		while (parser.getEventType() != XmlPullParser.END_TAG) {
 			if (parser.getEventType() != XmlPullParser.START_TAG)
 				throw new XmlPullParserException("Expected content tag", parser, null);
@@ -836,6 +838,17 @@ public class CompassKeyboardView extends FrameLayout {
 				if (nColumns < na.width)
 					nColumns = na.width;
 			}
+			else if (parser.getName().contentEquals("Action")) {
+				if (nextGlobalSwipe > SE) {
+					Log.e(TAG, "Too many global swipe Actions;");
+				}
+				else {
+					globalDir[nextGlobalSwipe] = new Action(parser);
+					if (globalDir[nextGlobalSwipe].isEmpty)
+						globalDir[nextGlobalSwipe] = null;
+					nextGlobalSwipe++;
+				}
+			}
 		}
 		if (!parser.getName().contentEquals("Layout"))
 			throw new XmlPullParserException("Expected </Layout>", parser, null);
@@ -854,7 +867,6 @@ public class CompassKeyboardView extends FrameLayout {
 		int marginPixelsBottom = Math.round(marginBottom * metrics.ydpi / 25.4f);
 		setPadding(marginPixelsLeft, 0, marginPixelsRight, marginPixelsBottom);
 
-		Log.v(TAG, "keyMM=" + String.valueOf(keyMM) + ", xdpi=" + String.valueOf(metrics.xdpi) + ", ydpi=" + String.valueOf(metrics.ydpi) + ", nKeys=" + String.valueOf(nKeys) + ", nColumns=" + String.valueOf(nColumns));
 		// Desired "key size" in pixels is keyMM * metrics.xdpi / 25.4f
                 // This "key size" is an abstraction of a key that has 3 symbol columns (and therefore 4 gaps: gSgSgSg),
 		// so that the gaps take up 1/3 and the symbols take up 2/3 of the key, so
@@ -865,7 +877,6 @@ public class CompassKeyboardView extends FrameLayout {
 		totalWidth = Math.round(keyMM * metrics.xdpi / 25.4f * ((nKeys / 12.f) + (nColumns * 11 / 36.f)));
 		// Regardless of keyMM, it must fit the metrics, that is width - margins - 1 pixel between keys
 		i = metrics.widthPixels - marginPixelsLeft - marginPixelsRight - (nKeys - 1);
-		Log.v(TAG, "totalWidth=" + String.valueOf(totalWidth) + ", max=" + String.valueOf(i));
 		if (i < totalWidth)
 			totalWidth = i;
 
@@ -882,12 +893,13 @@ public class CompassKeyboardView extends FrameLayout {
 		// it from totalWidth and rounding it only downwards:
 		//   gap*(nKeys+nColumns) + sym*nColumns = totalWidth
 		sym = (totalWidth - gap*(nKeys+nColumns)) / nColumns;
-		Log.v(TAG, "sym=" + String.valueOf(sym) + ", gap=" + String.valueOf(gap));
 
 		// Sample data: nKeys=5, columns=13; Galaxy Mini: 240x320, Ace: 320x480, S: 480x80, S3: 720x1280 
 
 		// construct the Paint used for printing the labels
 		textPaint.setTextSize(sym);
+		int newSym = sym;
+
 		specPaint.setTextSize(sym);
 		candidatePaint.setTextSize(sym * 3 / 2);
 		candidatePaint.setStrokeWidth(gap);
@@ -895,7 +907,8 @@ public class CompassKeyboardView extends FrameLayout {
 		Paint.FontMetrics fm = textPaint.getFontMetrics();
 		fontSize = fm.descent - fm.ascent;
 		fontDispY = -fm.ascent;
-		Log.v(TAG, "reqFS="+String.valueOf(sym)+", fs="+String.valueOf(fontSize)+", asc="+String.valueOf(fm.ascent)+", desc="+String.valueOf(fm.descent));
+
+		Log.v(TAG, "keyMM=" + String.valueOf(keyMM) + ", xdpi=" + String.valueOf(metrics.xdpi) + ", ydpi=" + String.valueOf(metrics.ydpi) + ", nKeys=" + String.valueOf(nKeys) + ", nColumns=" + String.valueOf(nColumns) + ", totalWidth=" + String.valueOf(totalWidth) + ", max=" + String.valueOf(i) + ", sym=" + String.valueOf(sym) + ", gap=" + String.valueOf(gap) + ", reqFS="+String.valueOf(sym)+", fs="+String.valueOf(fontSize)+", asc="+String.valueOf(fm.ascent)+", desc="+String.valueOf(fm.descent));
 
 		toast.setGravity(Gravity.TOP + Gravity.CENTER_HORIZONTAL, 0, -sym);
 
@@ -1081,22 +1094,12 @@ public class CompassKeyboardView extends FrameLayout {
 	public boolean checkState(String mod) {
 		return modifiers.contains(mod);
 	}
+
 	public void resetState() {
 		if (!modifiers.isEmpty()) {
 			modifiers.clear();
 			commitState();
 		}
-	}
-
-	public void addState(String name) {
-		if (modifiers.add(name))
-			commitState();
-	}
-
-	public void toggleLock(String name) {
-		if (!locks.add(name))
-			locks.remove(name);
-		commitState();
 	}
 
 	public void changeState(String state, boolean isLock) {
@@ -1112,11 +1115,17 @@ public class CompassKeyboardView extends FrameLayout {
 		}
 		else if (isLock){
 			resetState();
-			toggleLock(state);
+			if (!locks.add(state))
+				locks.remove(state);
+			commitState();
 			vibrateCode(vibrateOnModifier);
 		}
 		else {
-			addState(state);
+			/*if (modifiers.add(state))
+				commitState();*/
+			if (!modifiers.add(state))
+				modifiers.remove(state);
+			commitState();
 			vibrateCode(vibrateOnModifier);
 		}
 	}

@@ -222,7 +222,7 @@
                 </State>
                 <State name="shift">
                     <Action/>                               <Action text="↑" code="%1b[1;2A"/>      <Action/>
-                    <Action text="←" code="%1b[1;2D"/>      <Action/>                               <Action text="→" code="%1b[1;2C"/>
+                    <Action text="←" code="%1b[1;2D"/>      <Action text="↲" key="66"/>             <Action text="→" code="%1b[1;2C"/>
                     <Action/>                               <Action text="↓" code="%1b[1;2B"/>      <Action/>
                 </State>
                 <State name="spec">
@@ -285,7 +285,7 @@
                 </State>
                 <State name="shift">
                     <Action code="S"/>                      <Action code="T"/>                      <Action code="U"/>
-                    <Action code="Y"/>                      <Action code="Z"/>                      <Action/>
+                    <Action code="Y"/>                      <Action code="Z"/>                      <Action code="_"/>
                 </State>
                 <State name="grave">
                     <Action/>                               <Action code="ư"/>                      <Action code="ù"/>
@@ -377,6 +377,10 @@
                     <Action code="0"/>                      <Action code="1"/>                      <Action code="2"/>
                     <Action code="5"/>                      <Action code="6"/>                      <Action code="7"/>
                 </State>
+                <State name="shift">
+                    <Action code="0"/>                      <Action code="1"/>                      <Action code="2"/>
+                    <Action code="5"/>                      <Action code="6"/>                      <Action code="7"/>
+                </State>
                 <State name="spec">
                     <Action text="Ⅰ" code="%1b[OP"/>        <Action text="Ⅱ" code="%1b[OQ"/>        <Action text="Ⅲ" code="%1b[OR"/>
                     <Action text="Ⅵ" code="%1b[17~"/>       <Action text="Ⅶ" code="%1b[18~"/>       <Action text="Ⅷ" code="%1b[19~"/>
@@ -389,6 +393,10 @@
 
             <Key name="3-9" has_right="0">
                 <State>
+                    <Action code="3"/>                      <Action code="4"/>
+                    <Action code="8"/>                      <Action code="9"/>
+                </State>
+                <State name="shift">
                     <Action code="3"/>                      <Action code="4"/>
                     <Action code="8"/>                      <Action code="9"/>
                 </State>
@@ -780,7 +788,7 @@
                     <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="shift">
-                    <Action code="Y"/>                      <Action code="Z"/>                      <Action/>
+                    <Action code="Y"/>                      <Action code="Z"/>                      <Action code="_"/>
                     <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="spec">
@@ -841,6 +849,10 @@
                     <Action code="0"/>                      <Action code="1"/>                      <Action code="2"/>
                     <Action code="5"/>                      <Action code="6"/>                      <Action code="7"/>
                 </State>
+                <State name="shift">
+                    <Action code="0"/>                      <Action code="1"/>                      <Action code="2"/>
+                    <Action code="5"/>                      <Action code="6"/>                      <Action code="7"/>
+                </State>
                 <State name="spec">
                     <Action text="Ⅰ" code="%1b[OP"/>        <Action text="Ⅱ" code="%1b[OQ"/>        <Action text="Ⅲ" code="%1b[OR"/>
                     <Action text="Ⅵ" code="%1b[17~"/>       <Action text="Ⅶ" code="%1b[18~"/>       <Action text="Ⅷ" code="%1b[19~"/>
@@ -853,6 +865,10 @@
 
             <Key name="3-9" has_right="0">
                 <State>
+                    <Action code="3"/>                      <Action code="4"/>
+                    <Action code="8"/>                      <Action code="9"/>
+                </State>
+                <State name="shift">
                     <Action code="3"/>                      <Action code="4"/>
                     <Action code="8"/>                      <Action code="9"/>
                 </State>

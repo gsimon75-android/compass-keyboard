@@ -91,7 +91,7 @@
 	<string name="pg_about_summary">Miscellaneous information</string>
 
 	<string name="ck_version_title">Version</string>
-	<string name="ck_version_summary">v1.4</string>
+	<string name="ck_version_summary">v1.5pre</string>
 
 	<string name="ck_copyright_title">Copyright</string>
 	<string name="ck_copyright_summary">2011-2012 Gabor Simon. All rights reserved, New BSD License applies.</string>
