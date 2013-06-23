@@ -746,7 +746,7 @@ public class CompassKeyboardView extends FrameLayout {
 	 * Methods of CompassKeyboardView
 	 */
 
-	public CompassKeyboardView(Context context) {
+	public CompassKeyboardView(Context context, boolean portrait, XmlPullParser parser) throws XmlPullParserException, java.io.IOException {
 		super(context);
 		kbd = new LinearLayout(context);
 		kbd.setOrientation(android.widget.LinearLayout.VERTICAL);
@@ -793,6 +793,98 @@ public class CompassKeyboardView extends FrameLayout {
 
 		toast = Toast.makeText(context, "<none>", Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.BOTTOM, 0, 0);
+
+		String name;
+
+		while (parser.getEventType() == XmlPullParser.START_DOCUMENT)
+			parser.next();
+
+		if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("CompassKeyboard"))
+			throw new XmlPullParserException("Expected <CompassKeyboard>", parser, null);
+
+		name = parser.getAttributeValue(null, "name");
+		if (name != null)
+			Log.i(TAG, "Loading keyboard '"+name+"'");
+		parser.nextTag();
+
+		while (parser.getEventType() != XmlPullParser.END_TAG) {
+			if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Layout"))
+				throw new XmlPullParserException("Expected <Layout>", parser, null);
+			String layoutName = parser.getAttributeValue(null, "name");
+
+			boolean readThis = false;
+			if (layoutName.contentEquals("horizontal"))
+				readThis = !portrait;
+			else if (layoutName.contentEquals("vertical"))
+				readThis = portrait;
+			else
+				throw new XmlPullParserException("Invalid Layout name '"+layoutName+"'", parser, null);
+
+			if (readThis) {
+				// drop and re-read all previously existing rows
+				globalDir = new Action[9];
+				kbd.removeAllViews();
+
+				int eventType = parser.getEventType();
+				if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Layout"))
+					throw new XmlPullParserException("Expected <Layout>", parser, null);
+
+				parser.nextTag();
+
+				nColumns = nKeys = 0;
+				int nextGlobalSwipe = NW;
+				while (parser.getEventType() != XmlPullParser.END_TAG) {
+					if (parser.getEventType() != XmlPullParser.START_TAG)
+						throw new XmlPullParserException("Expected content tag", parser, null);
+
+					if (parser.getName().contentEquals("Row")) {
+						Row nr = new CompassKeyboardView.Row(getContext(), parser);
+						kbd.addView(nr, lp);
+
+						int nc = nr.getChildCount();
+						if (nColumns < nr.columns)
+							nColumns = nr.columns;
+						if (nKeys < nc)
+							nKeys = nc;
+					}
+					else if (parser.getName().contentEquals("Align")) {
+						Align na = new Align(getContext(), parser);
+						kbd.addView(na, lp);
+
+						if (nColumns < na.width)
+							nColumns = na.width;
+					}
+					else if (parser.getName().contentEquals("Action")) {
+						if (nextGlobalSwipe > SE) {
+							Log.e(TAG, "Too many global swipe Actions;");
+						}
+						else {
+							globalDir[nextGlobalSwipe] = new Action(parser);
+							if (globalDir[nextGlobalSwipe].isEmpty)
+								globalDir[nextGlobalSwipe] = null;
+							nextGlobalSwipe++;
+						}
+					}
+				}
+				if (!parser.getName().contentEquals("Layout"))
+					throw new XmlPullParserException("Expected </Layout>", parser, null);
+				parser.nextTag();
+
+				// recalculate sizes and set bg colour
+				calculateSizesForMetrics(getResources().getDisplayMetrics());
+			}
+			else {
+				while ((parser.getEventType() != XmlPullParser.END_TAG) || !parser.getName().contentEquals("Layout"))
+					parser.nextTag();
+				parser.nextTag();
+			}
+		}
+
+		if (!parser.getName().contentEquals("CompassKeyboard")) {
+			Log.e(TAG, "Found " + parser.getName());
+			throw new XmlPullParserException("Expected </CompassKeyboard>", parser, null);
+		}
+		parser.next();
 	}
 
 	void vibrateCode(int n) {
@@ -801,61 +893,6 @@ public class CompassKeyboardView extends FrameLayout {
 		}
 		else if ((n >= 0) && (n < vibratePattern.length))
 			vibro.vibrate(vibratePattern[n], -1);
-	}
-
-	// Read the layout from an XML parser
-	public void readLayout(XmlPullParser parser) throws XmlPullParserException, IOException {
-		int eventType = parser.getEventType();
-		if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Layout"))
-			throw new XmlPullParserException("Expected <Layout>", parser, null);
-
-		parser.nextTag();
-
-		// drop and re-read all previously existing rows
-		globalDir = new Action[9];
-
-		kbd.removeAllViews();
-		nColumns = nKeys = 0;
-		int nextGlobalSwipe = NW;
-		while (parser.getEventType() != XmlPullParser.END_TAG) {
-			if (parser.getEventType() != XmlPullParser.START_TAG)
-				throw new XmlPullParserException("Expected content tag", parser, null);
-
-			if (parser.getName().contentEquals("Row")) {
-				Row nr = new CompassKeyboardView.Row(getContext(), parser);
-				kbd.addView(nr, lp);
-
-				int nc = nr.getChildCount();
-				if (nColumns < nr.columns)
-					nColumns = nr.columns;
-				if (nKeys < nc)
-					nKeys = nc;
-			}
-			else if (parser.getName().contentEquals("Align")) {
-				Align na = new Align(getContext(), parser);
-				kbd.addView(na, lp);
-
-				if (nColumns < na.width)
-					nColumns = na.width;
-			}
-			else if (parser.getName().contentEquals("Action")) {
-				if (nextGlobalSwipe > SE) {
-					Log.e(TAG, "Too many global swipe Actions;");
-				}
-				else {
-					globalDir[nextGlobalSwipe] = new Action(parser);
-					if (globalDir[nextGlobalSwipe].isEmpty)
-						globalDir[nextGlobalSwipe] = null;
-					nextGlobalSwipe++;
-				}
-			}
-		}
-		if (!parser.getName().contentEquals("Layout"))
-			throw new XmlPullParserException("Expected </Layout>", parser, null);
-		parser.nextTag();
-
-		// recalculate sizes and set bg colour
-		calculateSizesForMetrics(getResources().getDisplayMetrics());
 	}
 
 	// Recalculate all the sizes according to the display metrics
@@ -1080,10 +1117,10 @@ public class CompassKeyboardView extends FrameLayout {
 				actionListener.onKey(cd.keyCode, null); // process a 'key'
 			else if (actionListener instanceof CompassKeyboard) {
 				CompassKeyboard ck = (CompassKeyboard)actionListener;
-				if (cd.layout >= 0)
-					ck.updateLayout(cd.layout); // process a 'layout'
-				else if ((cd.cmd != null) && (cd.cmd.length() > 0))
-					ck.execCmd(cd.cmd); // process a 'cmd'
+				if (cd.layout >= 0) // process a 'layout'
+					ck.setLayout(cd.layout);
+				else if ((cd.cmd != null) && (cd.cmd.length() > 0)) // process a 'cmd'
+					ck.execCmd(cd.cmd);
 			}
 			vibrateCode(vibrateOnKey);
 		}

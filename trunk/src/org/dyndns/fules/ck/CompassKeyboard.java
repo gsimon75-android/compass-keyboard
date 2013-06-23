@@ -30,10 +30,13 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.inputmethodservice.AbstractInputMethodService;
+import android.view.inputmethod.InputMethodInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import java.util.Map;
+import java.util.List;
 import java.util.Set;
 import java.util.Iterator;
 
@@ -43,13 +46,12 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 	private static final String	TAG = "CompassKeyboard";
 
 	private SharedPreferences	mPrefs;					// the preferences instance
-	CompassKeyboardView		ckvHorizontal, ckvVertical;		// the layout views for horizontal and vertical screens
-	CompassKeyboardView		ckv;					// the current layout view, either @ckvHorizontal or @ckvVertical
-	int				currentLayout;
+	CompassKeyboardView		ckv = null;				// the current layout view, either @ckvHorizontal or @ckvVertical
 	boolean				forcePortrait;				// use the portrait layout even for horizontal screens
 
 	ExtractedTextRequest		etreq = new ExtractedTextRequest();
 	int				selectionStart = -1, selectionEnd = -1;
+	int				currentLayout = -1;
 
 	// send an auto-revoked notification with a title and a message
 	void sendNotification(String title, String msg) {
@@ -61,97 +63,50 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		Log.e(TAG, title+"; "+msg);
 	}
 
-	// Read a layout from a parser, both horizontal and vertical, if possible
-	String updateLayout(XmlPullParser parser) throws XmlPullParserException, java.io.IOException {
-		String name;
-
+	public String getLayoutName(XmlPullParser parser) throws XmlPullParserException, java.io.IOException {
 		while (parser.getEventType() == XmlPullParser.START_DOCUMENT)
 			parser.next();
 
 		if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("CompassKeyboard"))
 			throw new XmlPullParserException("Expected <CompassKeyboard>", parser, null);
 
-		name = parser.getAttributeValue(null, "name");
-		if (name != null)
-			Log.i(TAG, "Loading keyboard '"+name+"'");
-		parser.nextTag();
-
-		while (parser.getEventType() != XmlPullParser.END_TAG) {
-			if ((parser.getEventType() != XmlPullParser.START_TAG) || !parser.getName().contentEquals("Layout"))
-				throw new XmlPullParserException("Expected <Layout>", parser, null);
-			String layoutName = parser.getAttributeValue(null, "name");
-
-			if (layoutName.contentEquals("horizontal"))
-				ckvHorizontal.readLayout(parser);
-			else if (layoutName.contentEquals("vertical"))
-				ckvVertical.readLayout(parser);
-			else
-				throw new XmlPullParserException("Invalid Layout name '"+layoutName+"'", parser, null);
-		}
-
-		if (!parser.getName().contentEquals("CompassKeyboard"))
-			throw new XmlPullParserException("Expected </CompassKeyboard>", parser, null);
-		parser.next();
-
-		return name;
+		return parser.getAttributeValue(null, "name");
 	}
 
-	public String updateLayout(String filename) throws XmlPullParserException, java.io.IOException {
+	public XmlPullParser openLayout(String filename) throws XmlPullParserException, java.io.IOException {
 		FileInputStream is = new FileInputStream(filename);
 		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 		factory.setNamespaceAware(false);
 		XmlPullParser parser = factory.newPullParser();
 		parser.setInput(is, null);
-		return updateLayout(parser);
+		return parser;
 	}
 
-	// Update the layout if needed
-	public String updateLayout(int i) {
-		String name = null;
-		String err = null;
-
-		if ((i < 0) || (i == currentLayout))
-			return "same";
-
+	public XmlPullParser openLayout(int i) {
 		Log.d(TAG, "Loading layout '"+String.valueOf(i)+"'");
+		switch (i) {
+			case 0:
+				return getResources().getXml(R.xml.default_latin);
+
+			case 1:
+				return getResources().getXml(R.xml.default_cyrillic);
+
+			case 2:
+				return getResources().getXml(R.xml.default_greek);
+		}
+
+		String err = null;
 		try {
-			switch (i) {
-				case 0:
-					name = updateLayout(getResources().getXml(R.xml.default_latin));
-					break;
-
-				case 1:
-					name = updateLayout(getResources().getXml(R.xml.default_cyrillic));
-					break;
-
-				case 2:
-					name = updateLayout(getResources().getXml(R.xml.default_greek));
-					break;
-
-				default:
-					String s = mPrefs.getString("ck_layout_file["+String.valueOf(i)+"]", "");
-					if ((s == null) || s.contentEquals(""))
-						throw new FileNotFoundException("Invalid Layout index '"+String.valueOf(i)+"'");
-					name = updateLayout(s);
-					break;
-			}
+			String s = mPrefs.getString("ck_layout_file["+String.valueOf(i)+"]", "");
+			if ((s == null) || s.contentEquals(""))
+				throw new FileNotFoundException("Invalid Layout index '"+String.valueOf(i)+"'");
+			return openLayout(s);
 		}
 		catch (FileNotFoundException e)		{ err = e.getMessage(); }
 		catch (XmlPullParserException e)	{ err = e.getMessage(); }
 		catch (java.io.IOException e)		{ err = e.getMessage(); }
-
-		if (err == null) {
-			currentLayout = i;
-			return name;
-		}
-
 		sendNotification("Invalid layout", err);
-		// revert to default latin, unless this was the one that has failed
-		if (i != 0) {
-			currentLayout = -1;
-			updateLayout(0);
-		}
-		return null;
+		return getResources().getXml(R.xml.default_latin); // revert to default latin
 	}
 
 	@Override public AbstractInputMethodService.AbstractInputMethodImpl onCreateInputMethodInterface() {
@@ -159,17 +114,40 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		mPrefs = getSharedPreferences(SHARED_PREFS_NAME, 0);
 		etreq.hintMaxChars = etreq.hintMaxLines = 0;
 
-		ckvHorizontal = new CompassKeyboardView(this);
-		ckvHorizontal.setOnKeyboardActionListener(this);
+		return super.onCreateInputMethodInterface();
+	}
 
-		ckvVertical = new CompassKeyboardView(this);
-		ckvVertical.setOnKeyboardActionListener(this);
+	// Select the layout view appropriate for the screen direction, if there is more than one
+	@Override public View onCreateInputView() {
+		Log.d(TAG, "onCreateInputView;");
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		boolean portrait = mPrefs.getBoolean("ck_portrait_only", false);
 
-		ckv = ckvVertical;
+		portrait = portrait || (metrics.widthPixels <= metrics.heightPixels);
+		Log.v(TAG, "w=" + String.valueOf(metrics.widthPixels) + ", h=" + String.valueOf(metrics.heightPixels) + ", forceP=" + String.valueOf(portrait));
 
-		int i = currentLayout;
-		currentLayout = -1;			// enforce reloading layout
-		updateLayout(i);
+		String err = null;
+		ckv = null;
+		try {
+			XmlPullParser parser = openLayout(getPrefInt(mPrefs, "ck_layout", 0));
+			ckv = new CompassKeyboardView(this, portrait, parser);
+			ckv.setOnKeyboardActionListener(this);
+		}
+		catch (XmlPullParserException e)	{ err = e.getMessage(); }
+		catch (java.io.IOException e)		{ err = e.getMessage(); }
+		if (ckv == null) {
+			if (err != null)
+				sendNotification("Invalid layout", err);
+			err = null;
+			try {
+				XmlPullParser parser = openLayout(0);
+				ckv = new CompassKeyboardView(this, portrait, parser);
+			}
+			catch (XmlPullParserException e)	{ err = e.getMessage(); }
+			catch (java.io.IOException e)		{ err = e.getMessage(); }
+			if (err != null)
+				sendNotification("Invalid layout", err);
+		}
 
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
 		Map<String, ?> allPrefs = mPrefs.getAll();
@@ -183,55 +161,37 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 				}
 			}
 		}
-		return super.onCreateInputMethodInterface();
-	}
-
-	// Select the layout view appropriate for the screen direction, if there is more than one
-	@Override public View onCreateInputView() {
-		//Log.d(TAG, "onCreateInputView;");
-		DisplayMetrics metrics = getResources().getDisplayMetrics();
-
-		if (forcePortrait || (metrics.widthPixels <= metrics.heightPixels))
-			ckv = (ckvVertical != null) ? ckvVertical : ckvHorizontal;
-		else
-			ckv = (ckvHorizontal != null) ? ckvHorizontal : ckvVertical;
-
-		Log.v(TAG, "w=" + String.valueOf(metrics.widthPixels) + ", h=" + String.valueOf(metrics.heightPixels) + ", forceP=" + String.valueOf(forcePortrait));
-		/*if (ckv != null)
-			ckv.calculateSizesForMetrics(metrics); */
-	
-		ViewParent p = ckv.getParent();
-		if ((p != null) && (p instanceof ViewGroup))
-			((ViewGroup)p).removeView(ckv);
+		/*ViewParent p = ckv.getParent();
+		  if ((p != null) && (p instanceof ViewGroup))
+		  ((ViewGroup)p).removeView(ckv); */
 		return ckv;
 	} 
 
 	@Override public void onStartInputView(EditorInfo attribute, boolean restarting) {
-		//Log.d(TAG, "onStartInputView;");
+		Log.d(TAG, "onStartInputView;");
 		super.onStartInputView(attribute, restarting);
-		if (ckv != null) {
-			ckv.calculateSizesForMetrics(getResources().getDisplayMetrics());
-			ckv.resetState();
-			ckv.setInputType(attribute.inputType);
-		}
+		if (ckv == null)
+			return;
+		ckv.calculateSizesForMetrics(getResources().getDisplayMetrics());
+		ckv.resetState();
+		ckv.setInputType(attribute.inputType);
 	}
 
 	@Override public void onStartInput(EditorInfo attribute, boolean restarting) {
 		super.onStartInput(attribute, restarting); 
-		if (ckv != null) {
-			ckv.resetState();
-			ckv.setInputType(attribute.inputType);
-		}
+		if (ckv == null)
+			return;
+		ckv.resetState();
+		ckv.setInputType(attribute.inputType);
 	}
 
 	@Override public boolean onEvaluateFullscreenMode() {
 		return false; // never require fullscreen
-}
+	}
 
 	private void sendModifiers(InputConnection ic, int action) {
 		if (ckv == null)
 			return;
-
 		if (ckv.checkState("shift"))
 			ic.sendKeyEvent(new KeyEvent(action, KeyEvent.KEYCODE_SHIFT_LEFT));
 		if (ckv.checkState("alt"))
@@ -254,6 +214,14 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		sendModifiers(ic, KeyEvent.ACTION_DOWN);
 		sendKeyChar(text.charAt(0));
 	} 
+
+	// Process a layout change
+	public void setLayout(int n) {
+		SharedPreferences.Editor edit = mPrefs.edit();
+		edit.putString("ck_layout", String.valueOf(n));
+		edit.commit();
+		Log.d(TAG, "Set layout, should invalidate view; n='" + String.valueOf(n) + "'");
+	}
 
 	// Process a command
 	public void execCmd(String cmd) {
@@ -372,65 +340,53 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		}
 
 		if (key.contentEquals("ck_key_fb_key")) {
-			int v = getPrefInt(prefs, key, 0);
-			ckvHorizontal.setVibrateOnKey(v);
-			ckvVertical.setVibrateOnKey(v);
+			int v = getPrefInt(prefs, "ck_key_fb_key", 0);
+			ckv.setVibrateOnKey(v);
 		}
 		else if (key.contentEquals("ck_key_fb_mod")) {
-			int v = getPrefInt(prefs, key, 0);
-			ckvHorizontal.setVibrateOnModifier(v);
-			ckvVertical.setVibrateOnModifier(v);
+			int v = getPrefInt(prefs, "ck_key_fb_mod", 0);
+			ckv.setVibrateOnModifier(v);
 		}
 		else if (key.contentEquals("ck_key_fb_cancel")) {
-			int v = getPrefInt(prefs, key, 0);
-			ckvHorizontal.setVibrateOnCancel(v);
-			ckvVertical.setVibrateOnCancel(v);
+			int v = getPrefInt(prefs, "ck_key_fb_cancel", 0);
+			ckv.setVibrateOnCancel(v);
 		}
 		else if (key.contentEquals("ck_text_fb_normal")) {
-			int v = getPrefInt(prefs, key, 0);
-			ckvHorizontal.setFeedbackNormal(v);
-			ckvVertical.setFeedbackNormal(v);
+			int v = getPrefInt(prefs, "ck_text_fb_normal", 0);
+			ckv.setFeedbackNormal(v);
 		}
 		else if (key.contentEquals("ck_text_fb_password")) {
-			int v = getPrefInt(prefs, key, 0);
-			ckvHorizontal.setFeedbackPassword(v);
-			ckvVertical.setFeedbackPassword(v);
+			int v = getPrefInt(prefs, "ck_text_fb_password", 0);
+			ckv.setFeedbackPassword(v);
 		}
 		else if (key.contentEquals("ck_margin_left")) {
-			float f = getPrefFloat(prefs, key, 0);
-			ckvHorizontal.setLeftMargin(f);
-			ckvVertical.setLeftMargin(f);
+			float f = getPrefFloat(prefs, "ck_margin_left", 0);
+			ckv.setLeftMargin(f);
 			getWindow().dismiss();
 		}
 		else if (key.contentEquals("ck_margin_right")) {
-			float f = getPrefFloat(prefs, key, 0);
-			ckvHorizontal.setRightMargin(f);
-			ckvVertical.setRightMargin(f);
+			float f = getPrefFloat(prefs, "ck_margin_right", 0);
+			ckv.setRightMargin(f);
 			getWindow().dismiss();
 		}
 		else if (key.contentEquals("ck_margin_bottom")) {
-			float f = getPrefFloat(prefs, key, 0);
-			ckvHorizontal.setBottomMargin(f);
-			ckvVertical.setBottomMargin(f);
+			float f = getPrefFloat(prefs, "ck_margin_bottom", 0);
+			ckv.setBottomMargin(f);
 			getWindow().dismiss();
 		}
 		else if (key.contentEquals("ck_max_keysize")) {
-			float f = getPrefFloat(prefs, key, 12);
-			ckvHorizontal.setMaxKeySize(f);
-			ckvVertical.setMaxKeySize(f);
+			float f = getPrefFloat(prefs, "ck_max_keysize", 12);
+			ckv.setMaxKeySize(f);
 			getWindow().dismiss();
-		}
-		else if (key.contentEquals("ck_layout")) {
-			int i = getPrefInt(prefs, key, 0);
-			updateLayout(i);
 		}
 		else if (key.contentEquals("ck_custom_layout")) {
 			SharedPreferences.Editor edit = mPrefs.edit();
-			String s = prefs.getString(key, "");
+			String s = prefs.getString("ck_custom_layout", "");
 			if (s != "") {
 				String err = null;
 				try {
-					String name = updateLayout(s);
+					XmlPullParser parser = openLayout(s);
+					String name = getLayoutName(parser);
 
 					int n = getPrefInt(prefs, "ck_num_layouts", 3);
 					String sn = "["+String.valueOf(n)+"]";
@@ -452,8 +408,13 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 				}
 			}
 		}
-		else if (key.contentEquals("ck_portrait_only")) {
-			forcePortrait = prefs.getBoolean(key, false);
+		else if (key.contentEquals("ck_layout")) {
+			int v = getPrefInt(prefs, "ck_layout", 0);
+			if (v != currentLayout) {
+				currentLayout = v;
+				requestHideSelf(0);
+				setInputView(onCreateInputView());
+			}
 		}
 	}
 }
