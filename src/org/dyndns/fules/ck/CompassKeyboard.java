@@ -170,8 +170,10 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 	@Override public void onStartInputView(EditorInfo attribute, boolean restarting) {
 		Log.d(TAG, "onStartInputView;");
 		super.onStartInputView(attribute, restarting);
-		if (ckv == null)
+		if (ckv == null) {
+			Log.d(TAG, "ckv is null");
 			return;
+		}
 		ckv.calculateSizesForMetrics(getResources().getDisplayMetrics());
 		ckv.resetState();
 		ckv.setInputType(attribute.inputType);
@@ -413,10 +415,13 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			if (v != currentLayout) {
 				currentLayout = v;
 				requestHideSelf(0);
+				ckv = null;
 				setInputView(onCreateInputView());
 			}
 		}
 	}
+
+
 }
 
 // vim: set ai si sw=8 ts=8 noet:
