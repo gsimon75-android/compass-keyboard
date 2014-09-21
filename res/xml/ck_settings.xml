@@ -2,143 +2,133 @@
 <PreferenceScreen
        	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:fules="http://schemas.android.com/apk/res/org.dyndns.fules.ck"
-	android:title="@string/ck_settings"
-        android:key="cube2wallpaper_settings">
+	android:title="@string/settings"
+        android:key="settings">
 
 	<PreferenceScreen
 		android:key="pg_feedback"
-		android:title="@string/pg_feedback_title"
+		android:title="@string/pg_feedback"
 		android:summary="@string/pg_feedback_summary"
 		android:orderingFromXml="true">
 		<ListPreference
-			android:key="ck_key_fb_key"
-			android:title="@string/ck_key_fb_key_title"
-			android:summary="@string/ck_key_fb_key_summary"
-			android:entries="@array/ck_key_fbnames"
-			android:entryValues="@array/ck_key_fbvalues"
+			android:key="feedback_key"
+			android:title="@string/feedback_key"
+			android:summary="@string/feedback_key_summary"
+			android:entries="@array/key_feedback_names"
+			android:entryValues="@array/key_feedback_values"
 			android:defaultValue="-1"/>
 		<ListPreference
-			android:key="ck_key_fb_mod"
-			android:title="@string/ck_key_fb_mod_title"
-			android:summary="@string/ck_key_fb_mod_summary"
-			android:entries="@array/ck_key_fbnames"
-			android:entryValues="@array/ck_key_fbvalues"
+			android:key="feedback_mod"
+			android:title="@string/feedback_mod"
+			android:summary="@string/feedback_mod_summary"
+			android:entries="@array/key_feedback_names"
+			android:entryValues="@array/key_feedback_values"
 			android:defaultValue="1"/>
 		<ListPreference
-			android:key="ck_key_fb_cancel"
-			android:title="@string/ck_key_fb_cancel_title"
-			android:summary="@string/ck_key_fb_cancel_summary"
-			android:entries="@array/ck_key_fbnames"
-			android:entryValues="@array/ck_key_fbvalues"
+			android:key="feedback_cancel"
+			android:title="@string/feedback_cancel"
+			android:summary="@string/feedback_cancel_summary"
+			android:entries="@array/key_feedback_names"
+			android:entryValues="@array/key_feedback_values"
 			android:defaultValue="2"/>
 		<ListPreference
-			android:key="ck_text_fb_normal"
-			android:title="@string/ck_text_fb_normal_title"
-			android:summary="@string/ck_text_fb_normal_summary"
-			android:entries="@array/ck_text_fbnames"
-			android:entryValues="@array/ck_text_fbvalues"
+			android:key="feedback_text"
+			android:title="@string/feedback_text"
+			android:summary="@string/feedback_text_summary"
+			android:entries="@array/text_feedback_names"
+			android:entryValues="@array/text_feedback_values"
 			android:defaultValue="2"/>
 		<ListPreference
-			android:key="ck_text_fb_password"
-			android:title="@string/ck_text_fb_password_title"
-			android:summary="@string/ck_text_fb_password_summary"
-			android:entries="@array/ck_text_fbnames"
-			android:entryValues="@array/ck_text_fbvalues"
+			android:key="feedback_password"
+			android:title="@string/feedback_password"
+			android:summary="@string/feedback_password_summary"
+			android:entries="@array/text_feedback_names"
+			android:entryValues="@array/text_feedback_values"
 			android:defaultValue="1"/>
 	</PreferenceScreen>
 
+	<ListPreference
+		android:key="layout"
+		android:title="@string/current_layout"
+		android:summary="@string/current_layout_summary"
+		android:entries="@array/layout_names"
+		android:entryValues="@array/layout_values"
+		android:defaultValue="0"/>
+
 	<PreferenceScreen
 		android:key="pg_layouts"
-		android:title="@string/ck_layout_title"
-		android:summary="@string/ck_layout_summary">
-		<org.dyndns.fules.ck.ButtonPreference
-			android:key="ck_layout_click[0]"
-			android:title="@string/ck_latin_layout_title"
-			android:summary="@string/ck_latin_layout_summary"
-			android:order="0"
-			android:persistent="true"
-			android:selectable="true"/>
-		<org.dyndns.fules.ck.ButtonPreference
-			android:key="ck_layout_click[1]"
-			android:title="@string/ck_cyrillic_layout_title"
-			android:summary="@string/ck_cyrillic_layout_summary"
-			android:order="1"
-			android:persistent="true"
-			android:selectable="true"/>
-		<org.dyndns.fules.ck.ButtonPreference
-			android:key="ck_layout_click[2]"
-			android:title="@string/ck_greek_layout_title"
-			android:summary="@string/ck_greek_layout_summary"
-			android:order="2"
-			android:persistent="true"
-			android:selectable="true"/>
-		<org.dyndns.fules.ck.FilePickerPreference
-			android:key="ck_custom_layout"
-			android:title="@string/ck_custom_layout_title"
-			android:summary="@string/ck_custom_layout_summary"
-			android:order="1000"
-			android:defaultValue=""
-			android:choiceMode="singleChoice"
-			android:positiveButtonText="@string/ck_custom_layout_positive"
-			android:negativeButtonText="@string/ck_custom_layout_negative"
-			fules:showUnreadable="false"
-			fules:showOthers="false"
-			fules:showFiles="true"
-			fules:showHidden="true"
-			fules:workingDir="/sdcard"
-			fules:mask=".*\.xml"/>
+		android:title="@string/layout"
+		android:summary="@string/layout_summary">
 		<CheckBoxPreference
-			android:key="ck_portrait_only"
-			android:title="@string/ck_portrait_only"
-			android:summary="@string/ck_portrait_only_summary"/>
+			android:key="portrait_only"
+			android:title="@string/portrait_only"
+			android:summary="@string/portrait_only_summary"/>
+		<CheckBoxPreference
+			android:key="disable_layout_keys"
+			android:title="@string/disable_layout_keys"
+			android:summary="@string/disable_layout_keys_summary"/>
+        
+		<Preference
+			android:key="layout_4"
+			android:title="Layout 4"
+			android:summary="custom layout 4"
+            android:targetClass="org.dyndns.fules.ck/.FilePicker"
+			android:defaultValue="">
+            <intent android:action="android.intent.action.PICK">
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.path" android:value="/mnt/sdcard"/>
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.regex" android:value="\.xml$"/>
+                <extra android:name="org.dyndns.fules.ck.filepicker.preference" android:value="CompassKeyboardPreference"/>
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.regex" android:value="layout_4_path"/>
+            </intent>
+        </Preference>
 	</PreferenceScreen>
 
 	<PreferenceScreen
 		android:key="pg_sizes"
-		android:title="@string/pg_sizes_title"
+		android:title="@string/pg_sizes"
 		android:summary="@string/pg_sizes_summary"
 		android:orderingFromXml="true">
 		<EditTextPreference
-			android:key="ck_margin_left"
-			android:title="@string/ck_margin_left_title"
-			android:summary="@string/ck_margin_left_summary"
+			android:key="margin_left"
+			android:title="@string/margin_left"
+			android:summary="@string/margin_left_summary"
 			android:defaultValue="0"/>
 		<EditTextPreference
-			android:key="ck_margin_right"
-			android:title="@string/ck_margin_right_title"
-			android:summary="@string/ck_margin_right_summary"
+			android:key="margin_right"
+			android:title="@string/margin_right"
+			android:summary="@string/margin_right_summary"
 			android:defaultValue="0"/>
 		<EditTextPreference
-			android:key="ck_margin_bottom"
-			android:title="@string/ck_margin_bottom_title"
-			android:summary="@string/ck_margin_bottom_summary"
+			android:key="margin_bottom"
+			android:title="@string/margin_bottom"
+			android:summary="@string/margin_bottom_summary"
 			android:defaultValue="0"/>
 		<EditTextPreference
-			android:key="ck_max_keysize"
-			android:title="@string/ck_max_keysize_title"
-			android:summary="@string/ck_max_keysize_summary"
+			android:key="max_keysize"
+			android:title="@string/max_keysize"
+			android:summary="@string/max_keysize_summary"
 			android:defaultValue="12"/>
 	</PreferenceScreen>
 
 	<PreferenceScreen
 		android:key="pg_about"
-		android:title="@string/pg_about_title"
+		android:title="@string/pg_about"
 		android:summary="@string/pg_about_summary"
 		android:orderingFromXml="true">
 		<Preference
-			android:key="ck_version"
-			android:title="@string/ck_version_title"
-			android:summary="@string/ck_version_summary"
+			android:key="version"
+			android:title="@string/version"
+			android:summary="@string/version_summary"
 			android:selectable="false"/>
 		<Preference
-			android:key="ck_source"
-			android:title="@string/ck_source_title"
-			android:summary="@string/ck_source_summary"
+			android:key="source"
+			android:title="@string/source"
+			android:summary="@string/source_summary"
 			android:selectable="false"/>
 		<Preference
-			android:key="ck_copyright"
-			android:title="@string/ck_copyright_title"
-			android:summary="@string/ck_copyright_summary"
+			android:key="copyright"
+			android:title="@string/copyright"
+			android:summary="@string/copyright_summary"
 			android:selectable="false"/>
 	</PreferenceScreen>
 </PreferenceScreen>

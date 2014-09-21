@@ -26,10 +26,6 @@ public class ButtonPreference extends Preference {
 			return;
 		persistBoolean(value);
 	}
-
-	/*@Override protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-		super.onSetInitialValue(restorePersistedValue, defaultValue);
-	} */
 }
 
 // vim: set ai si sw=8 ts=8 noet:

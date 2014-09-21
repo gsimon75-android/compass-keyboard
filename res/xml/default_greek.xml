@@ -126,11 +126,11 @@
             <Key name="τ-_">
                 <State>
                     <Action code="τ"/>                      <Action code="υ"/>                      <Action code="φ"/>
-                    <Action/>                               <Action/>                               <Action code="_"/>
+                    <Action/>                               <Action text="↚" key="67"/>             <Action/>
                 </State>
                 <State name="shift">
                     <Action code="Τ"/>                      <Action code="Υ"/>                      <Action code="Φ"/>
-                    <Action/>                               <Action/>                               <Action code="_"/>
+                    <Action/>                               <Action text="↚" key="67"/>             <Action/>
                 </State>
                 <State name="spec">
                     <Action/>                               <Action/>                               <Action/>
@@ -141,11 +141,11 @@
             <Key name="χ-spaces">
                 <State>
                     <Action code="χ"/>                      <Action code="ψ"/>                      <Action code="ω"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="shift">
                     <Action code="Χ"/>                      <Action code="Ψ"/>                      <Action code="Ω"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="spec">
                     <Action text="X" cmd="cut"/>            <Action/>                               <Action text="P" cmd="paste"/>
@@ -319,11 +319,11 @@
             <Key name="χ-ω">
                 <State>
                     <Action code="χ"/>                      <Action code="ψ"/>                      <Action code="ω"/>
-                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↚" key="67"/>             <Action/>
                 </State>
                 <State name="shift">
                     <Action code="Χ"/>                      <Action code="Ψ"/>                      <Action code="Ω"/>
-                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↚" key="67"/>             <Action/>
                 </State>
                 <State name="spec">
                     <Action/>                               <Action/>                               <Action/>
@@ -333,12 +333,12 @@
 
             <Key name="_-spaces">
                 <State>
-                    <Action/>                               <Action/>                               <Action code="_"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="shift">
-                    <Action/>                               <Action/>                               <Action code="_"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action/>                               <Action/>                               <Action/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="spec">
                     <Action text="X" cmd="cut"/>            <Action/>                               <Action text="P" cmd="paste"/>
