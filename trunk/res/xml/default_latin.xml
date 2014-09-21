@@ -281,11 +281,11 @@
             <Key name="s-_">
                 <State>
                     <Action code="s"/>                      <Action code="t"/>                      <Action code="u"/>
-                    <Action code="y"/>                      <Action code="z"/>                      <Action code="_"/>
+                    <Action code="y"/>                      <Action text="↚" key="67"/>             <Action code="z"/>
                 </State>
                 <State name="shift">
                     <Action code="S"/>                      <Action code="T"/>                      <Action code="U"/>
-                    <Action code="Y"/>                      <Action code="Z"/>                      <Action code="_"/>
+                    <Action code="Y"/>                      <Action text="↚" key="67"/>             <Action code="Z"/>
                 </State>
                 <State name="grave">
                     <Action/>                               <Action code="ư"/>                      <Action code="ù"/>
@@ -305,11 +305,11 @@
                 </State>
                 <State name="acute">
                     <Action code="ś"/>                      <Action/>                               <Action code="ú"/>
-                    <Action code="ý"/>                      <Action code="ź"/>                      <Action/>
+                    <Action code="ý"/>                      <Action/>                               <Action code="ź"/>
                 </State>
                 <State name="shift,acute">
                     <Action code="Ś"/>                      <Action/>                               <Action code="Ú"/>
-                    <Action code="Ý"/>                      <Action code="Ź"/>                      <Action/>
+                    <Action code="Ý"/>                      <Action/>                               <Action code="Ź"/>
                 </State>
                 <State name="diae">
                     <Action/>                               <Action/>                               <Action code="ü"/>
@@ -329,19 +329,19 @@
                 </State>
                 <State name="hacek">
                     <Action code="š"/>                      <Action code="ť"/>                      <Action code="ǔ"/>
-                    <Action/>                               <Action code="ž"/>                      <Action/>
+                    <Action/>                               <Action/>                               <Action code="ž"/>
                 </State>
                 <State name="shift,hacek">
                     <Action code="Š"/>                      <Action code="Ť"/>                      <Action code="Ǔ"/>
-                    <Action/>                               <Action code="Ž"/>                      <Action/>
+                    <Action/>                               <Action/>                               <Action code="Ž"/>
                 </State>
                 <State name="misc">
                     <Action code="ß"/>                      <Action code="ð"/>                      <Action code="ū"/>
-                    <Action/>                               <Action code="ż"/>                      <Action code="ů"/>
+                    <Action/>                               <Action code="ů"/>                      <Action code="ż"/>
                 </State>
                 <State name="shift,misc">
                     <Action code="ß"/>                      <Action code="Ð"/>                      <Action code="Ū"/>
-                    <Action/>                               <Action code="Ż"/>                      <Action code="Ů"/>
+                    <Action/>                               <Action code="Ů"/>                      <Action code="Ż"/>
                 </State>
                 <State name="spec">
                     <Action code="ş"/>                      <Action code="ţ"/>                      <Action code="ų"/>
@@ -356,11 +356,11 @@
             <Key name="v-spaces">
                 <State>
                     <Action code="v"/>                      <Action code="w"/>                      <Action code="x"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="shift">
                     <Action code="V"/>                      <Action code="W"/>                      <Action code="X"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="spec">
                     <Action text="X" cmd="cut"/>            <Action/>                               <Action text="P" cmd="paste"/>
@@ -770,11 +770,11 @@
             <Key name="v-x">
                 <State>
                     <Action code="v"/>                      <Action code="w"/>                      <Action code="x"/>
-                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↚" key="67"/>             <Action/>
                 </State>
                 <State name="shift">
                     <Action code="V"/>                      <Action code="W"/>                      <Action code="X"/>
-                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↚" key="67"/>             <Action/>
                 </State>
                 <State name="spec">
                     <Action/>                               <Action/>                               <Action/>
@@ -784,12 +784,12 @@
 
             <Key name="y-spaces">
                 <State>
-                    <Action code="y"/>                      <Action code="z"/>                      <Action code="_"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action code="y"/>                      <Action/>                               <Action code="z"/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="shift">
-                    <Action code="Y"/>                      <Action code="Z"/>                      <Action code="_"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action code="Y"/>                      <Action/>                               <Action code="Z"/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="spec">
                     <Action text="X" cmd="cut"/>            <Action/>                               <Action text="P" cmd="paste"/>
@@ -800,27 +800,27 @@
                     <Action text="↛" code="%1b[3;2~"/>      <Action/>                               <Action text="↱" code="%1b[2;2~"/>
                 </State>
                 <State name="acute">
-                    <Action code="ý"/>                      <Action code="ź"/>                      <Action/>
+                    <Action code="ý"/>                      <Action/>                               <Action code="ź"/>
                     <Action/>                               <Action/>                               <Action/>
                 </State>
                 <State name="shift,acute">
-                    <Action code="Ý"/>                      <Action code="Ź"/>                      <Action/>
+                    <Action code="Ý"/>                      <Action/>                               <Action code="Ź"/>
                     <Action/>                               <Action/>                               <Action/>
                 </State>
                 <State name="hacek">
-                    <Action/>                               <Action code="ž"/>                      <Action/>
+                    <Action/>                               <Action/>                               <Action code="ž"/>
                     <Action/>                               <Action/>                               <Action/>
                 </State>
                 <State name="shift,hacek">
-                    <Action/>                               <Action code="Ž"/>                      <Action/>
+                    <Action/>                               <Action/>                               <Action code="Ž"/>
                     <Action/>                               <Action/>                               <Action/>
                 </State>
                 <State name="misc">
-                    <Action/>                               <Action code="ż"/>                      <Action/>
+                    <Action/>                               <Action/>                               <Action code="ż"/>
                     <Action/>                               <Action/>                               <Action/>
                 </State>
                 <State name="shift,misc">
-                    <Action/>                               <Action code="Ż"/>                      <Action/>
+                    <Action/>                               <Action/>                               <Action code="Ż"/>
                     <Action/>                               <Action/>                               <Action/>
                 </State>
             </Key>

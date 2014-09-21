@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+	<string name="ime_name">Compass Keyboard</string>
+
+	<string name="settings">Settings</string>
+
+	<string name="pg_feedback">Feedback</string>
+	<string name="pg_feedback_summary">Visual and vibrating feedback settings</string>
+
+	<string name="feedback_key">Key press feedback</string>
+	<string name="feedback_key_summary">Vibrate/tick when a key is entered</string>
+
+	<string name="feedback_mod">Modifier feedback</string>
+	<string name="feedback_mod_summary">Vibrate/tick when a modifier is selected</string>
+
+	<string name="feedback_cancel">Cancel feedback</string>
+	<string name="feedback_cancel_summary">Vibrate/tick when a modifier is cancelled</string>
+
+	<string name="feedback_text">Normal text feedback</string>
+	<string name="feedback_text_summary">Visual feedback for normal text</string>
+
+	<string name="feedback_password">Password feedback</string>
+	<string name="feedback_password_summary">Visual feedback for passwords</string>
+
+	<string name="pg_sizes">Sizes</string>
+	<string name="pg_sizes_summary">Keyboard layout sizes in mm-s</string>
+
+	<string name="margin_left">Left</string>
+	<string name="margin_left_summary">Left margin in mm-s</string>
+
+	<string name="margin_right">Right</string>
+	<string name="margin_right_summary">Right margin in mm-s</string>
+
+	<string name="margin_bottom">Bottom</string>
+	<string name="margin_bottom_summary">Bottom margin in mm-s</string>
+
+	<string name="max_keysize">Key size</string>
+	<string name="max_keysize_summary">Maximal key size in mm-s</string>
+
+	<string name="layout">Layouts</string>
+	<string name="layout_summary">Layouts for various alphabets</string>
+
+	<string name="current_layout">Current layout</string>
+	<string name="current_layout_summary">Choose the active layout</string>
+
+	<string-array name="layout_names">
+		<item>"Latin"</item>
+		<item>"Кириллица"</item>
+		<item>"Ελληνικό"</item>
+        <!-- custom layout names will be added/removed programmatically -->
+	</string-array>
+
+	<string-array name="layout_values">
+		<item>"@latin"</item>
+		<item>"@cyrillic"</item>
+		<item>"@greek"</item>
+        <!-- custom layout filenames will be added/removed programmatically -->
+	</string-array>
+
+	<string name="custom_layout_positive">OK</string>
+	<string name="custom_layout_negative">Cancel</string>
+
+	<string name="portrait_only">Portrait layout only</string>
+	<string name="portrait_only_summary">Use the portrait layout even in landscape mode</string>
+
+	<string name="disable_layout_keys">Disable layout keys</string>
+	<string name="disable_layout_keys_summary">Disable the layout switching keys</string>
+
+	<string-array name="key_feedback_names">
+		<item>"None"</item>
+		<item>"Tick"</item>
+		<item>"Vibrate once"</item>
+		<item>"Vibrate twice"</item>
+	</string-array>
+
+	<string-array name="key_feedback_values">
+		<item>"-2"</item>
+		<item>"-1"</item>
+		<item>"0"</item>
+		<item>"1"</item>
+	</string-array>
+	
+	<string-array name="text_feedback_names">
+		<item>"None"</item>
+		<item>"Highlight"</item>
+		<item>"Toast"</item>
+	</string-array>
+
+	<string-array name="text_feedback_values">
+		<item>"0"</item>
+		<item>"1"</item>
+		<item>"2"</item>
+	</string-array>
+	
+	<string name="pg_about">About</string>
+	<string name="pg_about_summary">Miscellaneous information</string>
+
+	<string name="version">Version</string>
+	<string name="version_summary">v1.6pre1</string>
+
+	<string name="copyright">Copyright</string>
+	<string name="copyright_summary">2011-2014 Gabor Simon. All rights reserved, New BSD License applies.</string>
+	<string name="source">Source</string>
+	<string name="source_summary">$HeadURL$</string>
+
+</resources>

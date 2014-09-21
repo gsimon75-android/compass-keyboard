@@ -6,15 +6,9 @@
         <attr name="showFiles" format="boolean"/>
         <attr name="showOthers" format="boolean"/>
         <attr name="showUnreadable" format="boolean"/>
-        <attr name="mask" format="string"/>
-    </declare-styleable>
-    <declare-styleable name="FilePickerPreference">
-        <attr name="workingDir"/>
-        <attr name="showHidden"/>
-        <attr name="showFiles"/>
-        <attr name="showOthers"/>
-        <attr name="showUnreadable"/>
-        <attr name="mask"/>
+        <attr name="regex" format="string"/>
+        <attr name="preferenceName" format="string"/>
+        <attr name="preferenceKey" format="string"/>
     </declare-styleable>
     <declare-styleable name="TextDialogPreference">
     </declare-styleable>

@@ -191,11 +191,11 @@
             <Key name="у-_">
                 <State>
                     <Action code="у"/>                      <Action code="ф"/>                      <Action code="х"/>
-                    <Action code="щ"/>                      <Action code="ъ"/>                      <Action code="_"/>
+                    <Action code="щ"/>                      <Action text="↚" key="67"/>             <Action code="ъ"/>
                 </State>
                 <State name="shift">
                     <Action code="У"/>                      <Action code="Ф"/>                      <Action code="Х"/>
-                    <Action code="Щ"/>                      <Action code="Ъ"/>                      <Action code="_"/>
+                    <Action code="Щ"/>                      <Action text="↚" key="67"/>             <Action code="Ъ"/>
                 </State>
 				<State name="spec">
                     <Action code="ӯ"/>                      <Action code="ү"/>                      <Action code="ҳ"/>
@@ -234,11 +234,11 @@
             <Key name="ц-spaces">
                 <State>
                     <Action code="ц"/>                      <Action code="ч"/>                      <Action code="ш"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="shift">
                     <Action code="Ц"/>                      <Action code="Ч"/>                      <Action code="Ш"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="spec">
                     <Action text="X" cmd="cut"/>            <Action code="ҷ"/>                      <Action text="P" cmd="paste"/>
@@ -504,11 +504,11 @@
             <Key name="ц-ш">
                 <State>
                     <Action code="ц"/>                      <Action code="ч"/>                      <Action code="ш"/>
-                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↚" key="67"/>             <Action/>
                 </State>
                 <State name="shift">
                     <Action code="Ц"/>                      <Action code="Ч"/>                      <Action code="Ш"/>
-                    <Action/>                               <Action/>                               <Action/>
+                    <Action/>                               <Action text="↚" key="67"/>             <Action/>
                 </State>
                 <State name="spec">
                     <Action/>                               <Action/>                               <Action/>
@@ -526,12 +526,12 @@
 
             <Key name="щ-spaces">
                 <State>
-                    <Action code="щ"/>                      <Action code="ъ"/>                      <Action code="_"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action code="щ"/>                      <Action/>                               <Action code="ъ"/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="shift">
-                    <Action code="Щ"/>                      <Action code="Ъ"/>                      <Action code="_"/>
-                    <Action text="↚" key="67"/>             <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
+                    <Action code="Щ"/>                      <Action/>                               <Action code="Ъ"/>
+                    <Action code="_"/>                      <Action text="▆" key="62"/>             <Action text="⇨" key="61"/>
                 </State>
                 <State name="spec">
                     <Action text="X" cmd="cut"/>            <Action code="ҷ"/>                      <Action text="P" cmd="paste"/>
@@ -542,11 +542,11 @@
                     <Action text="↛" code="%1b[3;2~"/>      <Action/>                               <Action text="↱" code="%1b[2;2~"/>
                 </State>
 				<State name="soft">
-                    <Action/>                               <Action code="ь"/>                      <Action/>
+                    <Action/>                               <Action/>                               <Action code="ь"/>
                     <Action/>                               <Action/>                               <Action/>
 				</State>
 				<State name="shift,soft">
-                    <Action/>                               <Action code="Ь"/>                      <Action/>
+                    <Action/>                               <Action/>                               <Action code="Ь"/>
                     <Action/>                               <Action/>                               <Action/>
 				</State>
             </Key>
