@@ -72,9 +72,8 @@
 			android:key="layout_4"
 			android:title="Layout 4"
 			android:summary="custom layout 4"
-            android:targetClass="org.dyndns.fules.ck/.FilePicker"
 			android:defaultValue="">
-            <intent android:action="android.intent.action.PICK">
+            <intent android:action="org.dyndns.fules.ck.filepicker.action.PICK" android:targetClass="org.dyndns.fules.ck.FilePicker">
                 <extra android:name="org.dyndns.fules.ck.filepicker.extra.path" android:value="/mnt/sdcard"/>
                 <extra android:name="org.dyndns.fules.ck.filepicker.extra.regex" android:value="\.xml$"/>
                 <extra android:name="org.dyndns.fules.ck.filepicker.preference" android:value="CompassKeyboardPreference"/>

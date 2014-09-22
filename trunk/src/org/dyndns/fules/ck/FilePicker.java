@@ -15,7 +15,8 @@ import android.content.SharedPreferences;
 public class FilePicker extends Activity implements FilePickerView.ResultListener {
 	private static final String TAG = "FilePicker";
 
-	public static final String EXTRA_PATH = "org.dyndns.fules.ck.filepicker.extra.path";
+	public static final String ACTION_PICK = "org.dyndns.fules.ck.filepicker.action.PICK";
+    public static final String EXTRA_PATH = "org.dyndns.fules.ck.filepicker.extra.path";
 	public static final String EXTRA_REGEX = "org.dyndns.fules.ck.filepicker.extra.regex";
 	public static final String EXTRA_SHOW_HIDDEN = "org.dyndns.fules.ck.filepicker.extra.show.hidden";
 	public static final String EXTRA_SHOW_FILES = "org.dyndns.fules.ck.filepicker.extra.show.files";
@@ -34,7 +35,7 @@ public class FilePicker extends Activity implements FilePickerView.ResultListene
 
 		Intent i = getIntent();
 		String action = i.getAction();
-		if (action.contentEquals(Intent.ACTION_MAIN) || action.contentEquals(Intent.ACTION_PICK)) {
+		if (action.contentEquals(Intent.ACTION_MAIN) || action.contentEquals(ACTION_PICK)) {
 			String s;
 			int n;
 
