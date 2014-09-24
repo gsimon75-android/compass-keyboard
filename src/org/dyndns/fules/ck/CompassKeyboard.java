@@ -24,6 +24,8 @@ import android.R.id;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 import java.util.Iterator;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -32,10 +34,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import android.inputmethodservice.AbstractInputMethodService;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
 
 public class CompassKeyboard extends InputMethodService implements KeyboardView.OnKeyboardActionListener, SharedPreferences.OnSharedPreferenceChangeListener  {
 	public static final String	SHARED_PREFS_NAME = "CompassKeyboardSettings";

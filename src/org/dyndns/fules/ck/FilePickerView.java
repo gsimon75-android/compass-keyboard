@@ -49,7 +49,7 @@ class RegexFilter implements FilenameFilter {
 }
 
 class FileInfoView extends LinearLayout implements Checkable, View.OnTouchListener {
-	private static final String	TAG = "FileInfoView";
+	private static final String	TAG = "FilePicker";
 	static final int		TYPE_FILE = 0;
 	static final int		TYPE_DIR = 1;
 	static final int		TYPE_OTHER = 2;
@@ -160,7 +160,7 @@ class FileInfoView extends LinearLayout implements Checkable, View.OnTouchListen
 
 
 public class FilePickerView extends ListView implements AdapterView.OnItemClickListener {
-	private static final String	TAG = "FilePickerView";
+	private static final String	TAG = "FilePicker";
 
 	interface ResultListener {
 		void onFileSelected(String path, boolean selected);

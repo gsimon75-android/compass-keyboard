@@ -34,6 +34,18 @@ public class FilePicker extends Activity implements FilePickerView.ResultListene
 		setContentView(R.layout.filepicker);
 
 		Intent i = getIntent();
+        {
+            Bundle bundle = i.getExtras();
+            if (bundle == null) {
+                Log.d(TAG, "No extras");
+            }
+            else {
+                for (String key : bundle.keySet()) {
+                    Object value = bundle.get(key);
+                    Log.d(TAG, String.format("Extra: %s %s (%s)", key,  value.toString(), value.getClass().getName()));
+                }
+            }
+        }
 		String action = i.getAction();
 		if (action.contentEquals(Intent.ACTION_MAIN) || action.contentEquals(ACTION_PICK)) {
 			String s;
@@ -79,13 +91,13 @@ public class FilePicker extends Activity implements FilePickerView.ResultListene
 	public void onFileSelected(String path, boolean selected) {
 		Log.d(TAG, "Selected file; path='" + path + "', state='" + String.valueOf(selected) + "'");
         if ((prefName != null) && (prefKey != null) && (prefName.length() > 0) && (prefKey.length() > 0)) {
-        {
-                SharedPreferences prefs = getSharedPreferences(prefName, 0);
-				SharedPreferences.Editor ed = prefs.edit();
-				ed.putString(prefKey, path);
-				ed.commit();
-			}}
-		setResult(Activity.RESULT_OK, new Intent().setAction(Intent.ACTION_PICK).putExtra(EXTRA_PATH, path));
+            Log.d(TAG, "Shared pref; name='" + prefName + "', key='" + prefKey + "'");
+            SharedPreferences prefs = getSharedPreferences(prefName, 0);
+            SharedPreferences.Editor ed = prefs.edit();
+            ed.putString(prefKey, path);
+            ed.commit();
+        }
+		setResult(Activity.RESULT_OK, new Intent().setAction(ACTION_PICK).putExtra(EXTRA_PATH, path));
 		finish();
 	}
 }
