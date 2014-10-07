@@ -10,9 +10,5 @@
         <attr name="preferenceName" format="string"/>
         <attr name="preferenceKey" format="string"/>
     </declare-styleable>
-    <declare-styleable name="TextDialogPreference">
-    </declare-styleable>
-    <declare-styleable name="ButtonPreference">
-    </declare-styleable>
 </resources>
 

@@ -77,7 +77,33 @@
                 <extra android:name="org.dyndns.fules.ck.filepicker.extra.path" android:value="/mnt/sdcard"/>
                 <extra android:name="org.dyndns.fules.ck.filepicker.extra.regex" android:value="\.xml$"/>
                 <extra android:name="org.dyndns.fules.ck.filepicker.extra.preference" android:value="CompassKeyboardSettings"/>
-                <extra android:name="org.dyndns.fules.ck.filepicker.extra.preference.key" android:value="layout_4_path"/>
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.preference.key" android:value="layout_path_4"/>
+            </intent>
+        </Preference>
+        
+		<Preference
+			android:key="layout_5"
+			android:title="Layout 5"
+			android:summary="custom layout 5"
+			android:defaultValue="">
+            <intent android:action="org.dyndns.fules.ck.filepicker.action.PICK" android:targetClass="org.dyndns.fules.ck.FilePicker">
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.path" android:value="/mnt/sdcard"/>
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.regex" android:value="\.xml$"/>
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.preference" android:value="CompassKeyboardSettings"/>
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.preference.key" android:value="layout_path_5"/>
+            </intent>
+        </Preference>
+        
+		<Preference
+			android:key="layout_6"
+			android:title="Layout 6"
+			android:summary="custom layout 6"
+			android:defaultValue="">
+            <intent android:action="org.dyndns.fules.ck.filepicker.action.PICK" android:targetClass="org.dyndns.fules.ck.FilePicker">
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.path" android:value="/mnt/sdcard"/>
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.regex" android:value="\.xml$"/>
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.preference" android:value="CompassKeyboardSettings"/>
+                <extra android:name="org.dyndns.fules.ck.filepicker.extra.preference.key" android:value="layout_path_6"/>
             </intent>
         </Preference>
 	</PreferenceScreen>

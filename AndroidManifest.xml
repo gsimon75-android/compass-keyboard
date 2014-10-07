@@ -27,16 +27,6 @@
 			android:exported="true">
 		</activity>
 
-		<activity
-			android:name="org.dyndns.fules.ck.ButtonPreference"
-			android:exported="true">
-		</activity>
-
-		<activity
-			android:name="org.dyndns.fules.ck.TextDialogPreference"
-			android:exported="true">
-		</activity>
-
 		<activity android:name="FilePicker">
 			<intent-filter>
 				<action android:name="org.dyndns.fules.ck.filepicker.action.PICK" />
