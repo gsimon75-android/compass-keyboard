@@ -440,34 +440,9 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			int i = getPrefInt(prefs, key, 0);
 			updateLayout(i);
 		}
-		/*else if (key.contentEquals("ck_custom_layout")) {
-			SharedPreferences.Editor edit = mPrefs.edit();
-			String s = prefs.getString(key, "");
-			if (s != "") {
-				String err = null;
-				try {
-					String name = updateLayout(s);
-
-					int n = getPrefInt(prefs, "ck_num_layouts", 3);
-					String sn = "["+String.valueOf(n)+"]";
-
-					edit.putString("ck_layout_file"+sn, s);
-					edit.putString("ck_layout_name"+sn, name);
-					edit.putString("ck_num_layouts", String.valueOf(n + 1));
-					edit.putString("ck_layout", String.valueOf(n));
-					edit.remove("ck_custom_layout");
-					edit.commit();
-					Log.d(TAG, "Added custom layout " + String.valueOf(n) + ": " + s);
-				}
-				catch (FileNotFoundException e)		{ err = e.getMessage(); }
-				catch (XmlPullParserException e)	{ err = e.getMessage(); }
-				catch (java.io.IOException e)		{ err = e.getMessage(); }
-
-				if (err != null) {
-					sendNotification("Invalid layout", err);
-				}
-			}
-		}*/
+		else if (key.startsWith("layout_path_")) {
+			int i = Integer.parseInt(key.substring(12));
+		}
 		else if (key.contentEquals("portrait_only")) {
 			forcePortrait = prefs.getBoolean(key, false);
 		}
