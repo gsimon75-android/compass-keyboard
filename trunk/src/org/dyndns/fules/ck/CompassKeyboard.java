@@ -46,7 +46,7 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 	String				currentLayout;
 
 	boolean				lastInPortrait;
-	DisplayMetrics			lastMetrics;
+	DisplayMetrics			lastMetrics = new DisplayMetrics();
 
 	boolean				forcePortrait;				// use the portrait layout even for horizontal screens
 
@@ -161,7 +161,7 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		ckv.setOnKeyboardActionListener(this);
 
 		forcePortrait = mPrefs.getBoolean("portrait_only", false);
-		lastMetrics = getResources().getDisplayMetrics();
+		lastMetrics.setTo(getResources().getDisplayMetrics());
 		lastInPortrait = forcePortrait || (lastMetrics.widthPixels <= lastMetrics.heightPixels);
 
 		currentLayout = "";			// enforce reloading layout
@@ -186,11 +186,12 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 
 	// Select the layout view appropriate for the screen direction, if there is more than one
 	@Override public View onCreateInputView() {
-		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		DisplayMetrics metrics = new DisplayMetrics();
+		metrics.setTo(getResources().getDisplayMetrics());
 		Log.v(TAG, "onCreateInputView; w=" + String.valueOf(metrics.widthPixels) + ", h=" + String.valueOf(metrics.heightPixels) + ", forceP=" + String.valueOf(forcePortrait));
 		Log.v(TAG, "onCreateInputView; last w=" + String.valueOf(lastMetrics.widthPixels) + ", h=" + String.valueOf(lastMetrics.heightPixels) + ", forceP=" + String.valueOf(forcePortrait));
 		if ((metrics.widthPixels != lastMetrics.widthPixels) || (metrics.heightPixels != lastMetrics.heightPixels)) {
-			lastMetrics = metrics;
+			lastMetrics.setTo(metrics);
 			boolean inPortrait = forcePortrait || (lastMetrics.widthPixels <= lastMetrics.heightPixels);
 			Log.v(TAG, "onCreateInputView; metrics changed, inPortrait=" + String.valueOf(inPortrait) + ", lastInPortrait=" + String.valueOf(lastInPortrait));
 			if (inPortrait != lastInPortrait) {
