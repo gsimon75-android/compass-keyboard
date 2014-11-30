@@ -22,8 +22,9 @@
 	<string name="feedback_password">Password feedback</string>
 	<string name="feedback_password_summary">Visual feedback for passwords</string>
 
-	<string name="pg_sizes">Sizes</string>
-	<string name="pg_sizes_summary">Keyboard layout sizes in mm-s</string>
+	<string name="p_sizes">Portrait Sizes</string>
+	<string name="l_sizes">Landscape Sizes</string>
+	<string name="sizes_summary">Keyboard layout sizes in mm-s</string>
 
 	<string name="margin_left">Left</string>
 	<string name="margin_left_summary">Left margin in mm-s</string>
@@ -96,7 +97,7 @@
 	<string name="pg_about_summary">Miscellaneous information</string>
 
 	<string name="version">Version</string>
-	<string name="version_summary">v1.6pre1</string>
+	<string name="version_summary">v1.6pre2</string>
 
 	<string name="copyright">Copyright</string>
 	<string name="copyright_summary">2011-2014 Gabor Simon. All rights reserved, New BSD License applies.</string>

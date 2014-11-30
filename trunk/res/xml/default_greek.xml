@@ -61,14 +61,14 @@
 
             <Key name="nav">
                 <State>
-                    <Action code=";"/>                      <Action text="↑" key="19"/>             <Action code=":"/>
-                    <Action text="←" key="21"/>             <Action text="↲" key="66"/>             <Action text="→" key="22"/>
-                    <Action code=","/>                      <Action text="↓" key="20"/>             <Action code="."/>
+                    <Action code=";"/>                      <Action text="⇑" key="19"/>             <Action code=":"/>
+                    <Action text="⇐" key="21"/>             <Action text="↲" key="66"/>             <Action text="⇒" key="22"/>
+                    <Action code=","/>                      <Action text="⇓" key="20"/>             <Action code="."/>
                 </State>
                 <State name="shift">
-                    <Action/>                               <Action text="↑" code="%1b[1;2A"/>      <Action/>
-                    <Action text="←" code="%1b[1;2D"/>      <Action text="↲" key="66"/>             <Action text="→" code="%1b[1;2C"/>
-                    <Action/>                               <Action text="↓" code="%1b[1;2B"/>      <Action/>
+                    <Action/>                               <Action text="⇑" code="%1b[1;2A"/>      <Action/>
+                    <Action text="⇐" code="%1b[1;2D"/>      <Action text="↲" key="66"/>             <Action text="⇒" code="%1b[1;2C"/>
+                    <Action/>                               <Action text="⇓" code="%1b[1;2B"/>      <Action/>
                 </State>
                 <State name="spec">
                     <Action/>                               <Action text="↟" key="92"/>             <Action/>
@@ -107,7 +107,7 @@
             <Key name="misc" has_left="0">
                 <State>
                     <Action code="%25"/><!-- % -->          <Action code="="/>
-                    <Action text="⇧" mod="shift"/>          <Action text="C" key="23" isSpecial="1"/>
+                    <Action text="⇫" mod="shift"/>          <Action text="C" key="23" isSpecial="1"/>
                 </State>
                 <State name="shift">
                     <Action code="&amp;"/>                  <Action text="H" mod="hide"/>
@@ -115,7 +115,7 @@
                 </State>
                 <State name="spec">
                     <Action text="E" code="%1b"/><!--esc--> <Action/>
-                    <Action text="⇧" mod="shift"/>          <Action text="C" key="23" isSpecial="1"/>
+                    <Action text="⇫" mod="shift"/>          <Action text="C" key="23" isSpecial="1"/>
                 </State>
                 <State name="shift,spec">
                     <Action/>                               <Action/>
@@ -247,11 +247,11 @@
             <Key name="nav down">
                 <State>
                     <Action code="$"/>                      <Action code="%40"/><!-- @ -->          <Action code="%25"/><!-- % -->
-                    <Action code=","/>                      <Action text="↓" key="20"/>             <Action code="."/>
+                    <Action code=","/>                      <Action text="⇓" key="20"/>             <Action code="."/>
                 </State>
                 <State name="shift">
                     <Action code="^"/>                      <Action code="~"/>                      <Action code="&amp;"/>
-                    <Action/>                               <Action text="↓" code="%1b[1;2B"/>      <Action/>
+                    <Action/>                               <Action text="⇓" code="%1b[1;2B"/>      <Action/>
                 </State>
                 <State name="spec">
                     <Action/>                               <Action text="▒" cmd="selectAll"/>      <Action/>
@@ -300,7 +300,7 @@
             <Key name="τ-misc">
                 <State>
                     <Action code="τ"/>                      <Action code="υ"/>                      <Action code="φ"/>
-                    <Action code="="/>                      <Action text="⇧" mod="shift"/>          <Action text="C" key="23" isSpecial="1"/>
+                    <Action code="="/>                      <Action text="⇫" mod="shift"/>          <Action text="C" key="23" isSpecial="1"/>
                 </State>
                 <State name="shift">
                     <Action code="Τ"/>                      <Action code="Υ"/>                      <Action code="Φ"/>
@@ -308,7 +308,7 @@
                 </State>
                 <State name="spec">
                     <Action/>                               <Action text="E" code="%1b"/><!--esc--> <Action/>
-                    <Action/>                               <Action text="⇧" mod="shift"/>          <Action text="C" key="23" isSpecial="1"/>
+                    <Action/>                               <Action text="⇫" mod="shift"/>          <Action text="C" key="23" isSpecial="1"/>
                 </State>
                 <State name="shift,spec">
                     <Action/>                               <Action/>                               <Action/>
@@ -352,12 +352,12 @@
 
             <Key name="nav">
                 <State>
-                    <Action code=";"/>                      <Action text="↑" key="19"/>             <Action code=":"/>
-                    <Action text="←" key="21"/>             <Action text="↲" key="66"/>             <Action text="→" key="22"/>
+                    <Action code=";"/>                      <Action text="⇑" key="19"/>             <Action code=":"/>
+                    <Action text="⇐" key="21"/>             <Action text="↲" key="66"/>             <Action text="⇒" key="22"/>
                 </State>
                 <State name="shift">
-                    <Action/>                               <Action text="↑" code="%1b[1;2A"/>      <Action/>
-                    <Action text="←" code="%1b[1;2D"/>      <Action text="↲" key="66"/>             <Action text="→" code="%1b[1;2C"/>
+                    <Action/>                               <Action text="⇑" code="%1b[1;2A"/>      <Action/>
+                    <Action text="⇐" code="%1b[1;2D"/>      <Action text="↲" key="66"/>             <Action text="⇒" code="%1b[1;2C"/>
                 </State>
                 <State name="spec">
                     <Action/>                               <Action text="↟" key="92"/>             <Action/>

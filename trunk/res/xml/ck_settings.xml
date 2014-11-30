@@ -109,27 +109,54 @@
 	</PreferenceScreen>
 
 	<PreferenceScreen
-		android:key="pg_sizes"
-		android:title="@string/pg_sizes"
-		android:summary="@string/pg_sizes_summary"
+		android:key="p_sizes"
+		android:title="@string/p_sizes"
+		android:summary="@string/sizes_summary"
 		android:orderingFromXml="true">
 		<EditTextPreference
-			android:key="margin_left"
+			android:key="portrait_margin_left"
 			android:title="@string/margin_left"
 			android:summary="@string/margin_left_summary"
 			android:defaultValue="0"/>
 		<EditTextPreference
-			android:key="margin_right"
+			android:key="portrait_margin_right"
 			android:title="@string/margin_right"
 			android:summary="@string/margin_right_summary"
 			android:defaultValue="0"/>
 		<EditTextPreference
-			android:key="margin_bottom"
+			android:key="portrait_margin_bottom"
 			android:title="@string/margin_bottom"
 			android:summary="@string/margin_bottom_summary"
 			android:defaultValue="0"/>
 		<EditTextPreference
-			android:key="max_keysize"
+			android:key="portrait_max_keysize"
+			android:title="@string/max_keysize"
+			android:summary="@string/max_keysize_summary"
+			android:defaultValue="12"/>
+	</PreferenceScreen>
+
+	<PreferenceScreen
+		android:key="l_sizes"
+		android:title="@string/l_sizes"
+		android:summary="@string/sizes_summary"
+		android:orderingFromXml="true">
+		<EditTextPreference
+			android:key="landscape_margin_left"
+			android:title="@string/margin_left"
+			android:summary="@string/margin_left_summary"
+			android:defaultValue="0"/>
+		<EditTextPreference
+			android:key="landscape_margin_right"
+			android:title="@string/margin_right"
+			android:summary="@string/margin_right_summary"
+			android:defaultValue="0"/>
+		<EditTextPreference
+			android:key="landscape_margin_bottom"
+			android:title="@string/margin_bottom"
+			android:summary="@string/margin_bottom_summary"
+			android:defaultValue="0"/>
+		<EditTextPreference
+			android:key="landscape_max_keysize"
 			android:title="@string/max_keysize"
 			android:summary="@string/max_keysize_summary"
 			android:defaultValue="12"/>
