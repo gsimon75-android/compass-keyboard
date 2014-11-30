@@ -172,14 +172,12 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		ckv.setVibrateOnCancel(getPrefInt("feedback_cancel", 0));
 		ckv.setFeedbackNormal(getPrefInt("feedback_text", 0));
 		ckv.setFeedbackPassword(getPrefInt("feedback_password", 0));
+
 		ckv.setLeftMargin(getPrefFloat("margin_left", 0));
 		ckv.setRightMargin(getPrefFloat("margin_right", 0));
 		ckv.setBottomMargin(getPrefFloat("margin_bottom", 0));
 		ckv.setMaxKeySize(getPrefFloat("max_keysize", 12));
-		//getWindow().dismiss();
-		//else if (key.startsWith("layout_path_")) {
-		//	int i = Integer.parseInt(key.substring(12));
-		//}
+
 		mPrefs.registerOnSharedPreferenceChangeListener(this);
 		return super.onCreateInputMethodInterface();
 	}
@@ -314,13 +312,28 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 	public void onRelease(int primaryCode) {
 	} 
 
-	int getPrefInt(String key, int def) {
+	String getPrefString(String key, String def) {
 		String s = "";
-		try {
+
+		if (lastInPortrait) {
+			s = mPrefs.getString("portrait_" + key, "");
+			if (s.contentEquals(""))
+				s = mPrefs.getString("landscape_" + key, "");
+		}
+		else {
+			s = mPrefs.getString("landscape_" + key, "");
+			if (s.contentEquals(""))
+				s = mPrefs.getString("portrait_" + key, "");
+		}
+		if (s.contentEquals(""))
 			s = mPrefs.getString(key, "");
-			if ((s == null) || s.contentEquals(""))
-				return def;
-			return Integer.parseInt(s);
+		return s.contentEquals("") ? def : s;
+	}
+
+	int getPrefInt(String key, int def) {
+		String s = getPrefString(key, "");
+		try {
+			return s.contentEquals("") ? def : Integer.parseInt(s);
 		}
 		catch (NumberFormatException e) {
 			Log.w(TAG, "Invalid value for integer preference; key='" + key + "', value='" + s +"'");
@@ -329,16 +342,12 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			Log.w(TAG, "Found non-string int preference; key='" + key + "', err='" + e.getMessage() + "'");
 		}
 		return def;
-
 	}
 
 	float getPrefFloat(String key, float def) {
-		String s = "";
+		String s = getPrefString(key, "");
 		try {
-			s = mPrefs.getString(key, "");
-			if ((s == null) || s.contentEquals(""))
-				return def;
-			return Float.parseFloat(s);
+			return s.contentEquals("") ? def : Float.parseFloat(s);
 		}
 		catch (NumberFormatException e) {
 			Log.w(TAG, "Invalid value for float preference; key='" + key + "', value='" + s +"'");
@@ -362,19 +371,19 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 			ckv.setFeedbackNormal(getPrefInt("feedback_text", 0));
 		else if (key.contentEquals("feedback_password"))
 			ckv.setFeedbackPassword(getPrefInt("feedback_password", 0));
-		else if (key.contentEquals("margin_left")) {
+		else if (key.endsWith("margin_left")) {
 			ckv.setLeftMargin(getPrefFloat("margin_left", 0));
 			getWindow().dismiss();
 		}
-		else if (key.contentEquals("margin_right")) {
+		else if (key.endsWith("margin_right")) {
 			ckv.setRightMargin(getPrefFloat("margin_right", 0));
 			getWindow().dismiss();
 		}
-		else if (key.contentEquals("margin_bottom")) {
+		else if (key.endsWith("margin_bottom")) {
 			ckv.setBottomMargin(getPrefFloat("margin_bottom", 0));
 			getWindow().dismiss();
 		}
-		else if (key.contentEquals("max_keysize")) {
+		else if (key.endsWith("max_keysize")) {
 			ckv.setMaxKeySize(getPrefFloat("max_keysize", 12));
 			getWindow().dismiss();
 		}
