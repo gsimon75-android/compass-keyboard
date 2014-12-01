@@ -152,6 +152,13 @@ public class CompassKeyboard extends InputMethodService implements KeyboardView.
 		return "failed";
 	}
 
+	public String updateLayout(int i) {
+		String s = mPrefs.getString("layout_path_" + String.valueOf(i), "");
+		if (s.length() > 0)
+			return updateLayout(s);
+		return "failed";
+	}
+
 	@Override public AbstractInputMethodService.AbstractInputMethodImpl onCreateInputMethodInterface() {
 		Log.d(TAG, "onCreateInputMethodInterface;");
 		etreq.hintMaxChars = etreq.hintMaxLines = 0;
