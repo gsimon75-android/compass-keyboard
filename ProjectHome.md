@@ -1,0 +1,1 @@
+Its main goal is to enable entering any character (including national characters and symbols of computer languages as well) with the same layouts.
