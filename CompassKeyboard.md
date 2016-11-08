@@ -11,7 +11,7 @@ Supporting these many characters would require quit a lot of keys, way too much 
 
 This behaviour will let you enter nine times more characters than an usual tapping-only keyboard, although it may require some time to get used to it (thanks to the alphabetical ordering, the learning curve is quite steep).
 
-![http://compass-keyboard.googlecode.com/files/usage.png](http://compass-keyboard.googlecode.com/files/usage.png)
+![Usage](usage.png)
 
 
 # Built-in layouts #
@@ -24,16 +24,16 @@ You may switch between the layouts (built-in or custom as well) without leaving 
 ## Settings ##
 In the settings you may review the currently installed layouts. The first three of them are the built-in ones that cannot be changed, but you are free to add any custom layouts from XML files by choosing the last option. These custom layouts will instantly appear on the list, provided that they are syntactically valid.
 Custom layouts can be removed from the list, for this just tap on them, and then confirm your decision on the appearing dialog (please note that they will be removed only from the list, their XML file remains unchanged).
-![http://compass-keyboard.googlecode.com/files/layout_settings_v1.1.png](http://compass-keyboard.googlecode.com/files/layout_settings_v1.1.png)
+![Layout settings](layout_settings_v1.1.png)
 
 ## Latin ##
-![http://compass-keyboard.googlecode.com/files/latin.png](http://compass-keyboard.googlecode.com/files/latin.png)
+![Latin key-mapping](latin.png)
 
 ## Cyrillic ##
-![http://compass-keyboard.googlecode.com/files/cyrillic.png](http://compass-keyboard.googlecode.com/files/cyrillic.png)
+![Cyrillic key-mapping](cyrillic.png)
 
 ## Greek ##
-![http://compass-keyboard.googlecode.com/files/greek.png](http://compass-keyboard.googlecode.com/files/greek.png)
+![Greek key-mapping](greek.png)
 
 
 # Global swipes #
@@ -44,13 +44,13 @@ If you make a large diagonal swipe from one corner of the keyboard to the opposi
 If you would like to enter uppercase accented characters, just tap shift first and then activate the required accented mode by its global swipe.
 
 ## Horizontal ##
-![http://compass-keyboard.googlecode.com/files/global_swipe_horizontal.png](http://compass-keyboard.googlecode.com/files/global_swipe_horizontal.png)
+![Swipe horizontal](global_swipe_horizontal.png)
 
 ## Vertical ##
-![http://compass-keyboard.googlecode.com/files/global_swipe_vertical.png](http://compass-keyboard.googlecode.com/files/global_swipe_vertical.png)
+![Swipe vertical](global_swipe_vertical.png)
 
 ## Diagonal ##
-![http://compass-keyboard.googlecode.com/files/global_swipe_diagonal.png](http://compass-keyboard.googlecode.com/files/global_swipe_diagonal.png)
+![Swipe diagonal](global_swipe_diagonal.png)
 
 ## Long tap ##
 Although not used by the built-in layouts, there is a 9th global swipe, the long tap. To activate it (for a custom layout, for example), tap the screen and hold it for 1.5 seconds.
@@ -128,7 +128,7 @@ Likewise, mostly in case of devices with large screens it you may find it annoyi
 # Custom layouts #
 Despite the best efforts for defining the default layouts as flexible as possible, you may find that another arrangement would fit your needs better, so CompassKeyboard supports loading a layout from a plain XML file as well. Although this feature gives you a complete control of the key layout and behaviour, designing such a file is somewhat a developers task and it is definitely a tedious work (believe me...), so before you decide to do so, please consider first whether it is really worth your time and efforts, and perhaps consult the document LayoutFormat.README and the built-in layouts, all available as part of the source code.
 
-![http://compass-keyboard.googlecode.com/files/custom_filebrowser.png](http://compass-keyboard.googlecode.com/files/custom_filebrowser.png)
+![Custom filebrowser](custom_filebrowser.png)
 
 
 # Character sets #

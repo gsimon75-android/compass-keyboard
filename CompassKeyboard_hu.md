@@ -11,7 +11,7 @@ Mindezen karakterek támogatásához rengeteg gombra lenne szükség, többre, m
 
 Ezen módon kilencszer annyi karaktert tudunk bevinni, mint a hagyományos, csak érintést vizsgáló billentyűzettel, bár kétségtelenül némi időbe telik, amíg rááll az ember keze (az abc szerinti elrendezésnek köszönhetően a rátanulás elég gyorsan megtörténik).
 
-![http://compass-keyboard.googlecode.com/files/usage.png](http://compass-keyboard.googlecode.com/files/usage.png)
+![Usage](usage.png)
 
 
 # Alapértelmezett kiosztások #
@@ -24,17 +24,17 @@ A kiosztások (beépítettek és egyediek egyaránt) között a billentyűzet el
 ## Beállítások ##
 A beállítások között megtekinthetjük az aktuálisan elérhető kiosztásokat. Ezek közül az első három a beépített kiosztások, ezek nem változtathatóak meg, viszont szabadon adhatunk a listához továbbiakat XML file-okból az utolsó menüpont használatával. Ezen egyedileg hozzáadott kiosztások azonnal megjelennek a listában, feltéve, hogy szintaktikailag helyesek voltak.
 Az egyedileg hozzáadott kiosztásokat el is távolíthatjuk a listáról, csak meg kell érintenünk őket, majd a döntésünket jóváhagyni az ezután megjelenő ablakban (fontos tudni, hogy ez csak a listáról távolítja el a kiosztásokat, az őket tartalmazó XML file-ok változatlanul maradnak).
-![http://compass-keyboard.googlecode.com/files/layout_settings_v1.1.png](http://compass-keyboard.googlecode.com/files/layout_settings_v1.1.png)
+![Layout Settings](layout_settings_v1.1.png)
 
 
 ## Latin ##
-![http://compass-keyboard.googlecode.com/files/latin.png](http://compass-keyboard.googlecode.com/files/latin.png)
+![Latin](latin.png)
 
 ## Cirill ##
-![http://compass-keyboard.googlecode.com/files/cyrillic.png](http://compass-keyboard.googlecode.com/files/cyrillic.png)
+![Cirill](cyrillic.png)
 
 ## Görög ##
-![http://compass-keyboard.googlecode.com/files/greek.png](http://compass-keyboard.googlecode.com/files/greek.png)
+![Görög](greek.png)
 
 
 # Módosítók #
@@ -45,13 +45,13 @@ Ha húzunk egy nagy átlós vonalat a billentyűzet valamely sarkából az átel
 Ha nagybetűs ékezetes betűket szeretnénk, akkor a 'shift' megérintésével  váltsunk előbb nagybetűkre, majd a fenti módon válasszuk ki a kívánt ékezetes módot.
 
 ## Vízszintes ##
-![http://compass-keyboard.googlecode.com/files/global_swipe_horizontal.png](http://compass-keyboard.googlecode.com/files/global_swipe_horizontal.png)
+![Swipe vízszintes](global_swipe_horizontal.png)
 
 ## Függőleges ##
-![http://compass-keyboard.googlecode.com/files/global_swipe_vertical.png](http://compass-keyboard.googlecode.com/files/global_swipe_vertical.png)
+![Swipe függőleges](global_swipe_vertical.png)
 
 ## Átlós ##
-![http://compass-keyboard.googlecode.com/files/global_swipe_diagonal.png](http://compass-keyboard.googlecode.com/files/global_swipe_diagonal.png)
+![Swpie átlós](global_swipe_diagonal.png)
 
 ## Hosszú érintés ##
 Bár a beépített kiosztások nem használják, van egy kilencedik módosító is: a hosszú érintés. Ennek kiválasztásához (pl. egy egyedileg hozzáadott kiosztás esetére) a billentyűzetet érintsük meg bárhol és tartsuk így 1.5 másodpercig.
@@ -129,7 +129,7 @@ Ehhez hasonlóan főképp nagy kijelzőjű készülékeknél zavaró lehet a bil
 # Felhasználói elrendezések #
 Annak ellenére, hogy a beépített elrendezések a legjobb odafigyeléssel lettek kialakítva, hogy a lehető legrugalmasabbak legyenek, előfordulhat, hogy egy másfajta elrendezést kézreállóbbnak találna, ezért a CompassKeyboard lehetővé teszi az elrendezésnek egy sima XML file-ból való betöltését is. Bár ez a lehetőség teljeskörű befolyást ad az elrendezések fölött, egy ilyen file elkészítése már valamelyest fejlesztői feladat és mindenképpen egy időigényes és fárasztó folyamat, úgyhogy mielőtt ebbe belevágna, kérem mindenképpen mérlegelje először, hogy megéri-e az erre fordítandó idejét és fáradságát, valamint érdemes először átnézni a forráskódban található LayoutFormat.README leírást és a beépített elrendezések XML file-jait.
 
-![http://compass-keyboard.googlecode.com/files/custom_filebrowser.png](http://compass-keyboard.googlecode.com/files/custom_filebrowser.png)
+![Custom Filebrowser](custom_filebrowser.png)
 
 
 # Karakterkészletek #
